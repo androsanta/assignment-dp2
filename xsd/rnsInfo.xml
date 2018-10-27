@@ -4,16 +4,25 @@
   xsd:noNamespaceSchemaLocation="rnsInfo.xsd">
   <places>
     <place id="1" capacity="1">
+      <gate type="IN"/>
       <connection id="2"/>
     </place>
     <place id="2" capacity="1">
+      <parkingArea>
+        <services>
+          <service name="wash"/>
+          <service name="machine slot"/>
+        </services>
+      </parkingArea>
       <connection id="1"/>
       <connection id="3"/>
     </place>
     <place id="3" capacity="1">
+      <roadSegment id="1" road="polito"/>
       <connection id="1"/>
     </place>
     <place id="4" capacity="1">
+      <gate type="OUT"/>
       <connection/>
     </place>
   </places>
@@ -32,7 +41,7 @@
       <segment name="duca degli abruzzi" id="3"/>
     </road>
     <road name="polimi">
-      <segment name="boh" id="1"/>
+      <segment name="boh" id="4"/>
       <segment name="castelfidardo" id="5"/>
     </road>
   </roads>
