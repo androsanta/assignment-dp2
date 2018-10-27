@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<rns
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+  xsd:noNamespaceSchemaLocation="rnsInfo.xsd">
+  <places>
+    <place id="1" capacity="1">
+      <connection id="2"/>
+    </place>
+    <place id="2" capacity="1">
+      <connection id="1"/>
+      <connection id="3"/>
+    </place>
+    <place id="3" capacity="1">
+      <connection id="1"/>
+    </place>
+    <place id="4" capacity="1">
+      <connection/>
+    </place>
+  </places>
+
+  <vehicles>
+    <vehicle id="v1" position="1" origin="1" destination="1"
+             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="v2" position="4" origin="2" destination="1"
+             entryTime="2002-06-30T09:00:00" state="IN_TRANSIT" type="TRUCK"/>
+  </vehicles>
+
+  <roads>
+    <road name="polito">
+      <segment name="castelfidardo" id="1"/>
+      <segment name="boggio" id="2"/>
+      <segment name="duca degli abruzzi" id="3"/>
+    </road>
+    <road name="polimi">
+      <segment name="boh" id="1"/>
+      <segment name="castelfidardo" id="5"/>
+    </road>
+  </roads>
+</rns>
