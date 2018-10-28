@@ -2,47 +2,45 @@
 <rns
   xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
   xsd:noNamespaceSchemaLocation="rnsInfo.xsd">
+  <roads>
+    <road name="SS">
+      <segment name="131" id="SS-131"/>
+      <segment name="132" id="SS-132"/>
+    </road>
+    <road name="CA">
+      <segment name="131" id="SS-133"/>
+      <segment name="132" id="SS-134"/>
+    </road>
+  </roads>
+
+  <parkingAreas>
+    <parkingArea id="SS-135">
+      <services>
+        <service name="wash"/>
+        <service name="wash2"/>
+      </services>
+    </parkingArea>
+  </parkingAreas>
+
+  <gates>
+    <gate type="OUT" id="SS-13"/>
+    <gate type="OUT" id="SS-14"/>
+  </gates>
+
   <places>
-    <place id="1" capacity="1">
-      <gate type="IN"/>
-      <connection id="2"/>
+    <place id="SS-130" capacity="5">
+      <connection id="SS-131"/>
+      <connection id="SS-14"/>
     </place>
-    <place id="2" capacity="1">
-      <parkingArea>
-        <services>
-          <service name="wash"/>
-          <service name="machine slot"/>
-        </services>
-      </parkingArea>
-      <connection id="1"/>
-      <connection id="3"/>
-    </place>
-    <place id="3" capacity="1">
-      <roadSegment id="1" road="polito"/>
-      <connection id="1"/>
-    </place>
-    <place id="4" capacity="1">
-      <gate type="OUT"/>
-      <connection/>
+    <place id="SS-132" capacity="5">
+      <connection id="SS-134"/>
     </place>
   </places>
 
   <vehicles>
-    <vehicle id="v1" position="1" origin="1" destination="1"
+    <vehicle id="CG556WM" position="SS-13" origin="SS-131" destination="SS-131"
              entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="v2" position="4" origin="2" destination="1"
-             entryTime="2002-06-30T09:00:00" state="IN_TRANSIT" type="TRUCK"/>
+    <vehicle id="CA556WM" position="SS-131" origin="SS-14" destination="SS-14"
+             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
   </vehicles>
-
-  <roads>
-    <road name="polito">
-      <segment name="castelfidardo" id="1"/>
-      <segment name="boggio" id="2"/>
-      <segment name="duca degli abruzzi" id="3"/>
-    </road>
-    <road name="polimi">
-      <segment name="boh" id="4"/>
-      <segment name="castelfidardo" id="5"/>
-    </road>
-  </roads>
 </rns>

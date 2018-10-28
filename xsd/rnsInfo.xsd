@@ -6,60 +6,55 @@
 
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:element name="roads" type="RoadsType"/>
+        <xsd:element name="parkingAreas" type="ParkingAreasType"/>
+        <xsd:element name="gates" type="GatesType"/>
         <xsd:element name="places" type="PlacesType"/>
         <xsd:element name="vehicles" type="VehiclesType"/>
-        <xsd:element name="roads" type="RoadsType"/>
       </xsd:sequence>
     </xsd:complexType>
 
-    <!-- Places key - keyref - unique -->
-    <xsd:key name="placeKey">
-      <xsd:selector xpath="places/place"/>
+    <xsd:unique name="roadNameUnique">
+      <xsd:selector xpath="roads/road"/>
+      <xsd:field xpath="@name"/>
+    </xsd:unique>
+
+    <!-- Unique referenceable identified entity (id) between road segments, parking areas and gates -->
+    <xsd:key name="genericPlaceKey">
+      <xsd:selector xpath="roads/road/segment|parkingAreas/parkingArea|gates/gate"/>
       <xsd:field xpath="@id"/>
     </xsd:key>
 
-    <xsd:keyref name="placeConnection" refer="placeKey">
+    <!-- Unique id between single places inside places -->
+    <xsd:unique name="placeUnique">
+      <xsd:selector xpath="places/place"/>
+      <xsd:field xpath="@id"/>
+    </xsd:unique>
+
+    <!-- connection must reference a generic place -->
+    <xsd:keyref name="genericPlaceConnection" refer="genericPlaceKey">
       <xsd:selector xpath="places/place/connection"/>
       <xsd:field xpath="@id"/>
     </xsd:keyref>
 
-    <xsd:key name="roadKey">
-      <xsd:selector xpath="roads/road"/>
-      <xsd:field xpath="@name"/>
-    </xsd:key>
-
-    <xsd:key name="segmentKey">
-      <xsd:selector xpath="roads/road/segment"/>
-      <xsd:field xpath="@id"/>
-    </xsd:key>
-
-    <xsd:keyref name="placeRoadSegment" refer="roadKey">
-      <xsd:selector xpath="places/place/roadSegment"/>
-      <xsd:field xpath="@road"/>
-    </xsd:keyref>
-
-    <xsd:keyref name="placeSegment" refer="segmentKey">
-      <xsd:selector xpath="places/place/roadSegment"/>
-      <xsd:field xpath="@id"/>
-    </xsd:keyref>
-
-    <!-- Vehicles key - keyref - unique -->
-    <xsd:unique name="uniqueVehicle">
+    <!-- Unique identified entity (id) for each vehicle -->
+    <xsd:unique name="uniqueVehicleId">
       <xsd:selector xpath="vehicles/vehicle"/>
       <xsd:field xpath="@id"/>
     </xsd:unique>
 
-    <xsd:keyref name="vehiclePosition" refer="placeKey">
+    <!-- Vehicle position, origin and destination must refer to a valid place id -->
+    <xsd:keyref name="vehiclePosition" refer="genericPlaceKey">
       <xsd:selector xpath="vehicles/vehicle"/>
       <xsd:field xpath="@position"/>
     </xsd:keyref>
 
-    <xsd:keyref name="vehicleOrigin" refer="placeKey">
+    <xsd:keyref name="vehicleOrigin" refer="genericPlaceKey">
       <xsd:selector xpath="vehicles/vehicle"/>
       <xsd:field xpath="@origin"/>
     </xsd:keyref>
 
-    <xsd:keyref name="vehicleDestination" refer="placeKey">
+    <xsd:keyref name="vehicleDestination" refer="genericPlaceKey">
       <xsd:selector xpath="vehicles/vehicle"/>
       <xsd:field xpath="@destination"/>
     </xsd:keyref>
@@ -67,39 +62,36 @@
   </xsd:element>
 
 
-  <!-- Places -->
-  <xsd:complexType name="PlacesType">
+  <!-- Roads -->
+  <xsd:complexType name="RoadsType">
     <xsd:sequence>
-      <xsd:element name="place" type="PlaceType" minOccurs="0" maxOccurs="unbounded">
-        <!-- a place cannot be connected to itself -->
-        <xsd:unique name="uniqueConnection">
-          <xsd:selector xpath="connection|."/>
-          <xsd:field xpath="@id"/>
+      <xsd:element name="road" type="RoadType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:unique name="segmentUnique">
+          <xsd:selector xpath="segment"/>
+          <xsd:field xpath="@name"/>
         </xsd:unique>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="PlaceType">
+  <xsd:complexType name="RoadType">
     <xsd:sequence>
-      <xsd:choice>
-        <xsd:element name="roadSegment" type="RoadSegmentType"/>
-        <xsd:element name="parkingArea" type="ParkingAreaType"/>
-        <xsd:element name="gate" type="GateType"/>
-      </xsd:choice>
-      <xsd:element name="connection" maxOccurs="unbounded">
-        <xsd:complexType>
-          <xsd:attribute name="id" type="xsd:string"/>
-        </xsd:complexType>
-      </xsd:element>
+      <xsd:element name="segment" type="RoadSegmentType" maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:string" use="required"/>
-    <xsd:attribute name="capacity" type="xsd:positiveInteger" use="required"/>
+    <xsd:attribute name="name" type="xsd:string"/>
   </xsd:complexType>
 
   <xsd:complexType name="RoadSegmentType">
-    <xsd:attribute name="id" type="xsd:string"/>
-    <xsd:attribute name="road" type="xsd:string"/>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+
+  <!-- Parking Areas -->
+  <xsd:complexType name="ParkingAreasType">
+    <xsd:sequence>
+      <xsd:element name="parkingArea" type="ParkingAreaType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="ParkingAreaType">
@@ -120,10 +112,46 @@
         </xsd:unique>
       </xsd:element>
     </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+
+  <!-- Gates -->
+  <xsd:complexType name="GatesType">
+    <xsd:sequence>
+      <xsd:element name="gate" type="GateType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="GateType">
-    <xsd:attribute name="type" type="GateTypeEnum"/>
+    <xsd:attribute name="type" type="GateTypeEnum" use="required"/>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+
+  <!-- Places -->
+  <xsd:complexType name="PlacesType">
+    <xsd:sequence>
+      <xsd:element name="place" type="PlaceType" minOccurs="0" maxOccurs="unbounded">
+        <!-- a place cannot be connected to itself -->
+        <xsd:unique name="uniqueConnection">
+          <xsd:selector xpath="connection|."/>
+          <xsd:field xpath="@id"/>
+        </xsd:unique>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PlaceType">
+    <xsd:sequence>
+      <xsd:element name="connection" type="ConnectionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="capacity" type="xsd:positiveInteger" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ConnectionType">
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
   </xsd:complexType>
 
 
@@ -142,29 +170,6 @@
     <xsd:attribute name="entryTime" type="xsd:dateTime" use="required"/>
     <xsd:attribute name="state" type="VehicleStateEnum" use="required"/>
     <xsd:attribute name="type" type="VehicleTypeEnum" use="required"/>
-  </xsd:complexType>
-
-  <xsd:complexType name="RoadsType">
-    <xsd:sequence>
-      <xsd:element name="road" type="RoadType" minOccurs="0" maxOccurs="unbounded">
-        <xsd:unique name="segmentUnique">
-          <xsd:selector xpath="segment"/>
-          <xsd:field xpath="@name"/>
-        </xsd:unique>
-      </xsd:element>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="RoadType">
-    <xsd:sequence>
-      <xsd:element name="segment" maxOccurs="unbounded">
-        <xsd:complexType>
-          <xsd:attribute name="name" type="xsd:string" use="required"/>
-          <xsd:attribute name="id" type="xsd:string" use="required"/>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:sequence>
-    <xsd:attribute name="name" type="xsd:string"/>
   </xsd:complexType>
 
 
@@ -192,5 +197,13 @@
       <xsd:enumeration value="INOUT"/>
     </xsd:restriction>
   </xsd:simpleType>
+
+  <!-- xsd:simpleType name="PlaceTypeEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ROAD"/>
+      <xsd:enumeration value="PARKING_AREA"/>
+      <xsd:enumeration value="GATE"/>
+    </xsd:restriction>
+  </xsd:simpleType -->
 
 </xsd:schema>

@@ -2,16 +2,20 @@ package it.polito.dp2.RNS.sol1;
 
 import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.sol1.jaxb.*;
+import it.polito.dp2.RNS.sol1.jaxb.GateType;
+import it.polito.dp2.RNS.sol1.jaxb.VehicleType;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import javax.xml.bind.*;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.math.BigInteger;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -34,11 +38,11 @@ public class RnsInfoSerializer {
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.seed",
-      "1"
+      "2"
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.testcase",
-      "0"
+      "1"
     );
   }
 
@@ -72,7 +76,7 @@ public class RnsInfoSerializer {
       .collect(Collectors.groupingBy(RoadSegmentReader::getRoadName))
       .entrySet()
       .stream()
-      // Gap to RoadType (which contains a list of Segment)
+      // Map to RoadType (which contains a list of Segment)
       .map(e -> {
         RoadType road = new RoadType();
         road.setName(e.getKey());
@@ -81,7 +85,7 @@ public class RnsInfoSerializer {
           e.getValue()
             .stream()
             .map(rs -> {
-              RoadType.Segment segment = new RoadType.Segment();
+              RoadSegmentType segment = new RoadSegmentType();
               segment.setId(rs.getId());
               segment.setName(rs.getName());
               return segment;
@@ -97,20 +101,78 @@ public class RnsInfoSerializer {
     rns.setRoads(roadsType);
   }
 
+  private void serializeParkingAreas () {
+    ParkingAreasType parkingAreasType = new ParkingAreasType();
+
+    List<ParkingAreaType> parkingAreas = reader.getParkingAreas(null)
+      .stream()
+      .map(pa -> {
+        ParkingAreaType parkingArea = new ParkingAreaType();
+        parkingArea.setId(pa.getId());
+
+        ParkingAreaType.Services services = new ParkingAreaType.Services();
+        services.getService().addAll(
+          pa.getServices()
+            .stream()
+            .map(s -> {
+              ParkingAreaType.Services.Service service = new ParkingAreaType.Services.Service();
+              service.setName(s);
+              return service;
+            })
+          .collect(Collectors.toList())
+        );
+        parkingArea.setServices(services);
+
+        return parkingArea;
+      })
+      .collect(Collectors.toList());
+
+    parkingAreasType.getParkingArea().addAll(parkingAreas);
+    rns.setParkingAreas(parkingAreasType);
+  }
+
+  private void serializeGates () {
+    GatesType gatesType = new GatesType();
+
+    List<GateType> gates = reader.getGates(null)
+      .stream()
+      .map(g -> {
+        GateType gate = new GateType();
+
+        gate.setId(g.getId());
+        gate.setType(GateTypeEnum.fromValue(g.getType().value()));
+
+        return gate;
+      })
+      .collect(Collectors.toList());
+
+    gatesType.getGate().addAll(gates);
+    rns.setGates(gatesType);
+  }
+
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
     List<PlaceType> places = reader.getPlaces(null)
       .stream()
-      .map(place -> {
-        PlaceType placeType = new PlaceType();
+      .map(p -> {
+        PlaceType place = new PlaceType();
 
-        placeType.setId(place.getId());
-        placeType.setCapacity(BigInteger.valueOf(place.getCapacity()));
+        place.setId(p.getId());
+        place.setCapacity(BigInteger.valueOf(p.getCapacity()));
 
+        List<ConnectionType> connections = p.getNextPlaces()
+          .stream()
+          .map(c -> {
+            ConnectionType conn = new ConnectionType();
+            conn.setId(c.getId());
+            return conn;
+          })
+          .collect(Collectors.toList());
 
+        place.getConnection().addAll(connections);
 
-        return placeType;
+        return place;
       })
       .collect(Collectors.toList());
 
@@ -118,10 +180,46 @@ public class RnsInfoSerializer {
     rns.setPlaces(placesType);
   }
 
+  private XMLGregorianCalendar setVehicleEntryTime (GregorianCalendar gregorianCalendar) {
+    try {
+      return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
+    } catch (DatatypeConfigurationException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private void serializeVehicles () {
+    VehiclesType vehiclesType = new VehiclesType();
+
+    List<VehicleType> vehicles = reader.getVehicles(null, null, null)
+      .stream()
+      .map(v -> {
+        VehicleType vehicle = new VehicleType();
+
+        vehicle.setId(v.getId());
+        vehicle.setType(VehicleTypeEnum.fromValue(v.getType().value()));
+        vehicle.setEntryTime(setVehicleEntryTime((GregorianCalendar) v.getEntryTime()));
+        vehicle.setDestination(v.getDestination().getId());
+        vehicle.setOrigin(v.getOrigin().getId());
+        vehicle.setPosition(v.getPosition().getId());
+        vehicle.setState(VehicleStateEnum.fromValue(v.getState().value()));
+
+        return vehicle;
+      })
+      .collect(Collectors.toList());
+
+    vehiclesType.getVehicle().addAll(vehicles);
+    rns.setVehicles(vehiclesType);
+  }
+
   private void serializeAll (String output) {
 
     serializeRoads();
+    serializeParkingAreas();
+    serializeGates();
     serializePlaces();
+    serializeVehicles();
 
     try {
       // Instantiate JAXB context
@@ -131,19 +229,19 @@ public class RnsInfoSerializer {
       // Format output in readable format
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
       // Instantiate schema factory and add the custom validation schema
-      // SchemaFactory sf = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-      // Schema schema = sf.newSchema(new File("xsd/rnsInfo.xsd"));
-      // m.setSchema(schema);
+      SchemaFactory sf = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
+      Schema schema = sf.newSchema(new File("xsd/rnsInfo.xsd"));
+      m.setSchema(schema);
       // Marshal data into the file specified as argument
       m.marshal(rns, new File(output));
 
     } catch (JAXBException e) {
       System.out.println("Caught JAXB Exception");
       e.printStackTrace();
-    }/* catch (org.xml.sax.SAXException e) {
+    } catch (org.xml.sax.SAXException e) {
       System.out.println("Caught SAX Exception");
       e.printStackTrace();
-    }*/
+    }
   }
 
 }
