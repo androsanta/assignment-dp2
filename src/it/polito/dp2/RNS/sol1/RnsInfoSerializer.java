@@ -1,6 +1,7 @@
 package it.polito.dp2.RNS.sol1;
 
 import it.polito.dp2.RNS.*;
+import it.polito.dp2.RNS.RnsReaderFactory;
 import it.polito.dp2.RNS.sol1.jaxb.*;
 import it.polito.dp2.RNS.sol1.jaxb.GateType;
 import it.polito.dp2.RNS.sol1.jaxb.VehicleType;
