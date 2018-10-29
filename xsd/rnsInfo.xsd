@@ -25,6 +25,12 @@
       <xsd:field xpath="@id"/>
     </xsd:key>
 
+    <!-- All identified entity must be unique globally -->
+    <xsd:unique name="identifiedEntityUnique">
+      <xsd:selector xpath="roads/road/segment|parkingAreas/parkingArea|gates/gate|vehicles/vehicle"/>
+      <xsd:field xpath="@id"/>
+    </xsd:unique>
+
     <!-- Unique id between single places inside places -->
     <xsd:unique name="placeUnique">
       <xsd:selector xpath="places/place"/>
