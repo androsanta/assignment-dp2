@@ -27,3 +27,4 @@ build/
 gen/
 \.idea
 output.xml
+testout.xml
