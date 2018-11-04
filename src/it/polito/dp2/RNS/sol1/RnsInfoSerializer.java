@@ -7,6 +7,7 @@ import it.polito.dp2.RNS.sol1.jaxb.GateType;
 import it.polito.dp2.RNS.sol1.jaxb.VehicleType;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+
 import javax.xml.bind.*;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -91,7 +92,7 @@ public class RnsInfoSerializer {
               segment.setName(rs.getName());
               return segment;
             })
-          .collect(Collectors.toSet())
+            .collect(Collectors.toSet())
         );
         return road;
       })
@@ -120,7 +121,7 @@ public class RnsInfoSerializer {
               service.setName(s);
               return service;
             })
-          .collect(Collectors.toList())
+            .collect(Collectors.toList())
         );
         parkingArea.setServices(services);
 
@@ -224,9 +225,9 @@ public class RnsInfoSerializer {
 
     try {
       // Instantiate JAXB context
-      JAXBContext jc = JAXBContext.newInstance("it.polito.dp2.RNS.sol1.jaxb");
+      JAXBContext jaxbContext = JAXBContext.newInstance("it.polito.dp2.RNS.sol1.jaxb");
       // Create Marshaller
-      Marshaller m = jc.createMarshaller();
+      Marshaller m = jaxbContext.createMarshaller();
       // Format output in readable format
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
       // Instantiate schema factory and add the custom validation schema

@@ -1,11 +1,24 @@
 package it.polito.dp2.RNS.sol1;
 
 import it.polito.dp2.RNS.*;
+import it.polito.dp2.RNS.sol1.jaxb.Rns;
 
 import java.util.Calendar;
 import java.util.Set;
 
-public class RnsReaderSol implements it.polito.dp2.RNS.RnsReader {
+
+public class RnsReaderSol implements RnsReader {
+
+  private Set<PlaceReader> places;
+  private Set<GateReader> gates;
+  private Set<RoadSegmentReader> roadSegments;
+  private Set<ParkingAreaReader> parkingAreas;
+  private Set<ConnectionReader> connections;
+  private Set<VehicleReader> vehicles;
+
+  public RnsReaderSol (Rns rns) {
+
+  }
 
   @Override
   public Set<PlaceReader> getPlaces (String s) {
