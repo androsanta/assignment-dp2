@@ -10,6 +10,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.util.List;
 
 
 public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {

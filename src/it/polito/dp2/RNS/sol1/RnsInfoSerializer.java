@@ -17,7 +17,7 @@ import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -72,7 +72,7 @@ public class RnsInfoSerializer {
     RoadsType roadsType = new RoadsType();
 
     // Get all road segments and get from them all the roads name
-    List<RoadType> roads = reader.getRoadSegments(null)
+    Set<RoadType> roads = reader.getRoadSegments(null)
       .stream()
       // Group by roadName - list of road segment
       .collect(Collectors.groupingBy(RoadSegmentReader::getRoadName))
@@ -97,7 +97,7 @@ public class RnsInfoSerializer {
         return road;
       })
       // Collect everything into a list of RoadType
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     roadsType.getRoad().addAll(roads);
     rns.setRoads(roadsType);
@@ -106,7 +106,7 @@ public class RnsInfoSerializer {
   private void serializeParkingAreas () {
     ParkingAreasType parkingAreasType = new ParkingAreasType();
 
-    List<ParkingAreaType> parkingAreas = reader.getParkingAreas(null)
+    Set<ParkingAreaType> parkingAreas = reader.getParkingAreas(null)
       .stream()
       .map(pa -> {
         ParkingAreaType parkingArea = new ParkingAreaType();
@@ -127,7 +127,7 @@ public class RnsInfoSerializer {
 
         return parkingArea;
       })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     parkingAreasType.getParkingArea().addAll(parkingAreas);
     rns.setParkingAreas(parkingAreasType);
@@ -136,7 +136,7 @@ public class RnsInfoSerializer {
   private void serializeGates () {
     GatesType gatesType = new GatesType();
 
-    List<GateType> gates = reader.getGates(null)
+    Set<GateType> gates = reader.getGates(null)
       .stream()
       .map(g -> {
         GateType gate = new GateType();
@@ -146,7 +146,7 @@ public class RnsInfoSerializer {
 
         return gate;
       })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     gatesType.getGate().addAll(gates);
     rns.setGates(gatesType);
@@ -155,7 +155,7 @@ public class RnsInfoSerializer {
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
-    List<PlaceType> places = reader.getPlaces(null)
+    Set<PlaceType> places = reader.getPlaces(null)
       .stream()
       .map(p -> {
         PlaceType place = new PlaceType();
@@ -163,20 +163,20 @@ public class RnsInfoSerializer {
         place.setId(p.getId());
         place.setCapacity(BigInteger.valueOf(p.getCapacity()));
 
-        List<ConnectionType> connections = p.getNextPlaces()
+        Set<ConnectionType> connections = p.getNextPlaces()
           .stream()
           .map(c -> {
             ConnectionType conn = new ConnectionType();
             conn.setId(c.getId());
             return conn;
           })
-          .collect(Collectors.toList());
+          .collect(Collectors.toSet());
 
         place.getConnection().addAll(connections);
 
         return place;
       })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     placesType.getPlace().addAll(places);
     rns.setPlaces(placesType);
@@ -194,7 +194,7 @@ public class RnsInfoSerializer {
   private void serializeVehicles () {
     VehiclesType vehiclesType = new VehiclesType();
 
-    List<VehicleType> vehicles = reader.getVehicles(null, null, null)
+    Set<VehicleType> vehicles = reader.getVehicles(null, null, null)
       .stream()
       .map(v -> {
         VehicleType vehicle = new VehicleType();
@@ -209,7 +209,7 @@ public class RnsInfoSerializer {
 
         return vehicle;
       })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     vehiclesType.getVehicle().addAll(vehicles);
     rns.setVehicles(vehiclesType);
@@ -217,7 +217,6 @@ public class RnsInfoSerializer {
 
   private void serializeAll (String output) {
 
-    // @TODO use Set instead of List
     serializeRoads();
     serializeParkingAreas();
     serializeGates();
