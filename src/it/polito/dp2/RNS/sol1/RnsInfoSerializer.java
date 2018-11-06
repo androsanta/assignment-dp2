@@ -217,6 +217,7 @@ public class RnsInfoSerializer {
 
   private void serializeAll (String output) {
 
+    // @TODO use Set instead of List
     serializeRoads();
     serializeParkingAreas();
     serializeGates();

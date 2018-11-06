@@ -26,5 +26,7 @@ out/
 build/
 gen/
 \.idea
+.idea/
 output.xml
 testout.xml
+temp*/

@@ -1,9 +1,9 @@
 package it.polito.dp2.RNS.sol1;
 
 import it.polito.dp2.RNS.*;
-import it.polito.dp2.RNS.sol1.jaxb.Rns;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -16,13 +16,19 @@ public class RnsReaderSol implements RnsReader {
   private Set<ConnectionReader> connections;
   private Set<VehicleReader> vehicles;
 
-  public RnsReaderSol (Rns rns) {
-
+  public RnsReaderSol () {
+    // Initialize everything as an empty set
+    places = new HashSet<>();
+    gates = new HashSet<>();
+    roadSegments = new HashSet<>();
+    parkingAreas = new HashSet<>();
+    connections = new HashSet<>();
+    vehicles = new HashSet<>();
   }
 
   @Override
   public Set<PlaceReader> getPlaces (String s) {
-    return null;
+    return places;
   }
 
   @Override
