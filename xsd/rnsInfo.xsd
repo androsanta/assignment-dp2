@@ -19,6 +19,8 @@
       <xsd:field xpath="@name"/>
     </xsd:unique>
 
+    <!-- @TODO add keyref to place id into places -->
+
     <!-- Unique referenceable identified entity (id) between road segments, parking areas and gates -->
     <xsd:key name="genericPlaceKey">
       <xsd:selector xpath="roads/road/segment|parkingAreas/parkingArea|gates/gate"/>
@@ -203,13 +205,5 @@
       <xsd:enumeration value="INOUT"/>
     </xsd:restriction>
   </xsd:simpleType>
-
-  <!-- xsd:simpleType name="PlaceTypeEnum">
-    <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="ROAD"/>
-      <xsd:enumeration value="PARKING_AREA"/>
-      <xsd:enumeration value="GATE"/>
-    </xsd:restriction>
-  </xsd:simpleType -->
 
 </xsd:schema>

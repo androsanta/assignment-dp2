@@ -1,16 +1,19 @@
 package it.polito.dp2.RNS.sol1;
 
+import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.sol1.jaxb.Rns;
 import org.xml.sax.SAXException;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
@@ -34,12 +37,12 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
     rns = unmarshallRns(xmlOutput);
     if (rns != null) {
       /* Load data from jaxb classes if unmarshal
-      * and schema validation complete successfully */
-      loadPlaces();
+       * and schema validation complete successfully */
+      loadGates();
     }
 
     /* Always return the reader, which is empty
-    * or loaded with data based on unmarshal result*/
+     * or loaded with data based on unmarshal result */
     return reader;
   }
 
@@ -54,8 +57,8 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
       SchemaFactory sf = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
       Schema schema = sf.newSchema(new File("xsd/rnsInfo.xsd"));
       u.setSchema(schema);
-      // Unmarshall and return value
-      return (Rns)u.unmarshal(new File(fileName));
+      // Unmarshall and return value (safe cast because the file has been validated)
+      return (Rns) u.unmarshal(new File(fileName));
     } catch (JAXBException e) {
       System.out.println("Caught JAXB Exception");
       e.printStackTrace();
@@ -70,8 +73,19 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
     return null;
   }
 
-  private void loadPlaces () {
+  private void loadGates () {
+    Set<GateReader> gates = rns.getGates().getGate()
+      .stream()
+      .map(g -> new GateReaderSol(g.getId(), GateType.fromValue(g.getType().value())))
+      .collect(Collectors.toSet());
 
+    reader.getGates(null).addAll(gates);
+  }
+
+  private void loadVehicles () {
+    Set<VehicleReader> vehicles; // @TODO load vehicles
+
+    // reader.getVehicles(null, null, null).addAll(vehicles);
   }
 
 }
