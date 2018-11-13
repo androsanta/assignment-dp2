@@ -2,45 +2,36 @@
 <rns
   xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
   xsd:noNamespaceSchemaLocation="rnsInfo.xsd">
+
   <roads>
-    <road name="SS">
-      <segment name="131" id="SS-131"/>
-      <segment name="132" id="SS-132"/>
-    </road>
-    <road name="CA">
-      <segment name="131" id="SS-133"/>
-      <segment name="132" id="SS-134"/>
+    <road>
+      <segment id="1" capacity="10" name="aoado">
+        <connections>
+          <connection id="2"/>
+        </connections>
+      </segment>
     </road>
   </roads>
 
   <parkingAreas>
-    <parkingArea id="SS-135">
+    <parkingArea id="1" capacity="10">
+      <connections>
+        <connection id="2"/>
+        <connection id="2"/>
+      </connections>
       <services>
-        <service name="wash"/>
-        <service name="wash2"/>
+        <service name="WC"/>
+        <service name="WC"/>
       </services>
     </parkingArea>
   </parkingAreas>
 
   <gates>
-    <gate type="OUT" id="SS-13"/>
-    <gate type="OUT" id="SS-14"/>
+    <gate id="1" capacity="20" type="IN">
+      <connections>
+        <connection id="1"/>
+      </connections>
+    </gate>
   </gates>
 
-  <places>
-    <place id="SS-130" capacity="5">
-      <connection id="SS-131"/>
-      <connection id="SS-14"/>
-    </place>
-    <place id="SS-132" capacity="5">
-      <connection id="SS-134"/>
-    </place>
-  </places>
-
-  <vehicles>
-    <vehicle id="CG556WM" position="SS-13" origin="SS-131" destination="SS-131"
-             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA556WM" position="SS-131" origin="SS-14" destination="SS-14"
-             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-  </vehicles>
 </rns>
