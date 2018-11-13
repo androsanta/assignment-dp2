@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d87cdd70-6eab-43f9-9de2-ee9915d5195d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/xsd/rnsInfo-copy.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xsd/rnsInfo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xsd/rnsInfo.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xsd/rnsInfo.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/xsd/rnsInfo.xsd" afterDir="false" />
     </list>
@@ -36,7 +34,7 @@
           <entry key="flagfile" value="2" />
           <entry key="gitignore" value="9" />
           <entry key="iml" value="1" />
-          <entry key="java" value="127" />
+          <entry key="java" value="130" />
           <entry key="txt" value="2" />
           <entry key="xml" value="29" />
           <entry key="xsd" value="13" />
@@ -46,7 +44,7 @@
         <counts>
           <entry key="CLASS" value="76" />
           <entry key="IDEA_MODULE" value="1" />
-          <entry key="JAVA" value="127" />
+          <entry key="JAVA" value="130" />
           <entry key="PLAIN_TEXT" value="13" />
           <entry key="XML" value="42" />
         </counts>
@@ -56,15 +54,15 @@
           <entry key="dummy" value="22" />
           <entry key="gitignore" value="90" />
           <entry key="java" value="9572" />
-          <entry key="xml" value="533" />
-          <entry key="xsd" value="3030" />
+          <entry key="xml" value="543" />
+          <entry key="xsd" value="3055" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JAVA" value="9572" />
           <entry key="PLAIN_TEXT" value="112" />
-          <entry key="XML" value="3563" />
+          <entry key="XML" value="3598" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -77,20 +75,23 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.57153076">
+    <splitter split-orientation="horizontal" split-proportion="0.5154827">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xsd">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="242">
-                  <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
+                <state relative-caret-position="165">
+                  <caret line="11" column="58" selection-start-line="11" selection-start-column="58" selection-end-line="11" selection-end-column="58" />
                   <folding>
                     <element signature="n#xsd:complexType#0;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:sequence#0;n#xsd:complexType#0;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:complexType#1;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:complexType#1;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:sequence#0;n#xsd:complexType#2;n#xsd:schema#0;n#!!top" />
+                    <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
+                    <element signature="n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
+                    <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:sequence#0;n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
@@ -103,6 +104,8 @@
                     <element signature="n#xsd:complexContent#0;n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:complexType#8;n#xsd:schema#0;n#!!top" />
+                    <element signature="n#xsd:complexType#12;n#xsd:schema#0;n#!!top" />
+                    <element signature="n#xsd:complexType#13;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:simpleType#0;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:restriction#0;n#xsd:simpleType#0;n#xsd:schema#0;n#!!top" />
                     <element signature="n#xsd:simpleType#1;n#xsd:schema#0;n#!!top" />
@@ -114,6 +117,15 @@
               </provider>
             </entry>
           </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/PlaceType.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-58">
+                  <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -121,8 +133,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="135">
-                  <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+                <state relative-caret-position="525">
+                  <caret line="35" column="2" lean-forward="true" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
                 </state>
               </provider>
             </entry>
@@ -130,8 +142,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/xsd/rnsInfo-copy.xsd">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="119">
-                  <caret line="87" column="12" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="12" />
+                <state relative-caret-position="395">
+                  <caret line="173" column="2" selection-start-line="173" selection-start-column="2" selection-end-line="188" selection-end-column="20" />
                   <folding>
                     <element signature="n#xsd:key#0;n#xsd:element#0;n#xsd:schema#0;n#!!top" />
                     <element signature="e#564#697#0" />
@@ -238,8 +250,8 @@
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderSol.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RoadSegmentReaderSol.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java" />
-        <option value="$PROJECT_DIR$/xsd/rnsInfo.xml" />
         <option value="$PROJECT_DIR$/xsd/rnsInfo.xsd" />
+        <option value="$PROJECT_DIR$/xsd/rnsInfo.xml" />
       </list>
     </option>
   </component>
@@ -437,12 +449,12 @@
       <workItem from="1542035071044" duration="5156000" />
       <workItem from="1542057937782" duration="1341000" />
       <workItem from="1542059427850" duration="212000" />
-      <workItem from="1542120173410" duration="3623000" />
+      <workItem from="1542120173410" duration="4050000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73197000" />
+    <option name="totallyTimeSpent" value="73624000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -457,7 +469,7 @@
     <frame x="0" y="23" width="1440" height="834" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" weight="0.21459228" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" weight="0.1695279" />
       <window_info id="Structure" order="1" sideWeight="0.50051284" side_tool="true" weight="0.1673774" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -473,7 +485,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32884097" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32839313" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.1967655" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.19541779" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50039715" side_tool="true" weight="0.2301092" />
       <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.17924528" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -823,13 +835,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/ParkingAreaType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/GateType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
@@ -844,20 +849,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/PlaceType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="85" column="31" lean-forward="true" selection-start-line="85" selection-start-column="31" selection-end-line="85" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/Rns.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="26" column="22" lean-forward="true" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/RNS.jar!/it/polito/dp2/RNS/PlaceReader.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -865,10 +856,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/Rns.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="50" column="34" selection-start-line="50" selection-start-column="34" selection-end-line="50" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/PlaceType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-58">
+          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/it/polito/dp2/RNS/sol1/jaxb/ParkingAreaType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="39" column="21" lean-forward="true" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/xsd/rnsInfo-copy.xsd">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="87" column="12" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="12" />
+        <state relative-caret-position="395">
+          <caret line="173" column="2" selection-start-line="173" selection-start-column="2" selection-end-line="188" selection-end-column="20" />
           <folding>
             <element signature="n#xsd:key#0;n#xsd:element#0;n#xsd:schema#0;n#!!top" />
             <element signature="e#564#697#0" />
@@ -913,23 +925,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xsd">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
+        <state relative-caret-position="165">
+          <caret line="11" column="58" selection-start-line="11" selection-start-column="58" selection-end-line="11" selection-end-column="58" />
           <folding>
             <element signature="n#xsd:complexType#0;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:sequence#0;n#xsd:complexType#0;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:complexType#1;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:complexType#1;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:sequence#0;n#xsd:complexType#2;n#xsd:schema#0;n#!!top" />
+            <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
+            <element signature="n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
+            <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:sequence#0;n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#3;n#xsd:schema#0;n#!!top" />
@@ -942,6 +950,8 @@
             <element signature="n#xsd:complexContent#0;n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:extension#0;n#xsd:complexContent#0;n#xsd:complexType#4;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:complexType#8;n#xsd:schema#0;n#!!top" />
+            <element signature="n#xsd:complexType#12;n#xsd:schema#0;n#!!top" />
+            <element signature="n#xsd:complexType#13;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:simpleType#0;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:restriction#0;n#xsd:simpleType#0;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:simpleType#1;n#xsd:schema#0;n#!!top" />
@@ -949,6 +959,13 @@
             <element signature="n#xsd:simpleType#2;n#xsd:schema#0;n#!!top" />
             <element signature="n#xsd:restriction#0;n#xsd:simpleType#2;n#xsd:schema#0;n#!!top" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="2" lean-forward="true" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
         </state>
       </provider>
     </entry>
