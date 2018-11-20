@@ -12,41 +12,37 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 
 public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
 
-  private RnsReaderSol reader;
+  private RnsLib reader;
   private Rns rns;
 
   public static void main (String[] args) {
     System.setProperty("it.polito.dp2.RNS.sol1.RnsInfo.file", "output.xml");
     RnsReaderFactory factory = new RnsReaderFactory();
-    factory.newRnsReader();
+
+    try {
+      factory.newRnsReader();
+    } catch (RnsReaderException e) {
+      System.out.println("Caught RnsReaderException");
+      e.printStackTrace();
+    }
   }
 
   @Override
-  public RnsReaderSol newRnsReader () {
+  public RnsReader newRnsReader () throws RnsReaderException {
     String xmlOutput = System.getProperty("it.polito.dp2.RNS.sol1.RnsInfo.file");
 
-    // Create an empty reader
-    reader = new RnsReaderSol();
+    if (xmlOutput == null)
+      throw new RnsReaderException("System property 'it.polito.dp2.RNS.sol1.RnsInfo.file' must be set");
 
-    rns = unmarshallRns(xmlOutput);
-    if (rns != null) {
-      /* Load data from jaxb classes if unmarshal
-       * and schema validation complete successfully */
-      loadGates();
-    }
+    unmarshallRns(xmlOutput);
 
-    /* Always return the reader, which is empty
-     * or loaded with data based on unmarshal result */
     return reader;
   }
 
-  private Rns unmarshallRns (String fileName) {
+  private void unmarshallRns (String fileName) throws RnsReaderException {
 
     try {
       // Instantiate JAXB context
@@ -58,34 +54,18 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
       Schema schema = sf.newSchema(new File("xsd/rnsInfo.xsd"));
       u.setSchema(schema);
       // Unmarshall and return value (safe cast because the file has been validated)
-      return (Rns) u.unmarshal(new File(fileName));
+      rns = (Rns) u.unmarshal(new File(fileName));
     } catch (JAXBException e) {
       System.out.println("Caught JAXB Exception");
-      e.printStackTrace();
+      throw new RnsReaderException(e);
     } catch (SAXException e) {
       System.out.println("Caught SAX Exception");
-      e.printStackTrace();
+      throw new RnsReaderException(e);
     } catch (NullPointerException e) {
       System.out.println("Caught NULLPointer Exception");
-      e.printStackTrace();
+      throw new RnsReaderException(e);
     }
 
-    return null;
-  }
-
-  private void loadGates () {
-    Set<GateReader> gates = rns.getGates().getGate()
-      .stream()
-      .map(g -> new GateReaderSol(g.getId(), GateType.fromValue(g.getType().value())))
-      .collect(Collectors.toSet());
-
-    reader.getGates(null).addAll(gates);
-  }
-
-  private void loadVehicles () {
-    Set<VehicleReader> vehicles; // @TODO load vehicles
-
-    // reader.getVehicles(null, null, null).addAll(vehicles);
   }
 
 }

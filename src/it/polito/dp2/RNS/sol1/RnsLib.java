@@ -6,8 +6,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
-
-public class RnsReaderSol implements RnsReader {
+public class RnsLib implements RnsReader {
 
   private Set<PlaceReader> places;
   private Set<GateReader> gates;
@@ -16,7 +15,7 @@ public class RnsReaderSol implements RnsReader {
   private Set<ConnectionReader> connections;
   private Set<VehicleReader> vehicles;
 
-  public RnsReaderSol () {
+  public RnsLib () {
     // Initialize everything as an empty set
     places = new HashSet<>();
     gates = new HashSet<>();

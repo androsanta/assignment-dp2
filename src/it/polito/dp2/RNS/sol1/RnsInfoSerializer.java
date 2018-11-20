@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 public class RnsInfoSerializer {
 
   private RnsReader reader;
@@ -45,7 +44,7 @@ public class RnsInfoSerializer {
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.testcase",
-      "2"
+      "1"
     );
   }
 

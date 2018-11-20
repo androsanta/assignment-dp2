@@ -1,26 +1,19 @@
 package it.polito.dp2.RNS.sol1;
 
-import it.polito.dp2.RNS.GateReader;
-import it.polito.dp2.RNS.GateType;
 import it.polito.dp2.RNS.PlaceReader;
 
 import java.util.Set;
 
-public class GateReaderSol implements GateReader {
+public class Place implements PlaceReader {
 
   private String id;
-  private GateType type;
-  private int capacity;
   private Set<PlaceReader> nextPlaces;
+  private int capacity;
 
-  public GateReaderSol (String id, GateType type) {
+  public Place (String id, Set<PlaceReader> nextPlaces, int capacity) {
     this.id = id;
-    this.type = type;
-  }
-
-  @Override
-  public GateType getType () {
-    return type;
+    this.nextPlaces = nextPlaces;
+    this.capacity = capacity;
   }
 
   @Override
@@ -42,11 +35,8 @@ public class GateReaderSol implements GateReader {
     this.id = id;
   }
 
-  public void setType (GateType type) {
-    this.type = type;
-  }
-
   public void setCapacity (int capacity) {
     this.capacity = capacity;
   }
+
 }
