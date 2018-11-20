@@ -17,6 +17,7 @@ import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,11 +41,11 @@ public class RnsInfoSerializer {
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.seed",
-      "2"
+      "1211530"
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.testcase",
-      "1"
+      "2"
     );
   }
 
@@ -60,7 +61,7 @@ public class RnsInfoSerializer {
 
     try {
       rnsInfo = new RnsInfoSerializer();
-      rnsInfo.serializeAll(output);
+      rnsInfo.serialize(output);
     } catch (RnsReaderException e) {
       System.out.println("Error while instantiating Rns Serializer");
       e.printStackTrace();
@@ -68,117 +69,87 @@ public class RnsInfoSerializer {
 
   }
 
-  private void serializeRoads () {
-    RoadsType roadsType = new RoadsType();
+  private void serializePlace (PlaceType place, PlaceReader placeReader) {
+    place.setId(placeReader.getId());
+    place.setCapacity(BigInteger.valueOf(placeReader.getCapacity()));
 
-    // Get all road segments and get from them all the roads name
-    Set<RoadType> roads = reader.getRoadSegments(null)
-      .stream()
-      // Group by roadName - list of road segment
-      .collect(Collectors.groupingBy(RoadSegmentReader::getRoadName))
-      .entrySet()
-      .stream()
-      // Map to RoadType (which contains a list of Segment)
-      .map(e -> {
-        RoadType road = new RoadType();
-        road.setName(e.getKey());
-        // Add all segments by mapping them to Segment object
-        road.getSegment().addAll(
-          e.getValue()
-            .stream()
-            .map(rs -> {
-              RoadSegmentType segment = new RoadSegmentType();
-              segment.setId(rs.getId());
-              segment.setName(rs.getName());
-              return segment;
-            })
-            .collect(Collectors.toSet())
-        );
-        return road;
-      })
-      // Collect everything into a list of RoadType
-      .collect(Collectors.toSet());
-
-    roadsType.getRoad().addAll(roads);
-    rns.setRoads(roadsType);
+    ConnectionsType connections = new ConnectionsType();
+    connections.getConnection().addAll(
+      placeReader.getNextPlaces()
+        .stream()
+        .map(nextPlace -> {
+          ConnectionType connection = new ConnectionType();
+          connection.setId(nextPlace.getId());
+          return connection;
+        })
+        .collect(Collectors.toSet())
+    );
+    place.setConnections(connections);
   }
 
-  private void serializeParkingAreas () {
-    ParkingAreasType parkingAreasType = new ParkingAreasType();
-
-    Set<ParkingAreaType> parkingAreas = reader.getParkingAreas(null)
+  private Set<RoadSegmentType> serializeRoadSegments () {
+    return reader.getRoadSegments(null)
       .stream()
-      .map(pa -> {
-        ParkingAreaType parkingArea = new ParkingAreaType();
-        parkingArea.setId(pa.getId());
+      .map(roadSegmentReader -> {
+        RoadSegmentType roadSegment = new RoadSegmentType();
 
-        ParkingAreaType.Services services = new ParkingAreaType.Services();
+        serializePlace(roadSegment, roadSegmentReader);
+        roadSegment.setRoadName(roadSegmentReader.getRoadName());
+        roadSegment.setName(roadSegmentReader.getName());
+
+        return roadSegment;
+      })
+      .collect(Collectors.toSet());
+  }
+
+  private Set<ParkingAreaType> serializeParkingAreas () {
+    return reader.getParkingAreas(null)
+      .stream()
+      .map(parkingAreaReader -> {
+        ParkingAreaType parkingArea = new ParkingAreaType();
+
+        serializePlace(parkingArea, parkingAreaReader);
+        ServicesType services = new ServicesType();
         services.getService().addAll(
-          pa.getServices()
+          parkingAreaReader.getServices()
             .stream()
             .map(s -> {
-              ParkingAreaType.Services.Service service = new ParkingAreaType.Services.Service();
+              ServiceType service = new ServiceType();
               service.setName(s);
               return service;
             })
-            .collect(Collectors.toList())
+            .collect(Collectors.toSet())
         );
         parkingArea.setServices(services);
 
         return parkingArea;
       })
       .collect(Collectors.toSet());
-
-    parkingAreasType.getParkingArea().addAll(parkingAreas);
-    rns.setParkingAreas(parkingAreasType);
   }
 
-  private void serializeGates () {
-    GatesType gatesType = new GatesType();
-
-    Set<GateType> gates = reader.getGates(null)
+  private Set<GateType> serializeGates () {
+    return reader.getGates(null)
       .stream()
-      .map(g -> {
+      .map(gateReader -> {
         GateType gate = new GateType();
 
-        gate.setId(g.getId());
-        gate.setType(GateTypeEnum.fromValue(g.getType().value()));
+        serializePlace(gate, gateReader);
+        gate.setType(GateTypeEnum.fromValue(gateReader.getType().value()));
 
         return gate;
       })
       .collect(Collectors.toSet());
-
-    gatesType.getGate().addAll(gates);
-    rns.setGates(gatesType);
   }
 
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
-    Set<PlaceType> places = reader.getPlaces(null)
-      .stream()
-      .map(p -> {
-        PlaceType place = new PlaceType();
+    List<PlaceType> places = placesType.getRoadSegmentOrParkingAreaOrGate();
 
-        place.setId(p.getId());
-        place.setCapacity(BigInteger.valueOf(p.getCapacity()));
+    places.addAll(serializeRoadSegments());
+    places.addAll(serializeParkingAreas());
+    places.addAll(serializeGates());
 
-        Set<ConnectionType> connections = p.getNextPlaces()
-          .stream()
-          .map(c -> {
-            ConnectionType conn = new ConnectionType();
-            conn.setId(c.getId());
-            return conn;
-          })
-          .collect(Collectors.toSet());
-
-        place.getConnection().addAll(connections);
-
-        return place;
-      })
-      .collect(Collectors.toSet());
-
-    placesType.getPlace().addAll(places);
     rns.setPlaces(placesType);
   }
 
@@ -215,11 +186,8 @@ public class RnsInfoSerializer {
     rns.setVehicles(vehiclesType);
   }
 
-  private void serializeAll (String output) {
+  private void serialize (String output) {
 
-    serializeRoads();
-    serializeParkingAreas();
-    serializeGates();
     serializePlaces();
     serializeVehicles();
 
