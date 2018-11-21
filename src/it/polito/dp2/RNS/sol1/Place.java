@@ -4,14 +4,13 @@ import it.polito.dp2.RNS.PlaceReader;
 
 import java.util.Set;
 
-public class Place implements PlaceReader {
+public class Place extends IdentifiedEntity implements PlaceReader {
 
-  private String id;
   private Set<PlaceReader> nextPlaces;
   private int capacity;
 
   public Place (String id, Set<PlaceReader> nextPlaces, int capacity) {
-    this.id = id;
+    super(id);
     this.nextPlaces = nextPlaces;
     this.capacity = capacity;
   }
@@ -24,15 +23,6 @@ public class Place implements PlaceReader {
   @Override
   public Set<PlaceReader> getNextPlaces () {
     return nextPlaces;
-  }
-
-  @Override
-  public String getId () {
-    return id;
-  }
-
-  public void setId (String id) {
-    this.id = id;
   }
 
   public void setCapacity (int capacity) {

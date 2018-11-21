@@ -7,30 +7,21 @@ import it.polito.dp2.RNS.VehicleType;
 
 import java.util.Calendar;
 
-public class Vehicle implements VehicleReader {
+public class Vehicle extends IdentifiedEntity implements VehicleReader {
 
   private VehicleType type;
   private Calendar entryTime;
   private PlaceReader origin, destination, position;
   private VehicleState state;
-  private String id;
 
-  public Vehicle (
-    VehicleType type,
-    Calendar entryTime,
-    PlaceReader origin,
-    PlaceReader destination,
-    PlaceReader position,
-    VehicleState state,
-    String id
-  ) {
+  public Vehicle (String id, VehicleType type, Calendar entryTime, PlaceReader origin, PlaceReader destination, PlaceReader position, VehicleState state) {
+    super(id);
     this.type = type;
     this.entryTime = entryTime;
     this.origin = origin;
     this.destination = destination;
     this.position = position;
     this.state = state;
-    this.id = id;
   }
 
   @Override
@@ -63,11 +54,6 @@ public class Vehicle implements VehicleReader {
     return state;
   }
 
-  @Override
-  public String getId () {
-    return id;
-  }
-
   public void setType (VehicleType type) {
     this.type = type;
   }
@@ -90,9 +76,5 @@ public class Vehicle implements VehicleReader {
 
   public void setState (VehicleState state) {
     this.state = state;
-  }
-
-  public void setId (String id) {
-    this.id = id;
   }
 }
