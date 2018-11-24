@@ -57,11 +57,11 @@
 
   <!-- Places -->
   <xsd:complexType name="PlacesType">
-    <xsd:choice minOccurs="0" maxOccurs="unbounded">
-      <xsd:element name="roadSegment" type="RoadSegmentType"/>
-      <xsd:element name="parkingArea" type="ParkingAreaType"/>
-      <xsd:element name="gate" type="GateType"/>
-    </xsd:choice>
+    <xsd:sequence>
+      <xsd:element name="roadSegment" type="RoadSegmentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="parkingArea" type="ParkingAreaType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="gate" type="GateType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
   <!-- Connections -->

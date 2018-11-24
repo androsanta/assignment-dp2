@@ -24,6 +24,16 @@
         <service name="WC2"/>
       </services>
     </parkingArea>
+    <parkingArea id="5" capacity="10">
+      <connections>
+        <connection id="2"/>
+        <connection id="3"/>
+      </connections>
+      <services>
+        <service name="WC"/>
+        <service name="WC2"/>
+      </services>
+    </parkingArea>
     <gate id="3" capacity="20" type="IN">
       <connections>
         <connection id="1"/>

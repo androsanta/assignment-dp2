@@ -2,16 +2,16 @@ package it.polito.dp2.RNS.sol1;
 
 import it.polito.dp2.RNS.PlaceReader;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Place extends IdentifiedEntity implements PlaceReader {
 
-  private Set<PlaceReader> nextPlaces;
+  private Set<PlaceReader> nextPlaces = new HashSet<>();
   private int capacity;
 
-  public Place (String id, Set<PlaceReader> nextPlaces, int capacity) {
+  public Place (String id, int capacity) {
     super(id);
-    this.nextPlaces = nextPlaces;
     this.capacity = capacity;
   }
 

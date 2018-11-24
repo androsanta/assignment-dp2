@@ -17,7 +17,6 @@ import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,8 @@ public class RnsInfoSerializer {
   private Rns rns;
 
   public RnsInfoSerializer () throws RnsReaderException {
-    setProperties();
+    //@TODO remove before submitting solution
+    // setProperties();
     RnsReaderFactory factory = RnsReaderFactory.newInstance();
     reader = factory.newRnsReader();
     rns = new Rns();
@@ -143,11 +143,9 @@ public class RnsInfoSerializer {
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
-    List<PlaceType> places = placesType.getRoadSegmentOrParkingAreaOrGate();
-
-    places.addAll(serializeRoadSegments());
-    places.addAll(serializeParkingAreas());
-    places.addAll(serializeGates());
+    placesType.getRoadSegment().addAll(serializeRoadSegments());
+    placesType.getParkingArea().addAll(serializeParkingAreas());
+    placesType.getGate().addAll(serializeGates());
 
     rns.setPlaces(placesType);
   }

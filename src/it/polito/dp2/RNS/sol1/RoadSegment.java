@@ -1,17 +1,14 @@
 package it.polito.dp2.RNS.sol1;
 
-import it.polito.dp2.RNS.PlaceReader;
 import it.polito.dp2.RNS.RoadSegmentReader;
-
-import java.util.Set;
 
 public class RoadSegment extends Place implements RoadSegmentReader {
 
   private String name;
   private String roadName;
 
-  public RoadSegment (String id, Set<PlaceReader> nextPlaces, int capacity, String name, String roadName) {
-    super(id, nextPlaces, capacity);
+  public RoadSegment (String id, int capacity, String name, String roadName) {
+    super(id, capacity);
     this.name = name;
     this.roadName = roadName;
   }
