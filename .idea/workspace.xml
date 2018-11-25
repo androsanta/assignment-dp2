@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d87cdd70-6eab-43f9-9de2-ee9915d5195d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,17 +30,18 @@
     <session id="249098995">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="21" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="23" />
+          <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.11" value="3" />
           <entry key="project.open.time.12" value="3" />
           <entry key="project.open.time.13" value="5" />
           <entry key="project.open.time.14" value="2" />
           <entry key="project.open.time.15" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.open.time.5" value="2" />
+          <entry key="project.open.time.5" value="3" />
+          <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="21" />
+          <entry key="project.opened" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -51,7 +53,7 @@
           <entry key="gitignore" value="10" />
           <entry key="html" value="1" />
           <entry key="iml" value="1" />
-          <entry key="java" value="239" />
+          <entry key="java" value="242" />
           <entry key="txt" value="3" />
           <entry key="xml" value="47" />
           <entry key="xsd" value="16" />
@@ -62,7 +64,7 @@
           <entry key="CLASS" value="108" />
           <entry key="HTML" value="1" />
           <entry key="IDEA_MODULE" value="1" />
-          <entry key="JAVA" value="239" />
+          <entry key="JAVA" value="242" />
           <entry key="Manifest" value="1" />
           <entry key="PLAIN_TEXT" value="19" />
           <entry key="XML" value="63" />
@@ -72,14 +74,14 @@
         <counts>
           <entry key="dummy" value="22" />
           <entry key="gitignore" value="90" />
-          <entry key="java" value="15946" />
+          <entry key="java" value="15973" />
           <entry key="xml" value="772" />
           <entry key="xsd" value="4740" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="15946" />
+          <entry key="JAVA" value="15973" />
           <entry key="PLAIN_TEXT" value="112" />
           <entry key="XML" value="5512" />
         </counts>
@@ -94,7 +96,31 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#getPlaces#0;class#RnsLib#0" />
+                <element signature="method#getGates#0;class#RnsLib#0" />
+                <element signature="method#getRoadSegments#0;class#RnsLib#0" />
+                <element signature="method#getVehicles#0;class#RnsLib#0" />
+                <element signature="e#2259#2375#0" />
+                <element signature="e#2391#2495#0" />
+                <element signature="e#2511#2632#0" />
+                <element signature="method#addPlace#0;class#RnsLib#0" />
+                <element signature="method#addPlace#1;class#RnsLib#0" />
+                <element signature="method#addPlace#2;class#RnsLib#0" />
+                <element signature="method#addConnections#0;class#RnsLib#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -167,9 +193,9 @@
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/IdentifiedEntity.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/Place.java" />
         <option value="$PROJECT_DIR$/output.xml" />
-        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java" />
+        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java" />
       </list>
     </option>
   </component>
@@ -191,8 +217,8 @@
     </layout>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="856" />
-    <option name="y" value="425" />
+    <option name="x" value="482" />
+    <option name="y" value="363" />
     <option name="width" value="1514" />
     <option name="height" value="913" />
   </component>
@@ -204,8 +230,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -244,7 +270,7 @@
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543071687776" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
@@ -346,11 +372,14 @@
       <workItem from="1543007333099" duration="1986000" />
       <workItem from="1543054344775" duration="12526000" />
       <workItem from="1543156463173" duration="643000" />
+      <workItem from="1543161309766" duration="1078000" />
+      <workItem from="1543164721295" duration="351000" />
+      <workItem from="1543180532791" duration="251000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123447000" />
+    <option name="totallyTimeSpent" value="125127000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -362,9 +391,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="897" y="452" width="1514" height="913" extended-state="0" />
+    <frame x="482" y="363" width="1514" height="913" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" weight="0.22961956" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" visible="true" weight="0.23233695" />
       <window_info id="Structure" order="1" sideWeight="0.50051284" side_tool="true" weight="0.1673774" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -380,11 +410,11 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32839313" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32839313" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.36037442" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.3593179" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50039715" side_tool="true" weight="0.2301092" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.33463338" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.33373934" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.1548913" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.15421195" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -487,9 +517,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/lib/RNSRandom.jar!/META-INF/MANIFEST.MF">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/lab1/tests/RnsTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-455">
@@ -802,13 +829,6 @@
         <state relative-caret-position="-1533" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="60" column="3" lean-forward="true" selection-start-line="60" selection-start-column="3" selection-end-line="60" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/RNS.jar!/it/polito/dp2/RNS/RnsReaderFactory.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -820,14 +840,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="127">
           <caret line="30" column="23" lean-forward="true" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#serializeRoadSegments#0;class#RnsInfoSerializer#0" />
-            <element signature="method#serializeParkingAreas#0;class#RnsInfoSerializer#0" />
-            <element signature="method#serializeGates#0;class#RnsInfoSerializer#0" />
-            <element signature="method#serializeVehicles#0;class#RnsInfoSerializer#0" />
-            <element signature="method#serialize#0;class#RnsInfoSerializer#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -835,10 +847,33 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="20" column="65" selection-start-line="20" selection-start-column="65" selection-end-line="20" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/src.zip!/java/util/Set.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="272" column="12" selection-start-line="272" selection-start-column="12" selection-end-line="272" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#loadPlaces#0;class#RnsReaderFactory#0" />
-            <element signature="method#createConnections#0;class#RnsReaderFactory#0" />
+            <element signature="method#getPlaces#0;class#RnsLib#0" />
+            <element signature="method#getGates#0;class#RnsLib#0" />
+            <element signature="method#getRoadSegments#0;class#RnsLib#0" />
+            <element signature="method#getVehicles#0;class#RnsLib#0" />
+            <element signature="e#2259#2375#0" />
+            <element signature="e#2391#2495#0" />
+            <element signature="e#2511#2632#0" />
+            <element signature="method#addPlace#0;class#RnsLib#0" />
+            <element signature="method#addPlace#1;class#RnsLib#0" />
+            <element signature="method#addPlace#2;class#RnsLib#0" />
+            <element signature="method#addConnections#0;class#RnsLib#0" />
           </folding>
         </state>
       </provider>
@@ -900,7 +935,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

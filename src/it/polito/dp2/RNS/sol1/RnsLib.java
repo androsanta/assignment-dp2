@@ -4,7 +4,6 @@ import it.polito.dp2.RNS.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RnsLib implements RnsReader {
 
@@ -69,7 +68,7 @@ public class RnsLib implements RnsReader {
     return parkingAreas.entrySet()
       .stream()
       .map(Map.Entry::getValue)
-      .filter(pa -> pa.getServices().containsAll(set))
+      .filter(pa -> pa.getServices().containsAll(set) && pa.getServices().size() ==  set.size())
       .collect(Collectors.toSet());
   }
 
