@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="RNS">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/RNS.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

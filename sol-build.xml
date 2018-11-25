@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="generate-artifacts" name="RNS-SOL2">
+	<description>
+			Script for RNS Assignment 2 solution
+	</description>
+
+	<target name="generate-artifacts">
+	</target>
+
+</project>
