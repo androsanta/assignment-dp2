@@ -6,6 +6,6 @@ import it.polito.dp2.RNS.lab2.PathFinderException;
 public class PathFinderFactory extends it.polito.dp2.RNS.lab2.PathFinderFactory {
   @Override
   public PathFinder newPathFinder () throws PathFinderException {
-    return null;
+    return new PathFinderImpl();
   }
 }

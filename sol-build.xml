@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project basedir="." default="generate-artifacts" name="RNS-SOL2">
-	<description>
-			Script for RNS Assignment 2 solution
-	</description>
+  <description>
+    Script for RNS Assignment 2 solution
+  </description>
 
-	<target name="generate-artifacts">
-	</target>
+  <property name="projectRoot" value="." />
+  <property name="gen.dir" value="${projectRoot}/gen-src" />
+  <property name="schema.dir" value="${projectRoot}/custom" />
+
+  <target name="generate-artifacts">
+    <exec executable="xjc" failonerror="true">
+      <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol2.rest.client.node"/>
+      <arg line="${schema.dir}/node.xsd"/>
+      <arg line="${schema.dir}/nodeProperty.xsd"/>
+      <arg line="${schema.dir}/relationship.xsd"/>
+    </exec>
+  </target>
 
 </project>

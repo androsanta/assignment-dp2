@@ -61,11 +61,8 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
       u.setSchema(schema);
       // Unmarshall and return value (safe cast because the file has been validated)
       rns = (Rns) u.unmarshal(new File(fileName));
-    } catch (JAXBException e) {
+    } catch (JAXBException | SAXException e) {
       System.out.println("Caught JAXB Exception");
-      throw new RnsReaderException(e);
-    } catch (SAXException e) {
-      System.out.println("Caught SAX Exception");
       throw new RnsReaderException(e);
     }
   }
