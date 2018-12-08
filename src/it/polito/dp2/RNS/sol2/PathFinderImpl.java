@@ -175,11 +175,13 @@ public class PathFinderImpl implements PathFinder {
     for (RelationshipResult relationship : relationships) {
       deleteElement(client.target(relationship.getSelf()));
     }
+    relationships = null;
 
     // Delete nodes
     for (NodeResult nodeResult : nodes.values()) {
       deleteElement(client.target(nodeResult.getSelf()));
     }
+    nodes = null;
   }
 
   @Override

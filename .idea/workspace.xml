@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d87cdd70-6eab-43f9-9de2-ee9915d5195d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/S251579/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/S251579/test/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -81,7 +79,7 @@
           <entry key="class" value="4" />
           <entry key="dummy" value="26" />
           <entry key="gitignore" value="123" />
-          <entry key="java" value="22023" />
+          <entry key="java" value="22049" />
           <entry key="xml" value="1133" />
           <entry key="xsd" value="5444" />
         </counts>
@@ -89,7 +87,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="4" />
-          <entry key="JAVA" value="22023" />
+          <entry key="JAVA" value="22049" />
           <entry key="PLAIN_TEXT" value="149" />
           <entry key="XML" value="6577" />
         </counts>
@@ -110,8 +108,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="424">
-                  <caret line="192" lean-forward="true" selection-start-line="192" selection-end-line="192" />
+                <state relative-caret-position="930">
+                  <caret line="183" column="17" selection-start-line="183" selection-start-column="17" selection-end-line="183" selection-end-column="17" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="method#PathFinderImpl#0;class#PathFinderImpl#0" />
@@ -119,7 +117,6 @@
                     <element signature="method#loadNodes#0;class#PathFinderImpl#0" />
                     <element signature="method#loadConnections#0;class#PathFinderImpl#0" />
                     <element signature="method#deleteElement#0;class#PathFinderImpl#0" />
-                    <element signature="method#unloadModel#0;class#PathFinderImpl#0" />
                     <element signature="method#findShortestPaths#0;class#PathFinderImpl#0" />
                   </folding>
                 </state>
@@ -129,8 +126,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/S251579/test/Test.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="390">
-                  <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+                <state relative-caret-position="75">
+                  <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -357,7 +354,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/andrea/Desktop/Distributed II/Assignments/assignment1-dp2/src/it/polito/dp2/RNS/lab1/tests/RnsTests.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544296659826" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544296945564" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -508,12 +505,12 @@
       <workItem from="1543757827892" duration="14519000" />
       <workItem from="1543850051695" duration="4356000" />
       <workItem from="1544027916208" duration="296000" />
-      <workItem from="1544268568333" duration="15909000" />
+      <workItem from="1544268568333" duration="16198000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178569000" />
+    <option name="totallyTimeSpent" value="178858000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -526,6 +523,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2251" height="1373" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" visible="true" weight="0.16115889" />
       <window_info id="Structure" order="1" sideWeight="0.50051284" side_tool="true" weight="0.1673774" />
@@ -543,7 +541,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32839313" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32786885" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" visible="true" weight="0.3286495" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.3286495" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50039715" side_tool="true" weight="0.2301092" />
       <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.21311475" />
       <window_info anchor="bottom" id="Java Enterprise" order="12" weight="0.32839313" />
@@ -590,18 +588,6 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/S251579/test/Test.java</url>
-          <line>24</line>
-          <properties />
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -1055,8 +1041,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/S251579/test/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="75">
+          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1065,8 +1051,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="192" lean-forward="true" selection-start-line="192" selection-end-line="192" />
+        <state relative-caret-position="930">
+          <caret line="183" column="17" selection-start-line="183" selection-start-column="17" selection-end-line="183" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#PathFinderImpl#0;class#PathFinderImpl#0" />
@@ -1074,7 +1060,6 @@
             <element signature="method#loadNodes#0;class#PathFinderImpl#0" />
             <element signature="method#loadConnections#0;class#PathFinderImpl#0" />
             <element signature="method#deleteElement#0;class#PathFinderImpl#0" />
-            <element signature="method#unloadModel#0;class#PathFinderImpl#0" />
             <element signature="method#findShortestPaths#0;class#PathFinderImpl#0" />
           </folding>
         </state>
