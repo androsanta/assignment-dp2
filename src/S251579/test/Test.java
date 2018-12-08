@@ -22,6 +22,7 @@ public class Test {
     PathFinderFactory pathFinderFactory = PathFinderFactory.newInstance();
     PathFinder pathFinder = pathFinderFactory.newPathFinder();
     pathFinder.reloadModel();
+    pathFinder.reloadModel();
   }
 
 }

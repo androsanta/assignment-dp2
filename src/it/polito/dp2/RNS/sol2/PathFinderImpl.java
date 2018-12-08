@@ -27,14 +27,13 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 public class PathFinderImpl implements PathFinder {
 
+  private Boolean isModelLoaded = false;
   private URI restUri;
   private Map<String, NodeResult> nodes;
   private List<RelationshipResult> relationships;
 
   private JAXBContext jaxbContext;
   private Validator validator;
-
-  private Boolean isModelLoaded = false;
 
 
   public PathFinderImpl () throws PathFinderException {
@@ -153,6 +152,36 @@ public class PathFinderImpl implements PathFinder {
     }
   }
 
+  private void deleteElement (WebTarget target) throws ServiceException {
+    try {
+      int status = target
+        .request()
+        .delete()
+        .getStatus();
+
+      if (status != 204) { // No content
+        throw new Exception("Delete failed with code " + status);
+      }
+    } catch (Exception e) {
+      throw new ServiceException(e);
+    }
+  }
+
+  private void unloadModel (Client client) throws ServiceException {
+    // If things go wrong the model should not be set as loaded
+    isModelLoaded = false;
+
+    // Delete relationships first (neo4j requirement)
+    for (RelationshipResult relationship : relationships) {
+      deleteElement(client.target(relationship.getSelf()));
+    }
+
+    // Delete nodes
+    for (NodeResult nodeResult : nodes.values()) {
+      deleteElement(client.target(nodeResult.getSelf()));
+    }
+  }
+
   @Override
   public boolean isModelLoaded () {
     return isModelLoaded;
@@ -160,18 +189,21 @@ public class PathFinderImpl implements PathFinder {
 
   @Override
   public void reloadModel () throws ServiceException, ModelException {
-    //@TODO delete previous data
+    Client client = ClientBuilder.newClient();
+
+    if (isModelLoaded()) {
+      unloadModel(client);
+    }
 
     RnsReader reader = loadReader();
     nodes = new HashMap<>();
     relationships = new ArrayList<>();
 
-    Client client = ClientBuilder.newClient();
-
     loadNodes(client, reader.getPlaces(null));
     loadConnections(client, reader.getConnections());
 
     client.close();
+    isModelLoaded = true;
   }
 
   @Override
