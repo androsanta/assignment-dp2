@@ -1,10 +1,11 @@
 package S251579.test;
 
-import it.polito.dp2.RNS.lab2.*;
+import it.polito.dp2.RNS.lab2.PathFinder;
+import it.polito.dp2.RNS.lab2.PathFinderFactory;
 
 public class Test {
 
-  public static void main (String args[]) {
+  public static void main (String args[]) throws Exception {
     System.setProperty(
       "it.polito.dp2.RNS.lab2.URL",
       "http://192.168.1.5:7474/db/data"
@@ -18,15 +19,9 @@ public class Test {
       "it.polito.dp2.RNS.Random.RnsReaderFactoryImpl"
     );
 
-    PathFinder pathFinder;
-
-    try {
-      pathFinder = PathFinderFactory.newInstance().newPathFinder();
-      pathFinder.reloadModel();
-    } catch (PathFinderException | ModelException | ServiceException e) {
-      e.printStackTrace();
-    }
-
+    PathFinderFactory pathFinderFactory = PathFinderFactory.newInstance();
+    PathFinder pathFinder = pathFinderFactory.newPathFinder();
+    pathFinder.reloadModel();
   }
 
 }

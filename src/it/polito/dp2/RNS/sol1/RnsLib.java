@@ -68,7 +68,7 @@ public class RnsLib implements RnsReader {
     return parkingAreas.entrySet()
       .stream()
       .map(Map.Entry::getValue)
-      .filter(pa -> pa.getServices().containsAll(set) && pa.getServices().size() ==  set.size())
+      .filter(pa -> pa.getServices().containsAll(set))
       .collect(Collectors.toSet());
   }
 

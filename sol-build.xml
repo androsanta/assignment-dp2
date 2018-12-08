@@ -11,10 +11,8 @@
 
   <target name="generate-artifacts">
     <exec executable="xjc" failonerror="true">
-      <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol2.rest.client.node"/>
-      <arg line="${schema.dir}/node.xsd"/>
-      <arg line="${schema.dir}/nodeProperty.xsd"/>
-      <arg line="${schema.dir}/relationship.xsd"/>
+      <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol2.rest.client.jaxb"/>
+      <arg line="${schema.dir}/restClient.xsd"/>
     </exec>
   </target>
 
