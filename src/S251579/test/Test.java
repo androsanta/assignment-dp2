@@ -13,7 +13,7 @@ public class Test {
   public static void main (String args[]) {
     System.setProperty(
       "it.polito.dp2.RNS.lab2.URL",
-      "http://192.168.1.5:7474/db/data"
+      "http://192.168.1.5:7474/db"
     );
     System.setProperty(
       "it.polito.dp2.RNS.lab2.PathFinderFactory",
@@ -38,6 +38,8 @@ public class Test {
       pathFinder = pathFinderFactory.newPathFinder();
       pathFinder.reloadModel();
       Set<List<String>> paths = pathFinder.findShortestPaths("SS0-S1", "SS0-S3", 0);
+      paths.forEach(p -> p.forEach(System.out::println));
+      paths = pathFinder.findShortestPaths("Wrong", "SS0-S3", 0);
       paths.forEach(p -> p.forEach(System.out::println));
     } catch (Exception e) {
       e.printStackTrace();

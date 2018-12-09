@@ -44,7 +44,7 @@ public class PathFinderImpl implements PathFinder {
 
     if (uri == null)
       throw new PathFinderException("System property 'it.polito.dp2.RNS.lab2.URL' must be set");
-    restUri = UriBuilder.fromUri(uri).build();
+    restUri = UriBuilder.fromUri(uri).path("data").build();
 
     try {
       SchemaFactory sf = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
