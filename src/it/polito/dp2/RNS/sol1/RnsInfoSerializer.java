@@ -143,6 +143,8 @@ public class RnsInfoSerializer {
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
+    //@TODO check if place is connected to itselft
+    //@TODO check that place capacity is respected
     placesType.getRoadSegment().addAll(serializeRoadSegments());
     placesType.getParkingArea().addAll(serializeParkingAreas());
     placesType.getGate().addAll(serializeGates());
