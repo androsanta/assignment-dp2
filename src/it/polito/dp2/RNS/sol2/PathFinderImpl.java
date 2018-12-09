@@ -9,6 +9,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -20,8 +21,10 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
@@ -87,7 +90,8 @@ public class PathFinderImpl implements PathFinder {
 
       Response response;
       try {
-        response = target.request()
+        response = target
+          .request()
           .accept(MediaType.APPLICATION_JSON)
           .post(Entity.json(nodeProperty));
 
@@ -132,7 +136,8 @@ public class PathFinderImpl implements PathFinder {
         JAXBSource source = new JAXBSource(jaxbContext, of.createRelationshipRequest(relationshipRequest));
         validator.validate(source);
 
-        Response response = target.request()
+        Response response = target
+          .request()
           .accept(MediaType.APPLICATION_JSON)
           .post(Entity.json(relationshipRequest));
 
@@ -167,7 +172,8 @@ public class PathFinderImpl implements PathFinder {
     }
   }
 
-  private void unloadModel (Client client) throws ServiceException {
+  //@TODO just for test, make it private
+  public void unloadModel (Client client) throws ServiceException {
     // If things go wrong the model should not be set as loaded
     isModelLoaded = false;
 
@@ -210,6 +216,63 @@ public class PathFinderImpl implements PathFinder {
 
   @Override
   public Set<List<String>> findShortestPaths (String source, String destination, int maxlength) throws UnknownIdException, BadStateException, ServiceException {
-    return null;
+    if (!isModelLoaded()) {
+      throw new BadStateException("Calling findShortestPaths while on unloaded state");
+    }
+
+    NodeResult sourceNode = nodes.get(source);
+    NodeResult destinationNode = nodes.get(destination);
+    if (sourceNode == null || destinationNode == null) {
+      throw new UnknownIdException("Source and Destination must be a valid node id");
+    }
+
+    PathRequest pathRequest = new PathRequest();
+    pathRequest.setTo(destinationNode.getSelf());
+    pathRequest.setMaxDepth(BigInteger.valueOf(maxlength > 0 ? maxlength : nodes.size()));
+    pathRequest.setAlgorithm(AlgorithmType.SHORTEST_PATH);
+
+    PathRequest.Relationships relationshipsField = new PathRequest.Relationships();
+    relationshipsField.setType(ConnectionType.CONNECTED_TO);
+    relationshipsField.setDirection(RelationshipDirection.OUT);
+
+    pathRequest.setRelationships(relationshipsField);
+
+    Client client = ClientBuilder.newClient();
+    WebTarget target = client.target(sourceNode.getSelf()).path("paths");
+    Response response;
+
+    try {
+      response = target
+        .request()
+        .accept(MediaType.APPLICATION_JSON)
+        .post(Entity.json(pathRequest));
+
+      if (response.getStatus() != 200) { // ok
+        throw new Exception("Post failed with code " + response.getStatus());
+      }
+
+      List<PathResponse> pathResponses = response.readEntity(new GenericType<List<PathResponse>>() {});
+
+      //@TODO validate response
+
+      Map<String, String> nodesById = nodes
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+          e -> e.getValue().getSelf(),
+          Map.Entry::getKey
+        ));
+
+      return pathResponses
+        .stream()
+        .map(pathResponse -> pathResponse.getNodes()
+          .stream()
+          .map(nodesById::get)
+          .collect(Collectors.toList())
+        )
+        .collect(Collectors.toSet());
+    } catch (Exception e) {
+      throw new ServiceException(e);
+    }
   }
 }
