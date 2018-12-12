@@ -198,6 +198,7 @@ public class PathFinderImpl implements PathFinder {
       deleteElement(client.target(nodeResult.getSelf()));
     }
     nodes = null;
+    nodesById = null;
   }
 
   @Override
