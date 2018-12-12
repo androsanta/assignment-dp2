@@ -33,6 +33,7 @@ public class PathFinderImpl implements PathFinder {
   private Boolean isModelLoaded = false;
   private URI restUri;
   private Map<String, NodeResult> nodes;
+  private Map<String, String> nodesById;
   private List<RelationshipResult> relationships;
 
   private JAXBContext jaxbContext;
@@ -116,6 +117,15 @@ public class PathFinderImpl implements PathFinder {
 
       // Save node info
       nodes.put(nodeResult.getData().getId(), nodeResult);
+
+      // Also keep a map between node url and node id
+      nodesById = nodes
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+          e -> e.getValue().getSelf(),
+          Map.Entry::getKey
+        ));
     }
   }
 
@@ -254,15 +264,6 @@ public class PathFinderImpl implements PathFinder {
       List<PathResponse> pathResponses = response.readEntity(new GenericType<List<PathResponse>>() {});
 
       //@TODO validate response
-      //@TODO close client
-
-      Map<String, String> nodesById = nodes
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-          e -> e.getValue().getSelf(),
-          Map.Entry::getKey
-        ));
 
       return pathResponses
         .stream()
