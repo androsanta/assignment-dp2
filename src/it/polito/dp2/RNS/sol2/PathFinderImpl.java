@@ -263,7 +263,12 @@ public class PathFinderImpl implements PathFinder {
 
       List<PathResponse> pathResponses = response.readEntity(new GenericType<List<PathResponse>>() {});
 
-      //@TODO validate response
+      client.close();
+
+      for (PathResponse pathResponse : pathResponses) {
+        JAXBSource jaxbSource = new JAXBSource(jaxbContext, new ObjectFactory().createPathResponse(pathResponse));
+        validator.validate(jaxbSource);
+      }
 
       return pathResponses
         .stream()

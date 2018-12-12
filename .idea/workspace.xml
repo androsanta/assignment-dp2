@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d87cdd70-6eab-43f9-9de2-ee9915d5195d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -59,7 +58,7 @@
           <entry key="gitignore" value="14" />
           <entry key="html" value="1" />
           <entry key="iml" value="1" />
-          <entry key="java" value="378" />
+          <entry key="java" value="381" />
           <entry key="txt" value="3" />
           <entry key="xml" value="70" />
           <entry key="xsd" value="43" />
@@ -70,7 +69,7 @@
           <entry key="CLASS" value="138" />
           <entry key="HTML" value="1" />
           <entry key="IDEA_MODULE" value="1" />
-          <entry key="JAVA" value="378" />
+          <entry key="JAVA" value="381" />
           <entry key="Manifest" value="1" />
           <entry key="PLAIN_TEXT" value="24" />
           <entry key="XML" value="113" />
@@ -81,7 +80,7 @@
           <entry key="class" value="4" />
           <entry key="dummy" value="26" />
           <entry key="gitignore" value="123" />
-          <entry key="java" value="24007" />
+          <entry key="java" value="24180" />
           <entry key="xml" value="1177" />
           <entry key="xsd" value="6226" />
         </counts>
@@ -89,7 +88,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="4" />
-          <entry key="JAVA" value="24007" />
+          <entry key="JAVA" value="24180" />
           <entry key="PLAIN_TEXT" value="149" />
           <entry key="XML" value="7403" />
         </counts>
@@ -104,27 +103,48 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="935">
-              <caret line="266" lean-forward="true" selection-start-line="266" selection-end-line="266" />
-              <folding>
-                <element signature="method#PathFinderImpl#0;class#PathFinderImpl#0" />
-                <element signature="method#loadReader#0;class#PathFinderImpl#0" />
-                <element signature="e#2661#2700#0" />
-                <element signature="e#3547#3567#0" />
-                <element signature="method#loadConnections#0;class#PathFinderImpl#0" />
-                <element signature="method#deleteElement#0;class#PathFinderImpl#0" />
-                <element signature="method#unloadModel#0;class#PathFinderImpl#0" />
-                <element signature="method#reloadModel#0;class#PathFinderImpl#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.7768707">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1145">
+                  <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
+                  <folding>
+                    <element signature="method#PathFinderImpl#0;class#PathFinderImpl#0" />
+                    <element signature="method#loadReader#0;class#PathFinderImpl#0" />
+                    <element signature="method#loadNodes#0;class#PathFinderImpl#0" />
+                    <element signature="e#2661#2700#0" />
+                    <element signature="e#3547#3567#0" />
+                    <element signature="method#loadConnections#0;class#PathFinderImpl#0" />
+                    <element signature="method#deleteElement#0;class#PathFinderImpl#0" />
+                    <element signature="method#unloadModel#0;class#PathFinderImpl#0" />
+                    <element signature="method#reloadModel#0;class#PathFinderImpl#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/S251579/test/Test.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="285">
+                  <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -246,7 +266,7 @@
       <scroll-view-position x="0" y="0" />
     </layout>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="2225" />
     <option name="height" value="1374" />
@@ -302,10 +322,10 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/andrea/Desktop/Distributed II/Assignments/assignment1-dp2/src/it/polito/dp2/RNS/lab1/tests/RnsTests.java" />
+    <property name="SearchEverywhereHistoryKey" value="test&#9;PSI&#9;JAVA://S251579.test.Test" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544391796797" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544616377227" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -463,7 +483,7 @@
       <workItem from="1544375651111" duration="12904000" />
       <workItem from="1544453350916" duration="1503000" />
       <workItem from="1544562422001" duration="227000" />
-      <workItem from="1544611808532" duration="935000" />
+      <workItem from="1544611808532" duration="1846000" />
     </task>
     <servers />
   </component>
@@ -488,7 +508,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="199949000" />
+    <option name="totallyTimeSpent" value="200860000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -500,10 +520,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="2225" height="1374" extended-state="0" />
+    <frame x="0" y="23" width="2560" height="1374" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" visible="true" weight="0.14338067" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4994872" visible="true" weight="0.124305" />
       <window_info id="Structure" order="1" sideWeight="0.50051284" side_tool="true" weight="0.1673774" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -614,7 +634,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gen-src/it/polito/dp2/RNS/sol2/rest/client/node/NodeProperty.java" />
     <entry file="file://$PROJECT_DIR$/gen-src/it/polito/dp2/RNS/sol2/rest/client/node/ObjectFactory.java" />
     <entry file="file://$PROJECT_DIR$/gen-src/it/polito/dp2/RNS/sol2/rest/client/node/NodeResult.java" />
     <entry file="jar://$PROJECT_DIR$/lib/javax.ws.rs-api-2.0.1-sources.jar!/javax/ws/rs/core/UriBuilder.java">
@@ -806,16 +825,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/S251579/test/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/custom/restClient.xsd">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
@@ -932,13 +941,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/S251579/test/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/src.zip!/javax/xml/validation/Validator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="121" column="35" selection-start-line="121" selection-start-column="35" selection-end-line="121" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="266" lean-forward="true" selection-start-line="266" selection-end-line="266" />
+        <state relative-caret-position="1145">
+          <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
           <folding>
             <element signature="method#PathFinderImpl#0;class#PathFinderImpl#0" />
             <element signature="method#loadReader#0;class#PathFinderImpl#0" />
+            <element signature="method#loadNodes#0;class#PathFinderImpl#0" />
             <element signature="e#2661#2700#0" />
             <element signature="e#3547#3567#0" />
             <element signature="method#loadConnections#0;class#PathFinderImpl#0" />
