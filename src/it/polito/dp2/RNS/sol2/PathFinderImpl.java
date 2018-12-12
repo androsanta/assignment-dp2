@@ -254,6 +254,7 @@ public class PathFinderImpl implements PathFinder {
       List<PathResponse> pathResponses = response.readEntity(new GenericType<List<PathResponse>>() {});
 
       //@TODO validate response
+      //@TODO close client
 
       Map<String, String> nodesById = nodes
         .entrySet()
