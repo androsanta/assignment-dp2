@@ -25,7 +25,7 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
 
   public static void main (String[] args) {
     //@TODO remove before submitting solution
-    System.setProperty("it.polito.dp2.RNS.sol1.RnsInfo.file", "xsd/rnsInfo.xml");
+    // System.setProperty("it.polito.dp2.RNS.sol1.RnsInfo.file", "xsd/rnsInfo.xml");
     RnsReaderFactory factory = new RnsReaderFactory();
 
     try {
