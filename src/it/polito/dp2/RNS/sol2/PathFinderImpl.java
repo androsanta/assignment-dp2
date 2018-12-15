@@ -216,6 +216,7 @@ public class PathFinderImpl implements PathFinder {
 
     RnsReader reader = loadReader();
     nodes = new HashMap<>();
+    nodesById = new HashMap<>();
     relationships = new ArrayList<>();
 
     loadNodes(client, reader.getPlaces(null));
