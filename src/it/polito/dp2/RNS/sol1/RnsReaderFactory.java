@@ -25,7 +25,7 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
 
   public static void main (String[] args) {
     //@TODO remove before submitting solution
-    // System.setProperty("it.polito.dp2.RNS.sol1.RnsInfo.file", "output.xml");
+    System.setProperty("it.polito.dp2.RNS.sol1.RnsInfo.file", "xsd/rnsInfo.xml");
     RnsReaderFactory factory = new RnsReaderFactory();
 
     try {
@@ -62,16 +62,22 @@ public class RnsReaderFactory extends it.polito.dp2.RNS.RnsReaderFactory {
       // Unmarshall and return value (safe cast because the file has been validated)
       rns = (Rns) u.unmarshal(new File(fileName));
     } catch (JAXBException | SAXException e) {
-      System.out.println("Caught JAXB Exception");
       throw new RnsReaderException(e);
     }
   }
 
-  private void loadRns () {
+  private void loadRns () throws RnsReaderException {
     this.reader = new RnsLib();
     loadPlaces();
     createConnections();
     loadVehicles();
+
+    // Check if place is connected to itself and that place capacity is respected
+    try {
+      PlaceValidation.validateReader(reader);
+    } catch (PlaceValidationException e) {
+      throw new RnsReaderException(e);
+    }
   }
 
   private void loadPlaces () {

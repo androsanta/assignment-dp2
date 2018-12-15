@@ -4,7 +4,7 @@
   xsd:noNamespaceSchemaLocation="rnsInfo.xsd">
 
   <places>
-    <roadSegment id="1" capacity="10" roadName="corsocastels" name="castelfidardo">
+    <roadSegment id="1" capacity="5" roadName="corsocastels" name="castelfidardo">
       <connections>
         <connection id="2"/>
       </connections>
@@ -43,10 +43,18 @@
   </places>
 
   <vehicles>
-    <vehicle id="CG556WM" position="1" origin="2" destination="2"
-             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA556WM" position="3" origin="2" destination="3"
-             entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CG556WM" position="1" origin="2" destination="2" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA556WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA546WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA536WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA526WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA566WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA596WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="CA586WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="C6556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="C3556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="C1556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
+    <vehicle id="C2556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
   </vehicles>
 
 </rns>

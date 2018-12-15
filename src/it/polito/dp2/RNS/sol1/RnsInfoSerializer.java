@@ -211,7 +211,7 @@ public class RnsInfoSerializer {
     } catch (org.xml.sax.SAXException e) {
       System.out.println("Caught SAX Exception");
       e.printStackTrace();
-    } catch (Exception e) {
+    } catch (PlaceValidationException e) {
       System.out.println("Caught PlaceValidationException");
       e.printStackTrace();
     }

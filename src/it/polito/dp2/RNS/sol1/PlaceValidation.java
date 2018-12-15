@@ -26,7 +26,7 @@ public class PlaceValidation {
     return count <= placeReader.getCapacity();
   }
 
-  public static void validateReader (RnsReader reader) throws Exception {
+  public static void validateReader (RnsReader reader) throws PlaceValidationException {
     long validPlaces = reader
       .getPlaces(null)
       .stream()
