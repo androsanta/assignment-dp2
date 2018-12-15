@@ -11,6 +11,7 @@ public class PlaceValidation {
   private PlaceValidation () {}
 
   private static Boolean checkSelfConnection (PlaceReader placeReader) {
+    // return true if place is connected to itself
     return placeReader
       .getNextPlaces()
       .stream()
@@ -23,19 +24,18 @@ public class PlaceValidation {
       .filter(vehicle -> vehicle.getPosition().getId().equals(placeReader.getId()))
       .count();
 
-    return count <= placeReader.getCapacity();
+    // return true if place capacity not exceed
+    return count > placeReader.getCapacity();
   }
 
   public static void validateReader (RnsReader reader) throws PlaceValidationException {
-    long validPlaces = reader
-      .getPlaces(null)
-      .stream()
-      .filter(PlaceValidation::checkSelfConnection)
-      .filter(place -> checkPlaceCapacity(place, reader.getVehicles(null, null, null)))
-      .count();
-
-    if (validPlaces != reader.getPlaces(null).size()) {
-      throw new PlaceValidationException("Invalid Reader content, capacity exceeded or place is connected to itself");
+    for (PlaceReader placeReader : reader.getPlaces(null)) {
+      if (checkSelfConnection(placeReader)) {
+        throw new PlaceValidationException("Invalid Reader content, place " + placeReader.getId() + " is connected to itself");
+      }
+      if (checkPlaceCapacity(placeReader, reader.getVehicles(null, null, null))) {
+        throw new PlaceValidationException("Invalid Reader content, place " + placeReader.getId() + " capacity exceeded");
+      }
     }
   }
 

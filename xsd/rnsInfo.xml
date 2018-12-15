@@ -16,7 +16,6 @@
     </roadSegment>
     <parkingArea id="2" capacity="10">
       <connections>
-        <connection id="2"/>
         <connection id="3"/>
       </connections>
       <services>
@@ -47,10 +46,6 @@
     <vehicle id="CA556WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
     <vehicle id="CA546WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
     <vehicle id="CA536WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA526WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA566WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA596WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
-    <vehicle id="CA586WM" position="1" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
     <vehicle id="C6556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
     <vehicle id="C3556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>
     <vehicle id="C1556WM" position="3" origin="2" destination="3" entryTime="2002-05-30T09:00:00" state="PARKED" type="CAR"/>

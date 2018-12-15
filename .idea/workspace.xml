@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d87cdd70-6eab-43f9-9de2-ee9915d5195d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xsd/rnsInfo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/xsd/rnsInfo.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -83,17 +83,17 @@
           <entry key="class" value="4" />
           <entry key="dummy" value="26" />
           <entry key="gitignore" value="123" />
-          <entry key="java" value="25047" />
-          <entry key="xml" value="1201" />
+          <entry key="java" value="25449" />
+          <entry key="xml" value="1203" />
           <entry key="xsd" value="6226" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="4" />
-          <entry key="JAVA" value="25047" />
+          <entry key="JAVA" value="25449" />
           <entry key="PLAIN_TEXT" value="149" />
-          <entry key="XML" value="7427" />
+          <entry key="XML" value="7429" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -107,13 +107,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-10">
-              <caret line="63" column="35" selection-start-line="63" selection-start-column="35" selection-end-line="63" selection-end-column="35" />
+            <state relative-caret-position="376">
+              <caret line="50" column="7" selection-start-line="50" selection-start-column="7" selection-end-line="50" selection-end-column="7" />
               <folding>
-                <element signature="method#setProperties#0;class#RnsInfoSerializer#0" />
                 <element signature="method#serializePlace#0;class#RnsInfoSerializer#0" />
                 <element signature="e#2170#2330#0" />
                 <element signature="method#serializeParkingAreas#0;class#RnsInfoSerializer#0" />
@@ -130,33 +129,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsLib.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding>
-                <element signature="method#getPlaces#0;class#RnsLib#0" />
-                <element signature="method#getGates#0;class#RnsLib#0" />
-                <element signature="method#getRoadSegments#0;class#RnsLib#0" />
-                <element signature="method#getParkingAreas#0;class#RnsLib#0" />
-                <element signature="method#getVehicles#0;class#RnsLib#0" />
-                <element signature="e#2227#2343#0" />
-                <element signature="e#2359#2463#0" />
-                <element signature="e#2479#2600#0" />
-                <element signature="method#addPlace#0;class#RnsLib#0" />
-                <element signature="method#addPlace#1;class#RnsLib#0" />
-                <element signature="method#addPlace#2;class#RnsLib#0" />
-                <element signature="method#addConnections#0;class#RnsLib#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="43" column="32" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
+            <state relative-caret-position="165">
+              <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
               <folding>
                 <element signature="method#loadPlaces#0;class#RnsReaderFactory#0" />
                 <element signature="method#createConnections#0;class#RnsReaderFactory#0" />
@@ -170,22 +146,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+            <state relative-caret-position="270">
+              <caret line="18" column="28" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/output.xml">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-543" />
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="28" column="86" selection-start-line="28" selection-start-column="86" selection-end-line="28" selection-end-column="86" />
+            <state relative-caret-position="255">
+              <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -293,10 +271,10 @@
         <option value="$PROJECT_DIR$/xsd/rnsInfo.xsd" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol2/PathFinderImpl.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidationException.java" />
-        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java" />
-        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java" />
         <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java" />
         <option value="$PROJECT_DIR$/xsd/rnsInfo.xml" />
+        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java" />
+        <option value="$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java" />
       </list>
     </option>
   </component>
@@ -383,7 +361,7 @@
     <property name="SearchEverywhereHistoryKey" value="test&#9;PSI&#9;JAVA://S251579.test.Test" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544870592319" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544874359088" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -403,7 +381,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.RnsReaderFactory">
+  <component name="RunManager" selected="Application.RnsInfoSerializer">
     <configuration name="PathFinderFactory" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="it.polito.dp2.RNS.sol2.PathFinderFactory" />
       <module name="assignment1-dp2" />
@@ -488,11 +466,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.RnsInfoSerializer" />
         <item itemvalue="Application.RnsReaderFactory" />
         <item itemvalue="Application.Test" />
         <item itemvalue="JUnit.RNSTests.testUnknownSource" />
         <item itemvalue="Application.PathFinderFactory" />
-        <item itemvalue="Application.RnsInfoSerializer" />
       </list>
     </recent_temporary>
   </component>
@@ -542,7 +520,7 @@
       <workItem from="1544453350916" duration="1503000" />
       <workItem from="1544562422001" duration="227000" />
       <workItem from="1544611808532" duration="3667000" />
-      <workItem from="1544869671605" duration="965000" />
+      <workItem from="1544869671605" duration="3823000" />
     </task>
     <servers />
   </component>
@@ -567,7 +545,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="203646000" />
+    <option name="totallyTimeSpent" value="206504000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -591,7 +569,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32943013" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.2402496" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2402496" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49960285" weight="0.27613103" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -600,7 +578,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49960285" weight="0.32839313" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50039715" side_tool="true" weight="0.2301092" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.21294852" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49960285" weight="0.20046802" />
       <window_info anchor="bottom" id="Java Enterprise" order="12" weight="0.32839313" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.1115965" />
@@ -1035,12 +1013,34 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/output.xml">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-543" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="28" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
+          <folding>
+            <element signature="method#loadPlaces#0;class#RnsReaderFactory#0" />
+            <element signature="method#createConnections#0;class#RnsReaderFactory#0" />
+            <element signature="e#3556#3884#0" />
+            <element signature="method#loadVehicles#0;class#RnsReaderFactory#0" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/PlaceValidation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="86" selection-start-line="28" selection-start-column="86" selection-end-line="28" selection-end-column="86" />
+        <state relative-caret-position="255">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1049,10 +1049,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsInfoSerializer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="63" column="35" selection-start-line="63" selection-start-column="35" selection-end-line="63" selection-end-column="35" />
+        <state relative-caret-position="376">
+          <caret line="50" column="7" selection-start-line="50" selection-start-column="7" selection-end-line="50" selection-end-column="7" />
           <folding>
-            <element signature="method#setProperties#0;class#RnsInfoSerializer#0" />
             <element signature="method#serializePlace#0;class#RnsInfoSerializer#0" />
             <element signature="e#2170#2330#0" />
             <element signature="method#serializeParkingAreas#0;class#RnsInfoSerializer#0" />
@@ -1063,26 +1062,6 @@
             <element signature="method#setVehicleEntryTime#0;class#RnsInfoSerializer#0" />
             <element signature="method#serializeVehicles#0;class#RnsInfoSerializer#0" />
             <element signature="e#4874#5399#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xsd/rnsInfo.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/it/polito/dp2/RNS/sol1/RnsReaderFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="43" column="32" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
-          <folding>
-            <element signature="method#loadPlaces#0;class#RnsReaderFactory#0" />
-            <element signature="method#createConnections#0;class#RnsReaderFactory#0" />
-            <element signature="e#3556#3884#0" />
-            <element signature="method#loadVehicles#0;class#RnsReaderFactory#0" />
           </folding>
         </state>
       </provider>

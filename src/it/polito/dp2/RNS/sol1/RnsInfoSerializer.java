@@ -38,7 +38,7 @@ public class RnsInfoSerializer {
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.seed",
-      "1211530"
+      "1123956"
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.testcase",
@@ -56,10 +56,9 @@ public class RnsInfoSerializer {
     }
 
     final String output = args[0];
-    RnsInfoSerializer rnsInfo;
 
     try {
-      rnsInfo = new RnsInfoSerializer();
+      RnsInfoSerializer rnsInfo = new RnsInfoSerializer();
       rnsInfo.serialize(output);
     } catch (RnsReaderException e) {
       System.out.println("Error while instantiating Rns Serializer");
