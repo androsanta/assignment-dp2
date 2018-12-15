@@ -26,14 +26,12 @@ public class RnsInfoSerializer {
   private Rns rns;
 
   public RnsInfoSerializer () throws RnsReaderException {
-    //@TODO remove before submitting solution
-    // setProperties();
     RnsReaderFactory factory = RnsReaderFactory.newInstance();
     reader = factory.newRnsReader();
     rns = new Rns();
   }
 
-  private void setProperties () {
+  private static void setProperties () {
     System.setProperty(
       "it.polito.dp2.RNS.RnsReaderFactory",
       "it.polito.dp2.RNS.Random.RnsReaderFactoryImpl"
@@ -44,11 +42,13 @@ public class RnsInfoSerializer {
     );
     System.setProperty(
       "it.polito.dp2.RNS.Random.testcase",
-      "1"
+      "2"
     );
   }
 
   public static void main (String[] args) {
+    //@TODO remove before submitting solution
+    // setProperties();
 
     if (args.length != 1) {
       System.out.println("Specify an output file as argument");
@@ -143,8 +143,6 @@ public class RnsInfoSerializer {
   private void serializePlaces () {
     PlacesType placesType = new PlacesType();
 
-    //@TODO check if place is connected to itselft
-    //@TODO check that place capacity is respected
     placesType.getRoadSegment().addAll(serializeRoadSegments());
     placesType.getParkingArea().addAll(serializeParkingAreas());
     placesType.getGate().addAll(serializeGates());
@@ -191,6 +189,9 @@ public class RnsInfoSerializer {
     serializeVehicles();
 
     try {
+      // Check if place is connected to itself and that place capacity is respected
+      PlaceValidation.validateReader(reader);
+
       // Instantiate JAXB context
       JAXBContext jaxbContext = JAXBContext.newInstance("it.polito.dp2.RNS.sol1.jaxb");
       // Create Marshaller
@@ -209,6 +210,9 @@ public class RnsInfoSerializer {
       e.printStackTrace();
     } catch (org.xml.sax.SAXException e) {
       System.out.println("Caught SAX Exception");
+      e.printStackTrace();
+    } catch (Exception e) {
+      System.out.println("Caught PlaceValidationException");
       e.printStackTrace();
     }
   }
