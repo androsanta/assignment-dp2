@@ -1,119 +1,66 @@
 <?xml version="1.0"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-  <!-- Road Navigation System -->
+  <!-- Road Navigation System - rest entry point -->
   <xsd:element name="rns">
-
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="places" type="PlacesType"/>
-        <xsd:element name="vehicles" type="VehiclesType"/>
+        <xsd:element name="places" type="xsd:anyURI"/>
+        <xsd:element name="vehicles" type="xsd:anyURI"/>
       </xsd:sequence>
     </xsd:complexType>
-
-    <!-- All identified entity must be globally unique -->
-    <xsd:unique name="identifiedEntityUnique">
-      <xsd:selector xpath="places/roadSegment|places/parkingArea|places/gate|vehicles/vehicle"/>
-      <xsd:field xpath="@id"/>
-    </xsd:unique>
-
-    <!-- Places must be referenced -->
-    <xsd:key name="placesKey">
-      <xsd:selector xpath="places/roadSegment|places/parkingArea|places/gate"/>
-      <xsd:field xpath="@id"/>
-    </xsd:key>
-
-    <!-- Connection must refer to a place -->
-    <xsd:keyref name="placesKeyref" refer="placesKey">
-      <xsd:selector xpath="places/roadSegment/connections/connection|places/parkingArea/connections/connection|places/gate/connections/connection"/>
-      <xsd:field xpath="@id"/>
-    </xsd:keyref>
-
-    <!-- A RoadSegment is unique within the road -->
-    <xsd:unique name="uniqueSegmentInRoad">
-      <xsd:selector xpath="places/roadSegment"/>
-      <xsd:field xpath="@roadName"/>
-      <xsd:field xpath="@name"/>
-    </xsd:unique>
-
-    <!-- Vehicle position, origin and destination must refer to a valid place -->
-    <xsd:keyref name="positionPlaceKeyref" refer="placesKey">
-      <xsd:selector xpath="vehicles/vehicle"/>
-      <xsd:field xpath="@position"/>
-    </xsd:keyref>
-
-    <xsd:keyref name="originPlaceKeyref" refer="placesKey">
-      <xsd:selector xpath="vehicles/vehicle"/>
-      <xsd:field xpath="@origin"/>
-    </xsd:keyref>
-
-    <xsd:keyref name="destinationPlaceKeyref" refer="placesKey">
-      <xsd:selector xpath="vehicles/vehicle"/>
-      <xsd:field xpath="@destination"/>
-    </xsd:keyref>
-
   </xsd:element>
 
-
-  <!-- Places -->
-  <xsd:complexType name="PlacesType">
-    <xsd:sequence>
-      <xsd:element name="roadSegment" type="RoadSegmentType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="parkingArea" type="ParkingAreaType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="gate" type="GateType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <!-- Connections -->
-  <xsd:complexType name="ConnectionsType">
-    <xsd:sequence>
-      <xsd:element name="connection" type="ConnectionType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="ConnectionType">
-    <xsd:attribute name="id" type="xsd:string" use="required"/>
-  </xsd:complexType>
+  <!-- Places - also returned from connections hyperlink -->
+  <xsd:element name="places">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="roadSegment" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="parkingArea" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="gate" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
 
   <!-- Generic Place -->
   <xsd:complexType name="PlaceType">
     <xsd:sequence>
-      <xsd:element name="connections" type="ConnectionsType">
-        <xsd:unique name="uniqueConnection">
-          <xsd:selector xpath="connection"/>
-          <xsd:field xpath="@id"/>
-        </xsd:unique>
-      </xsd:element>
+      <xsd:element name="connections" type="xsd:anyURI"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="self" type="xsd:anyURI"/>
     <xsd:attribute name="capacity" type="xsd:positiveInteger" use="required"/>
   </xsd:complexType>
 
   <!-- RoadSegment -->
-  <xsd:complexType name="RoadSegmentType">
-    <xsd:complexContent>
-      <xsd:extension base="PlaceType">
-        <xsd:attribute name="roadName" type="xsd:string" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="required"/>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+  <xsd:element name="roadSegment">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="PlaceType">
+          <xsd:attribute name="roadName" type="xsd:string" use="required"/>
+          <xsd:attribute name="name" type="xsd:string" use="required"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
 
   <!-- Parking Area and Services -->
-  <xsd:complexType name="ParkingAreaType">
-    <xsd:complexContent>
-      <xsd:extension base="PlaceType">
-        <xsd:sequence>
-          <xsd:element name="services" type="ServicesType">
-            <xsd:unique name="uniqueService">
-              <xsd:selector xpath="service"/>
-              <xsd:field xpath="@name"/>
-            </xsd:unique>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+  <xsd:element name="parkingArea">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="PlaceType">
+          <xsd:sequence>
+            <xsd:element name="services" type="ServicesType">
+              <xsd:unique name="uniqueService">
+                <xsd:selector xpath="service"/>
+                <xsd:field xpath="@name"/>
+              </xsd:unique>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
 
   <xsd:complexType name="ServicesType">
     <xsd:sequence>
@@ -126,30 +73,37 @@
   </xsd:complexType>
 
   <!-- Gates -->
-  <xsd:complexType name="GateType">
-    <xsd:complexContent>
-      <xsd:extension base="PlaceType">
-        <xsd:attribute name="type" type="GateTypeEnum" use="required"/>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+  <xsd:element name="gate">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="PlaceType">
+          <xsd:attribute name="type" type="GateTypeEnum" use="required"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
 
   <!-- Vehicles -->
-  <xsd:complexType name="VehiclesType">
-    <xsd:sequence>
-      <xsd:element name="vehicle" type="VehicleType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+  <xsd:element name="vehicles">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="vehicle" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
 
-  <xsd:complexType name="VehicleType">
-    <xsd:attribute name="id" type="xsd:string" use="required" />
-    <xsd:attribute name="position" type="xsd:string" use="required" />
-    <xsd:attribute name="origin" type="xsd:string" use="required"/>
-    <xsd:attribute name="destination" type="xsd:string" use="required"/>
-    <xsd:attribute name="entryTime" type="xsd:dateTime" use="required"/>
-    <xsd:attribute name="state" type="VehicleStateEnum" use="required"/>
-    <xsd:attribute name="type" type="VehicleTypeEnum" use="required"/>
-  </xsd:complexType>
+  <xsd:element name="vehicle">
+    <xsd:complexType>
+      <xsd:attribute name="self" type="xsd:anyURI"/>
+      <xsd:attribute name="id" type="xsd:string" use="required"/>
+      <xsd:attribute name="position" type="xsd:string" use="required"/>
+      <xsd:attribute name="origin" type="xsd:string" use="required"/>
+      <xsd:attribute name="destination" type="xsd:string" use="required"/>
+      <xsd:attribute name="entryTime" type="xsd:dateTime" use="required"/>
+      <xsd:attribute name="state" type="VehicleStateEnum" use="required"/>
+      <xsd:attribute name="type" type="VehicleTypeEnum" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
 
   <!-- Enumerations -->
   <xsd:simpleType name="VehicleStateEnum">
