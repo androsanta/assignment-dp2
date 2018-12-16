@@ -19,6 +19,8 @@
         <xsd:element ref="parkingArea" minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element ref="gate" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="totalPages" type="xsd:positiveInteger"/>
+      <xsd:attribute name="page" type="xsd:positiveInteger"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -50,7 +52,7 @@
       <xsd:complexContent>
         <xsd:extension base="PlaceType">
           <xsd:sequence>
-            <xsd:element name="services" type="ServicesType">
+            <xsd:element name="services" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
               <xsd:unique name="uniqueService">
                 <xsd:selector xpath="service"/>
                 <xsd:field xpath="@name"/>
@@ -61,16 +63,6 @@
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
-
-  <xsd:complexType name="ServicesType">
-    <xsd:sequence>
-      <xsd:element name="service" type="ServiceType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="ServiceType">
-    <xsd:attribute name="name" type="xsd:string"/>
-  </xsd:complexType>
 
   <!-- Gates -->
   <xsd:element name="gate">
@@ -89,6 +81,8 @@
       <xsd:sequence>
         <xsd:element ref="vehicle" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="totalPages" type="xsd:positiveInteger"/>
+      <xsd:attribute name="page" type="xsd:positiveInteger"/>
     </xsd:complexType>
   </xsd:element>
 

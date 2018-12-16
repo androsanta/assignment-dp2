@@ -2,7 +2,7 @@ RESOURCE                    | VERB       | QUERY PARAMS             | STATUS    
 -------------------------------------------------------------------------------------------------------------------------------
 rns                         | GET        | none                     | 200 ok             | hyperlinks to vehicles and places  |
 -------------------------------------------------------------------------------------------------------------------------------
-rns/vehicles                | GET        | entrytime etc..          | 200 ok             | found vehicles                     |
+rns/vehicles                | GET        | page number              | 200 ok             | found vehicles                     |
                             ---------------------------------------------------------------------------------------------------
                             | POST       | body: vehicle to insert  | 201 created        |                                    |
                             |            |                          | 400 bad request    |                                    |
@@ -17,7 +17,7 @@ rns/vehicles/{id}           | GET        | none                     | 200 ok    
                             | DELETE     | none                     | 204 no content     |                                    |
                             |            |                          | 404 not found      |                                    |
 -------------------------------------------------------------------------------------------------------------------------------
-rns/places                  | GET        |                          | 200 ok             | places list                        |
+rns/places                  | GET        | page number              | 200 ok             | places list                        |
 -------------------------------------------------------------------------------------------------------------------------------
 rns/places/{id}             | GET        |                          | 200 ok             | place                              |
                             |            |                          | 404 not found      |                                    |
