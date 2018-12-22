@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build-service" name="RNS-SOL3">
+  <description>
+    Script for RNS Assignment 2 solution
+  </description>
+
+  <property name="gen.dir" value="${basedir}/gen-src"/>
+  <property name="schema.dir" value="${basedir}/xsd"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="src.dir" location="${basedir}/src"/>
+
+  <property name="lib.dir" location="${basedir}/lib"/>
+  <property name="lib.src.dir" location="${basedir}/lib-src"/>
+  <property name="shared.location" location="/opt/dp2/shared"/>
+  <property name="ext.lib.dir" location="${shared.location}/lib"/>
+
+  <property name="debug" value="false"/>
+  <property name="target" value="1.8"/>
+  <property name="source" value="1.8"/>
+
+  <path id="sol.classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${ext.lib.dir}">
+      <include name="*.jar" />
+      <exclude name="ant-*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${gen.dir}"/>
+  </target>
+
+  <target name="generate-artifacts" depends="init">
+    <exec executable="xjc" failonerror="true">
+      <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol3.rest.service.jaxb"/>
+      <arg line="${schema.dir}/RnsSystem.xsd"/>
+    </exec>
+  </target>
+
+  <target name="build-service" depends="generate-artifacts">
+    <echo>Building the solution</echo>
+    <javac
+      destdir="${build.dir}"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      includeantruntime="false">
+      <src path="${src.dir}"/>
+      <src path="${gen.dir}"/>
+      <include name="it/polito/dp2/RNS/sol3/**"/>
+      <classpath>
+        <path refid="sol.classpath" />
+      </classpath>
+    </javac>
+    <echo>Done.</echo>
+  </target>
+
+</project>
