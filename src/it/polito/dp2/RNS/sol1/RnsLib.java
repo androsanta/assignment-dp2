@@ -60,15 +60,15 @@ public class RnsLib implements RnsReader {
   }
 
   @Override
-  public Set<ParkingAreaReader> getParkingAreas (Set<String> set) {
-    if (set == null) {
+  public Set<ParkingAreaReader> getParkingAreas (Set<String> services) {
+    if (services == null) {
       return new HashSet<>(parkingAreas.values());
     }
 
     return parkingAreas.entrySet()
       .stream()
       .map(Map.Entry::getValue)
-      .filter(pa -> pa.getServices().containsAll(set))
+      .filter(pa -> pa.getServices().containsAll(services))
       .collect(Collectors.toSet());
   }
 

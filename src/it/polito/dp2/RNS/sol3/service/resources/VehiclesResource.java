@@ -3,7 +3,7 @@ package it.polito.dp2.RNS.sol3.service.resources;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterRequest;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicles;
 
@@ -30,7 +30,7 @@ public class VehiclesResource {
   })
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Vehicle createVehicle (EnterRequest enterRequest) {
+  public Vehicle createVehicle (EnterVehicle enterRequest) {
 
     return null;
   }
