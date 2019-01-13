@@ -1,6 +1,6 @@
 package S251579.test;
 
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.Places;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicles;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -8,7 +8,15 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Test {
 
@@ -34,18 +42,40 @@ public class Test {
       "1"
     );
 
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    Date d = null;
+    try {
+      d = format.parse("2018-01-12T19:08:41.428+01:00");
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    GregorianCalendar gg = new GregorianCalendar();
+    gg.setTime(d);
     Client client = ClientBuilder.newClient();
     String uri = "http://192.168.1.5:8080/RnsSystem/rest";
-    URI restUri = UriBuilder.fromUri(uri).path("rns").build();
-    WebTarget target = client.target(restUri).path("places");
+    URI restUri = null;
+    XMLGregorianCalendar xmlGregorianCalendar = null;
+    try {
+      xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gg);
+      System.out.println(xmlGregorianCalendar.toString());
+    } catch (DatatypeConfigurationException e) {
+      e.printStackTrace();
+    }
+
+    restUri = UriBuilder.fromUri(uri)
+      .path("rns")
+      .path("vehicles")
+      .queryParam("admin", true)
+      .queryParam("since", xmlGregorianCalendar)
+      .build();
+    WebTarget target = client.target(restUri);
     Response response = target
       .request()
       .accept(MediaType.APPLICATION_XML)
       .get();
 
-    Places places = response.readEntity(Places.class);
-    places.getPlace().forEach(place -> System.out.println(place.getId()));
-
+    Vehicles vehicles = response.readEntity(Vehicles.class);
+    vehicles.setTotalPages(BigInteger.ONE);
     response.close();
 
 

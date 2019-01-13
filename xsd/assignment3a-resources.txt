@@ -1,27 +1,27 @@
 RESOURCE                    | VERB       | QUERY - BODY PARAMS      | STATUS             | RESP BODY                          | ADMIN DIST     |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns                         | GET        | none                     | 200 ok             | rns                                | No             |
+rns                         | GET        | none                     | 200 ok             | rns                                | No             | x
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/vehicles                | GET        | body: vehiclesRequest    | 200 ok             | vehicles                           | Yes            |
+rns/vehicles                | GET        | queryprm since,state,type| 200 ok / 403 forb  | vehicles                           | Yes            | x
                             --------------------------------------------------------------------------------------------------------------------
-                            | POST       | body: enterVehicle       | 201 created        | vehicle                            | No             |
+                            | POST       | body: enterVehicle       | 201 created        | vehicle                            | No             | x
                             |            |                          | 400 bad request    |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/vehicles/{id}           | GET        | none                     | 200 ok             | vehicle                            | No             |
+rns/vehicles/{id}           | GET        | none                     | 200 ok             | vehicle                            | No             | x
                             |            |                          | 404 not found      |                                    |                |
                             --------------------------------------------------------------------------------------------------------------------
                             | PUT        | body: updated vehicle    | 204 no content     |                                    | No             |
                             | or PATCH?  |                          | 400 bad request    |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
                             --------------------------------------------------------------------------------------------------------------------
-                            | DELETE     | body: administrator      | 204 no content     | none                               | Yes            |
+                            | DELETE     | body: administrator      | 204 no content     | none                               | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places                  | GET        | body: placesRequest      | 200 ok             | places                             | Yes            |
-                            |            |                          | 403 forbidden      |                                    |                |
+rns/places                  | GET        | body: idsuffix           | 200 ok             | places                             | Yes            | x
+                            |            | admin, page              | 403 forbidden      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/{id}             | GET        | body: administrator      | 200 ok             | place                              | Yes            |
+rns/places/{id}             | GET        | body: administrator      | 200 ok             | place                              | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ rns/places/{id}/vehicles    | GET        | body: administrator      | 200 ok    
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/{id}/connections | GET        | body: administrator      | 200 ok             | list of connections                | Yes            |
+rns/places/{id}/connections | GET        | body: administrator      | 200 ok             | list of places                     | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,15 +37,15 @@ rns/connections             | GET        | body: pageRequest        | 200 ok    
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/roadSegments     | GET        | body: roadSegmentsRequest| 200 ok             | roadSegments                       | Yes            |
+rns/places/roadSegments     | GET        | body: roadSegmentsRequest| 200 ok             | roadSegments                       | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/parkingAreas     | GET        | body: parkingAreasRequest| 200 ok             | parkingAreas                       | Yes            |
+rns/places/parkingAreas     | GET        | body: parkingAreasRequest| 200 ok             | parkingAreas                       | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/gates            | GET        | body: gatesRequest       | 200 ok             | gates                              | Yes            |
+rns/places/gates            | GET        | body: gatesRequest       | 200 ok             | gates                              | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------

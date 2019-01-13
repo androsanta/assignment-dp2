@@ -82,21 +82,9 @@ public class RnsLib implements RnsReader {
     return vehicles.entrySet()
       .stream()
       .map(Map.Entry::getValue)
-      .filter(v -> {
-        if (calendar == null)
-          return true;
-        return v.getEntryTime().after(calendar);
-      })
-      .filter(v -> {
-        if (set == null)
-          return true;
-        return set.contains(v.getType());
-      })
-      .filter(v -> {
-        if (vehicleState == null)
-          return true;
-        return v.getState().equals(vehicleState);
-      })
+      .filter(v -> calendar == null || v.getEntryTime().after(calendar))
+      .filter(v -> set == null || set.contains(v.getType()))
+      .filter(v -> vehicleState == null || v.getState().equals(vehicleState))
       .collect(Collectors.toSet());
   }
 

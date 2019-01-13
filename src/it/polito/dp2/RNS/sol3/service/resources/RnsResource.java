@@ -25,6 +25,7 @@ public class RnsResource {
     Rns rns = new Rns();
     rns.setPlaces(uriInfo.getAbsolutePathBuilder().path("places").toTemplate());
     rns.setVehicles(uriInfo.getAbsolutePathBuilder().path("vehicles").toTemplate());
+    rns.setConnections(uriInfo.getAbsolutePathBuilder().path("connections").toTemplate());
     return rns;
   }
 

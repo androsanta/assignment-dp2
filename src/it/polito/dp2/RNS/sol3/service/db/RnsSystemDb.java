@@ -1,26 +1,44 @@
 package it.polito.dp2.RNS.sol3.service.db;
 
 import it.polito.dp2.RNS.*;
-import it.polito.dp2.RNS.lab2.ModelException;
-import it.polito.dp2.RNS.lab2.PathFinder;
-import it.polito.dp2.RNS.lab2.PathFinderException;
-import it.polito.dp2.RNS.lab2.ServiceException;
+import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.sol2.PathFinderFactory;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleStateEnum;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
 
 import javax.ws.rs.InternalServerErrorException;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class RnsSystemDb {
 
   private static RnsSystemDb db = new RnsSystemDb();
 
   private RnsReader rnsReader;
+  private Map<String, PlaceReader> places;
+
   private PathFinder pathFinder;
   private ConcurrentHashMap<String, Vehicle> trackedVehicles;
 
   private RnsSystemDb () {
+    System.setProperty(
+      "it.polito.dp2.RNS.lab2.PathFinderFactory",
+      "it.polito.dp2.RNS.sol2.PathFinderFactory"
+    );
+    if (System.getProperty("it.polito.dp2.RNS.lab3.Neo4JURL") == null) {
+      System.setProperty(
+        "it.polito.dp2.RNS.lab2.URL",
+        "http://localhost:7474/db"
+      );
+    } else {
+      System.setProperty(
+        "it.polito.dp2.RNS.lab2.URL",
+        System.getProperty("it.polito.dp2.RNS.lab3.Neo4JURL")
+      );
+    }
+
     try {
       // Instantiate the reader
       rnsReader = RnsReaderFactory.newInstance().newRnsReader();
@@ -30,7 +48,7 @@ public class RnsSystemDb {
       // Initialize list of tracked vehicles
       trackedVehicles = new ConcurrentHashMap<>();
     } catch (RnsReaderException | PathFinderException | ServiceException | ModelException e) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(e);
     }
   }
 
@@ -38,8 +56,65 @@ public class RnsSystemDb {
     return db;
   }
 
-  public Set<RoadSegmentReader> getRoadSegments () {
-    return db.rnsReader.getRoadSegments(null);
+  public Set<PlaceReader> getPlaces (String idSuffix) {
+    return db.rnsReader.getPlaces(idSuffix);
+  }
+
+  public PlaceReader getPlace (String id) {
+    return db.rnsReader.getPlace(id);
+  }
+
+  public Set<RoadSegmentReader> getRoadSegments (String roadName) {
+    return db.rnsReader.getRoadSegments(roadName);
+  }
+
+  public Set<ParkingAreaReader> getParkingAreas (Set<String> services) {
+    return db.rnsReader.getParkingAreas(services);
+  }
+
+  public Set<GateReader> getGates (GateType type) {
+    return db.rnsReader.getGates(type);
+  }
+
+  public GateReader getGate (String id) {
+    List<GateReader> gates = rnsReader.getGates(null).stream()
+      .filter(g -> g.getId().equals(id))
+      .collect(Collectors.toList());
+    if (gates.size() == 1)
+      return gates.get(0);
+    return null;
+  }
+
+  public Vehicle addVehicle (Vehicle vehicle) {
+    if (trackedVehicles.putIfAbsent(vehicle.getPlateId(), vehicle) == null) {
+      return vehicle;
+    }
+    return null;
+  }
+
+  public List<String> findShortestPath (String sourceId, String destinationId)
+    throws UnknownIdException, ServiceException, BadStateException {
+    Set<List<String>> paths = pathFinder.findShortestPaths(sourceId, destinationId, 0);
+    if (paths.size() == 0)
+      return new ArrayList<>();
+
+    return new ArrayList<>(paths).get(0);
+  }
+
+  public List<Vehicle> getVehicles (GregorianCalendar since, VehicleStateEnum state, Set<VehicleTypeEnum> types) {
+    return trackedVehicles.values().stream()
+       .filter(v -> since == null || v.getEntryTime().toGregorianCalendar().after(since))
+       .filter(v -> state == null || v.getState().equals(state))
+       .filter(v -> types == null || types.size() == 0 || types.contains(v.getType()))
+      .collect(Collectors.toList());
+  }
+
+  public Vehicle getVehicle (String plateId) {
+    return trackedVehicles.get(plateId);
+  }
+
+  public Vehicle removeVehicle (String plateId) {
+    return trackedVehicles.remove(plateId);
   }
 
 }
