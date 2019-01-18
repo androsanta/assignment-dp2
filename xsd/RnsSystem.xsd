@@ -40,6 +40,17 @@
     </xsd:complexType>
   </xsd:element>
 
+  <xsd:element name="updateVehicle">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:choice>
+          <xsd:element name="state" type="VehicleStateEnum"/>
+          <xsd:element name="position" type="xsd:anyURI"/>
+        </xsd:choice>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
   <xsd:complexType name="PageResponseType">
     <xsd:attribute name="totalPages" type="xsd:positiveInteger"/>
     <xsd:attribute name="page" type="xsd:positiveInteger"/>

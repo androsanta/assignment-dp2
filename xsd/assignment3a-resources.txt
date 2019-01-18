@@ -10,7 +10,7 @@ rns/vehicles                | GET        | queryprm since,state,type| 200 ok / 4
 rns/vehicles/{id}           | GET        | none                     | 200 ok             | vehicle                            | No             | x
                             |            |                          | 404 not found      |                                    |                |
                             --------------------------------------------------------------------------------------------------------------------
-                            | PUT        | body: updated vehicle    | 204 no content     |                                    | No             |
+                            | PUT        | body: updated vehicle    | 204 no content     |                                    | No             | x
                             | or PATCH?  |                          | 400 bad request    |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
                             --------------------------------------------------------------------------------------------------------------------

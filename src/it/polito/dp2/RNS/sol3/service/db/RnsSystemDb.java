@@ -2,7 +2,6 @@ package it.polito.dp2.RNS.sol3.service.db;
 
 import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.lab2.*;
-import it.polito.dp2.RNS.sol2.PathFinderFactory;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleStateEnum;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
@@ -57,23 +56,23 @@ public class RnsSystemDb {
   }
 
   public Set<PlaceReader> getPlaces (String idSuffix) {
-    return db.rnsReader.getPlaces(idSuffix);
+    return rnsReader.getPlaces(idSuffix);
   }
 
   public PlaceReader getPlace (String id) {
-    return db.rnsReader.getPlace(id);
+    return rnsReader.getPlace(id);
   }
 
   public Set<RoadSegmentReader> getRoadSegments (String roadName) {
-    return db.rnsReader.getRoadSegments(roadName);
+    return rnsReader.getRoadSegments(roadName);
   }
 
   public Set<ParkingAreaReader> getParkingAreas (Set<String> services) {
-    return db.rnsReader.getParkingAreas(services);
+    return rnsReader.getParkingAreas(services);
   }
 
   public Set<GateReader> getGates (GateType type) {
-    return db.rnsReader.getGates(type);
+    return rnsReader.getGates(type);
   }
 
   public GateReader getGate (String id) {
@@ -113,8 +112,14 @@ public class RnsSystemDb {
     return trackedVehicles.get(plateId);
   }
 
-  public Vehicle removeVehicle (String plateId) {
-    return trackedVehicles.remove(plateId);
+  public Vehicle updateVehicle (String id, Vehicle updatedVehicle) {
+    return trackedVehicles.computeIfPresent(
+      id,
+      (key, value) -> updatedVehicle
+    );
   }
 
+  public void removeVehicle (String plateId) {
+    trackedVehicles.remove(plateId);
+  }
 }

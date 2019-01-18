@@ -14,11 +14,9 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class PlacesService {
+public class RnsService {
 
   private RnsSystemDb db = RnsSystemDb.getDb();
 
@@ -38,7 +36,7 @@ public class PlacesService {
     places.getPlace().addAll(
       db.getPlaces(idSuffix)
         .stream()
-        .map(PlacesService::createPlaceType)
+        .map(RnsService::createPlaceType)
         .collect(Collectors.toSet())
     );
 
@@ -61,7 +59,7 @@ public class PlacesService {
 
     return placeReader.getNextPlaces()
       .stream()
-      .map(PlacesService::createPlaceType)
+      .map(RnsService::createPlaceType)
       .collect(Collectors.toList());
   }
 
@@ -134,13 +132,13 @@ public class PlacesService {
     return gates;
   }
 
-  public Vehicle addVehicle (Vehicle vehicle) {
-    return db.addVehicle(vehicle);
-  }
-
   public List<String> findShortestPath (String sourceId, String destinationId)
     throws UnknownIdException, ServiceException, BadStateException {
     return db.findShortestPath(sourceId, destinationId);
+  }
+
+  public Vehicle addVehicle (Vehicle vehicle) {
+    return db.addVehicle(vehicle);
   }
 
   public List<Vehicle> getVehicles (GregorianCalendar since, VehicleStateEnum state, Set<VehicleTypeEnum> types) {
@@ -149,6 +147,10 @@ public class PlacesService {
 
   public Vehicle getVehicle (String id) {
     return db.getVehicle(id);
+  }
+
+  public Vehicle updateVehicle (String id, Vehicle vehicle) {
+    return db.updateVehicle(id, vehicle);
   }
 
   public synchronized void removeVehicle (String id, boolean forced) {
@@ -172,5 +174,4 @@ public class PlacesService {
 
     throw new BadRequestException();
   }
-
 }

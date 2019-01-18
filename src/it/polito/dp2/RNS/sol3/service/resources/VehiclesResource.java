@@ -3,12 +3,12 @@ package it.polito.dp2.RNS.sol3.service.resources;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.jaxrs.PATCH;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
-import it.polito.dp2.RNS.sol3.service.PlacesService;
-import org.apache.tools.ant.taskdefs.condition.Not;
+import it.polito.dp2.RNS.sol3.service.RnsService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -29,7 +29,7 @@ public class VehiclesResource {
 
   @Context
   private UriInfo uriInfo;
-  private PlacesService service = new PlacesService();
+  private RnsService service = new RnsService();
 
   @GET
   @ApiOperation(value = "vehicles", notes = "get tracked vehicles")
@@ -158,6 +158,125 @@ public class VehiclesResource {
       throw new NotFoundException();
 
     return vehicle;
+  }
+
+  @PATCH
+  @Path("{id}")
+  @ApiOperation(value = "update vehicle", notes = "update state or position of a vehicle")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 400, message = "Bad Request"),
+    @ApiResponse(code = 404, message = "Not Found")
+  })
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public Vehicle updateVehicle (@PathParam("id") String id, UpdateVehicle updateVehicle) {
+    System.out.println("update vehicle " +  updateVehicle.getState() + " " + updateVehicle.getPosition());
+
+    Vehicle oldVehicle = service.getVehicle(id);
+
+    System.out.println("vehicle " + oldVehicle);
+
+    if (oldVehicle == null)
+      throw new NotFoundException();
+
+    String vehicleId = getIdFromUri(oldVehicle.getSelf());
+
+    Vehicle vehicle = new Vehicle();
+    vehicle.getPlace().addAll(oldVehicle.getPlace());
+    vehicle.setSelf(oldVehicle.getSelf());
+    vehicle.setPlateId(oldVehicle.getPlateId());
+    vehicle.setPosition(oldVehicle.getPosition());
+    vehicle.setOrigin(oldVehicle.getOrigin());
+    vehicle.setDestination(oldVehicle.getDestination());
+    vehicle.setEntryTime(oldVehicle.getEntryTime());
+    vehicle.setState(oldVehicle.getState());
+    vehicle.setType(oldVehicle.getType());
+
+    if (updateVehicle.getState() != null) {
+      System.out.println("changing vehicle state");
+
+      VehicleStateEnum state = updateVehicle.getState();
+      vehicle.setState(state);
+      vehicle = service.updateVehicle(vehicleId, vehicle);
+      if (vehicle == null)
+        throw new InternalServerErrorException(); // or not found?
+      return vehicle;
+    }
+
+    String newPosition = updateVehicle.getPosition();
+    if (newPosition != null && service.getPlace(getIdFromUri(newPosition)) != null) {
+      System.out.println("changing vehicle position");
+      if (!oldVehicle.getState().equals(VehicleStateEnum.IN_TRANSIT))
+        throw new BadRequestException();
+
+      System.out.println("vehicle is IN_TRANSIT");
+
+      // check if vehicle has a suggested path
+      if (oldVehicle.getPlace().size() > 0) {
+        System.out.println("vehicle has a suggested path");
+        // check if the new place is on the suggested path
+        if (newPosition.equals(oldVehicle.getPlace().get(0))) {
+          System.out.println("vehicle continue on suggested path");
+          vehicle.setPosition(newPosition);
+          vehicle.getPlace().remove(0);
+          vehicle = service.updateVehicle(vehicleId, vehicle);
+
+          if (vehicle == null)
+            throw new InternalServerErrorException();
+          return vehicle;
+        }
+      }
+
+      System.out.println("vehicle has no suggested path, or is deviating from it");
+
+      // continue if place is not on suggested path or there's no suggested path
+      // vehicle can move only to near places
+      System.out.println("place connections (current position): " + getIdFromUri(oldVehicle.getPosition()) + "------");
+      service.getPlaceConnections(getIdFromUri(oldVehicle.getPosition())).forEach(System.out::println);
+      System.out.println("-----------------------------");
+
+      boolean isConnected = service.getPlaceConnections(getIdFromUri(oldVehicle.getPosition()))
+        .stream()
+        .anyMatch(place -> place.getId().equals(getIdFromUri(newPosition)));
+
+      if (isConnected) {
+        vehicle.setPosition(newPosition);
+
+        System.out.println("requested position is reachable");
+
+        try {
+          UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
+          List<String> shortestPath = service.findShortestPath(
+            getIdFromUri(newPosition),
+            getIdFromUri(oldVehicle.getDestination())
+          );
+          vehicle.getPlace().clear();
+          vehicle.getPlace().addAll(
+            shortestPath
+              .stream()
+              .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
+              .filter(p -> !p.equals(newPosition))
+              .collect(Collectors.toList())
+          );
+          System.out.println("new shortest path computed");
+        } catch (UnknownIdException | BadStateException e) {
+          throw new InternalServerErrorException();
+        } catch (ServiceException e) {
+          vehicle.getPlace().clear();
+          System.out.println("is not possible to compute a shortest path");
+        }
+
+        vehicle = service.updateVehicle(vehicleId, vehicle);
+
+        if (vehicle == null)
+          throw new InternalServerErrorException();
+        return vehicle;
+      }
+
+      System.out.println("requested position is not reachable from the current position");
+    }
+
+    throw new BadRequestException();
   }
 
   @DELETE

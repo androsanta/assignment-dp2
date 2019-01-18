@@ -3,7 +3,7 @@ package it.polito.dp2.RNS.sol3.service.resources;
 import io.swagger.annotations.*;
 import it.polito.dp2.RNS.GateType;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
-import it.polito.dp2.RNS.sol3.service.PlacesService;
+import it.polito.dp2.RNS.sol3.service.RnsService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -22,7 +22,7 @@ public class PlacesResource {
 
   @Context
   private UriInfo uriInfo;
-  private PlacesService service = new PlacesService();
+  private RnsService service = new RnsService();
 
   @GET
   @ApiOperation(value = "get places", notes = "get places of rns")
