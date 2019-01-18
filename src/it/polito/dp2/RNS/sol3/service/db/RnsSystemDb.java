@@ -84,6 +84,10 @@ public class RnsSystemDb {
     return null;
   }
 
+  public Set<ConnectionReader> getConnections () {
+    return rnsReader.getConnections();
+  }
+
   public Vehicle addVehicle (Vehicle vehicle) {
     if (trackedVehicles.putIfAbsent(vehicle.getPlateId(), vehicle) == null) {
       return vehicle;

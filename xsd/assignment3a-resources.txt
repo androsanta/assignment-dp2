@@ -33,7 +33,7 @@ rns/places/{id}/connections | GET        | body: administrator      | 200 ok    
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/connections             | GET        | body: pageRequest        | 200 ok             | connections                        | Yes            |
+rns/places/connections      | GET        | body: pageRequest        | 200 ok             | connections                        | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------

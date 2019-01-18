@@ -115,6 +115,7 @@ public class PlacesResource {
 
     throw new ClientErrorException(403);
   }
+
   @GET
   @Path("{id}/vehicles")
   @ApiOperation(value = "get connections", notes = "get connections of specified place")

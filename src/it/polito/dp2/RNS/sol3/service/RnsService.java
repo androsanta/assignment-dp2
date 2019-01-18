@@ -138,6 +138,26 @@ public class RnsService {
     return gates;
   }
 
+  public Connections getConnections (int page) {
+    Connections connections = new Connections();
+
+    connections.setPage(BigInteger.ONE);
+    connections.setTotalPages(BigInteger.ONE);
+
+    connections.getConnection().addAll(
+      db.getConnections().stream()
+        .map(c -> {
+          Connection connection = new Connection();
+          connection.setFrom(createPlaceType(c.getFrom()));
+          connection.setTo(createPlaceType(c.getTo()));
+          return connection;
+        })
+        .collect(Collectors.toList())
+    );
+
+    return connections;
+  }
+
   public List<String> findShortestPath (String sourceId, String destinationId)
     throws UnknownIdException, ServiceException, BadStateException {
     return db.findShortestPath(sourceId, destinationId);
