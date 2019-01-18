@@ -11,10 +11,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static it.polito.dp2.RNS.sol3.service.RnsService.getIdFromUri;
 
 @Path("rns/places")
 @Api(value = "/rns/places")
@@ -86,26 +89,6 @@ public class PlacesResource {
   }
 
   @GET
-  @Path("{id}/vehicles")
-  @ApiOperation(value = "get vehicles", notes = "get tracked vehicles that are currently in the specified place")
-  @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
-    @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 404, message = "Not Found"),
-  })
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Vehicles getVehiclesInPlace (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @PathParam("id") long id
-  ) {
-    if (admin) {
-      return null;
-    }
-
-    throw new ClientErrorException(403);
-  }
-
-  @GET
   @Path("{id}/connections")
   @ApiOperation(value = "get connections", notes = "get connections of specified place")
   @ApiResponses(value = {
@@ -128,6 +111,39 @@ public class PlacesResource {
       return placeTypes.stream()
         .map(p -> of.createPlace(setPlaceLinks(p, baseUriBuilder)))
         .collect(Collectors.toList());
+    }
+
+    throw new ClientErrorException(403);
+  }
+  @GET
+  @Path("{id}/vehicles")
+  @ApiOperation(value = "get connections", notes = "get connections of specified place")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 403, message = "Forbidden"),
+    @ApiResponse(code = 404, message = "Not Found"),
+  })
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public Vehicles getVehiclesInPlace (
+    @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @PathParam("id") String placeId
+  ) {
+    if (admin) {
+      if (service.getPlace(placeId) == null)
+        throw new NotFoundException();
+
+      Vehicles vehicles = new Vehicles();
+      vehicles.setPage(BigInteger.ONE);
+      vehicles.setTotalPages(BigInteger.ONE);
+
+      vehicles.getVehicle().addAll(
+        service.getVehicles(null, null, null)
+          .stream()
+          .filter(vehicle -> getIdFromUri(vehicle.getPosition()).equals(placeId))
+          .collect(Collectors.toList())
+      );
+
+      return vehicles;
     }
 
     throw new ClientErrorException(403);

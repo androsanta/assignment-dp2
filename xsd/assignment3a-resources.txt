@@ -25,7 +25,7 @@ rns/places/{id}             | GET        | body: administrator      | 200 ok    
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/{id}/vehicles    | GET        | body: administrator      | 200 ok             | list of vehicles                   | Yes            |
+rns/places/{id}/vehicles    | GET        | body: administrator      | 200 ok             | list of vehicles                   | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------

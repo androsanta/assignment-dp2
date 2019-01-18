@@ -8,12 +8,13 @@ import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 import it.polito.dp2.RNS.sol3.service.db.RnsSystemDb;
-import it.polito.dp2.RNS.sol3.service.resources.VehiclesResource;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RnsService {
@@ -25,6 +26,11 @@ public class RnsService {
     placeType.setId(placeReader.getId());
     placeType.setCapacity(BigInteger.valueOf(placeReader.getCapacity()));
     return placeType;
+  }
+
+  public static String getIdFromUri (String uri) {
+    String[] split = uri.split("/");
+    return split[split.length - 1];
   }
 
   public Places getPlaces (String idSuffix, int page) {
@@ -159,7 +165,7 @@ public class RnsService {
     if (vehicle == null)
       throw new NotFoundException();
 
-    GateReader gate = db.getGate(VehiclesResource.getIdFromUri(vehicle.getPosition()));
+    GateReader gate = db.getGate(getIdFromUri(vehicle.getPosition()));
     if (gate == null)
       throw new BadRequestException();
 

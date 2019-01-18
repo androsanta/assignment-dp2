@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.polito.dp2.RNS.sol3.service.RnsService.getIdFromUri;
+
 @Path("rns/vehicles")
 public class VehiclesResource {
 
@@ -294,10 +296,4 @@ public class VehiclesResource {
   ) {
     service.removeVehicle(id, admin);
   }
-
-  public static String getIdFromUri (String uri) {
-    String[] split = uri.split("/");
-    return split[split.length - 1];
-  }
-
 }
