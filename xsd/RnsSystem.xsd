@@ -199,8 +199,8 @@
   <xsd:element name="connection">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="from" type="PlaceType"/>
-        <xsd:element name="to" type="PlaceType"/>
+        <xsd:element name="from" type="xsd:anyURI"/>
+        <xsd:element name="to" type="xsd:anyURI"/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>

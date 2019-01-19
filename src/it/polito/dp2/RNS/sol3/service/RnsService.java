@@ -148,8 +148,8 @@ public class RnsService {
       db.getConnections().stream()
         .map(c -> {
           Connection connection = new Connection();
-          connection.setFrom(createPlaceType(c.getFrom()));
-          connection.setTo(createPlaceType(c.getTo()));
+          connection.setFrom(c.getFrom().getId());
+          connection.setTo(c.getTo().getId());
           return connection;
         })
         .collect(Collectors.toList())

@@ -36,8 +36,8 @@ public class ConnectionsResource {
     connections.getConnection().replaceAll(
       connection -> {
         UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
-        connection.setTo(PlacesResource.setPlaceLinks(connection.getTo(), baseUrl));
-        connection.setFrom(PlacesResource.setPlaceLinks(connection.getFrom(), baseUrl));
+        connection.setTo(baseUrl.clone().path("rns/places").path(connection.getTo()).toTemplate());
+        connection.setFrom(baseUrl.clone().path("rns/places").path(connection.getFrom()).toTemplate());
         return connection;
       }
     );
