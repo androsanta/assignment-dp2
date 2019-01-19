@@ -205,18 +205,15 @@ public class VehiclesResource {
     if (updateVehicle.getState() != null) {
       System.out.println("changing vehicle state");
 
-      VehicleStateEnum state = updateVehicle.getState();
-      vehicle.setState(state);
+      vehicle.setState(updateVehicle.getState());
       vehicle = service.updateVehicle(vehicleId, vehicle);
       if (vehicle == null)
         throw new InternalServerErrorException(); // or not found?
       return vehicle;
     }
 
-    String newPosition = updateVehicle.getPosition();
-    if (newPosition == null)
-      throw new BadRequestException();
 
+    String newPosition = updateVehicle.getPosition();
     String newPositionId = PlacesResource.getPlaceIdFromUri(newPosition, uriInfo.getBaseUriBuilder());
     if (service.getPlace(newPositionId) != null) {
       System.out.println("changing vehicle position");
