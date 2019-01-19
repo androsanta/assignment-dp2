@@ -24,9 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static it.polito.dp2.RNS.sol3.service.RnsService.getIdFromUri;
 
-@Path("rns/vehicles")
+@Path("vehicles")
 public class VehiclesResource {
 
   @Context
@@ -90,7 +89,7 @@ public class VehiclesResource {
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicle createVehicle (EnterVehicle enterRequest) {
 
-    String gateId = getIdFromUri(enterRequest.getEnterGate());
+    String gateId = PlacesResource.getPlaceIdFromUri(enterRequest.getEnterGate(), uriInfo.getBaseUriBuilder());
 
     boolean isGateValid = service.getGates(null).getGate()
       .stream()
@@ -101,7 +100,7 @@ public class VehiclesResource {
       throw new BadRequestException();
 
     PlaceType destination = service.getPlace(
-      getIdFromUri(enterRequest.getDestination())
+      PlacesResource.getPlaceIdFromUri(enterRequest.getDestination(), uriInfo.getBaseUriBuilder())
     );
 
     if (destination == null)
@@ -113,8 +112,10 @@ public class VehiclesResource {
     vehicle.setType(enterRequest.getVehicleType());
     vehicle.setOrigin(enterRequest.getEnterGate());
     vehicle.setPosition(enterRequest.getEnterGate());
-    vehicle.setSelf(uriInfo.getAbsolutePathBuilder().path(vehicle.getPlateId()).toTemplate());
     vehicle.setDestination(enterRequest.getDestination());
+
+    UriBuilder selfBuilder = uriInfo.getAbsolutePathBuilder().path(vehicle.getPlateId());
+    vehicle.setSelf(selfBuilder.toTemplate());
 
     try {
       vehicle.setEntryTime(
@@ -127,15 +128,21 @@ public class VehiclesResource {
     try {
       UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
       List<String> paths = service.findShortestPath(
-        getIdFromUri(vehicle.getPosition()),
-        getIdFromUri(vehicle.getDestination())
+        PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder()),
+        PlacesResource.getPlaceIdFromUri(vehicle.getDestination(), uriInfo.getBaseUriBuilder())
       );
-      vehicle.getPlace().addAll(
+
+      ShortestPath shortestPath = new ShortestPath();
+      shortestPath.setPage(BigInteger.ONE);
+      shortestPath.setTotalPages(BigInteger.ONE);
+      shortestPath.getPlace().addAll(
         paths.stream()
           .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
           .filter(p -> !p.equals(vehicle.getPosition()))
           .collect(Collectors.toList())
       );
+      vehicle.setShortestPath(shortestPath);
+      vehicle.setShortestPathLink(selfBuilder.path("shortestPath").toTemplate());
     } catch (ServiceException | UnknownIdException | BadStateException e) {
       throw new InternalServerErrorException();
     }
@@ -181,10 +188,11 @@ public class VehiclesResource {
     if (oldVehicle == null)
       throw new NotFoundException();
 
-    String vehicleId = getIdFromUri(oldVehicle.getSelf());
+    String vehicleId = getVehicleIdFromUri(oldVehicle.getSelf(), uriInfo.getBaseUriBuilder());
 
     Vehicle vehicle = new Vehicle();
-    vehicle.getPlace().addAll(oldVehicle.getPlace());
+    vehicle.setShortestPath(oldVehicle.getShortestPath());
+    vehicle.setShortestPathLink(oldVehicle.getShortestPathLink());
     vehicle.setSelf(oldVehicle.getSelf());
     vehicle.setPlateId(oldVehicle.getPlateId());
     vehicle.setPosition(oldVehicle.getPosition());
@@ -206,7 +214,11 @@ public class VehiclesResource {
     }
 
     String newPosition = updateVehicle.getPosition();
-    if (newPosition != null && service.getPlace(getIdFromUri(newPosition)) != null) {
+    if (newPosition == null)
+      throw new BadRequestException();
+
+    String newPositionId = PlacesResource.getPlaceIdFromUri(newPosition, uriInfo.getBaseUriBuilder());
+    if (service.getPlace(newPositionId) != null) {
       System.out.println("changing vehicle position");
       if (!oldVehicle.getState().equals(VehicleStateEnum.IN_TRANSIT))
         throw new BadRequestException();
@@ -214,13 +226,14 @@ public class VehiclesResource {
       System.out.println("vehicle is IN_TRANSIT");
 
       // check if vehicle has a suggested path
-      if (oldVehicle.getPlace().size() > 0) {
+
+      if (oldVehicle.getShortestPath().getPlace().size() > 0) {
         System.out.println("vehicle has a suggested path");
         // check if the new place is on the suggested path
-        if (newPosition.equals(oldVehicle.getPlace().get(0))) {
+        if (newPosition.equals(oldVehicle.getShortestPath().getPlace().get(0))) {
           System.out.println("vehicle continue on suggested path");
           vehicle.setPosition(newPosition);
-          vehicle.getPlace().remove(0);
+          vehicle.getShortestPath().getPlace().remove(0);
           vehicle = service.updateVehicle(vehicleId, vehicle);
 
           if (vehicle == null)
@@ -233,13 +246,13 @@ public class VehiclesResource {
 
       // continue if place is not on suggested path or there's no suggested path
       // vehicle can move only to near places
-      System.out.println("place connections (current position): " + getIdFromUri(oldVehicle.getPosition()) + "------");
-      service.getPlaceConnections(getIdFromUri(oldVehicle.getPosition())).forEach(System.out::println);
-      System.out.println("-----------------------------");
 
-      boolean isConnected = service.getPlaceConnections(getIdFromUri(oldVehicle.getPosition()))
+      String oldPositionId = PlacesResource.getPlaceIdFromUri(oldVehicle.getPosition(), uriInfo.getBaseUriBuilder());
+      String destinationId = PlacesResource.getPlaceIdFromUri(oldVehicle.getDestination(), uriInfo.getBaseUriBuilder());
+
+      boolean isConnected = service.getPlaceConnections(oldPositionId)
         .stream()
-        .anyMatch(place -> place.getId().equals(getIdFromUri(newPosition)));
+        .anyMatch(place -> place.getId().equals(newPositionId));
 
       if (isConnected) {
         vehicle.setPosition(newPosition);
@@ -249,11 +262,11 @@ public class VehiclesResource {
         try {
           UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
           List<String> shortestPath = service.findShortestPath(
-            getIdFromUri(newPosition),
-            getIdFromUri(oldVehicle.getDestination())
+            newPositionId,
+            destinationId
           );
-          vehicle.getPlace().clear();
-          vehicle.getPlace().addAll(
+          vehicle.getShortestPath().getPlace().clear();
+          vehicle.getShortestPath().getPlace().addAll(
             shortestPath
               .stream()
               .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
@@ -264,7 +277,7 @@ public class VehiclesResource {
         } catch (UnknownIdException | BadStateException e) {
           throw new InternalServerErrorException();
         } catch (ServiceException e) {
-          vehicle.getPlace().clear();
+          vehicle.getShortestPath().getPlace().clear();
           System.out.println("is not possible to compute a shortest path");
         }
 
@@ -281,6 +294,23 @@ public class VehiclesResource {
     throw new BadRequestException();
   }
 
+  @GET
+  @Path("{id}/shortestPath")
+  @ApiOperation(value = "update vehicle", notes = "update state or position of a vehicle")
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 404, message = "Not Found")
+  })
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public ShortestPath getShortestPath (@PathParam("id") String id, @QueryParam("page") int page) {
+    Vehicle vehicle = service.getVehicle(id);
+
+    if (vehicle == null)
+      throw new NotFoundException();
+
+    return vehicle.getShortestPath();
+  }
+
   @DELETE
   @Path("{id}")
   @ApiOperation(value = "delete vehicle", notes = "remove vehicle from tracked vehicles")
@@ -294,6 +324,12 @@ public class VehiclesResource {
     @QueryParam("admin") @DefaultValue("false") boolean admin,
     @PathParam("id") String id
   ) {
-    service.removeVehicle(id, admin);
+    service.removeVehicle(id, admin, uriInfo.getBaseUriBuilder());
+  }
+
+  public static String getVehicleIdFromUri (String uri, UriBuilder baseUrl) {
+    return uri
+      .replaceAll(baseUrl.clone().path("vehicles").toTemplate(), "")
+      .replaceAll("/", "");
   }
 }

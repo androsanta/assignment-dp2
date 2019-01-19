@@ -13,8 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("rns")
-@Api(value = "/rns")
+@Path("/")
+@Api(value = "/")
 public class RnsResource {
 
   @GET

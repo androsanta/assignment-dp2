@@ -17,10 +17,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static it.polito.dp2.RNS.sol3.service.RnsService.getIdFromUri;
 
-@Path("rns/places")
-@Api(value = "/rns/places")
+@Path("places")
+@Api(value = "places")
 public class PlacesResource {
 
   @Context
@@ -49,12 +48,7 @@ public class PlacesResource {
       places.setGates(uri.clone().path("gates").toTemplate());
 
       places.getPlace()
-        .replaceAll(placeType -> {
-          UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(placeType.getId());
-          placeType.setSelf(uriBuilder.toTemplate());
-          placeType.setConnections(uriBuilder.clone().path("connections").toTemplate());
-          return placeType;
-        });
+        .replaceAll(placeType -> setPlaceLinks(placeType, uriInfo.getBaseUriBuilder()));
       return places;
     }
 
@@ -140,7 +134,10 @@ public class PlacesResource {
       vehicles.getVehicle().addAll(
         service.getVehicles(null, null, null)
           .stream()
-          .filter(vehicle -> getIdFromUri(vehicle.getPosition()).equals(placeId))
+          .filter(vehicle -> {
+            String vehicleId = VehiclesResource.getVehicleIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder());
+            return vehicleId.equals(placeId);
+          })
           .collect(Collectors.toList())
       );
 
@@ -237,10 +234,18 @@ public class PlacesResource {
   }
 
   public static PlaceType setPlaceLinks (PlaceType placeType, UriBuilder baseUrl) {
-    UriBuilder self = baseUrl.clone().path("rns/places").path(placeType.getId());
+    UriBuilder self = baseUrl.clone().path("places").path(placeType.getId());
     placeType.setSelf(self.toTemplate());
-    placeType.setConnections(self.clone().path("connections").toTemplate());
+    placeType.getConnection().replaceAll(
+      placeId -> baseUrl.clone().path("places").path(placeId).toTemplate()
+    );
     return placeType;
+  }
+
+  public static String getPlaceIdFromUri (String uri, UriBuilder baseUrl) {
+    return uri
+      .replaceAll(baseUrl.clone().path("places").toTemplate(), "")
+      .replaceAll("/", "");
   }
 
 }

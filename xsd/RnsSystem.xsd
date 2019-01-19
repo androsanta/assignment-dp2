@@ -75,7 +75,7 @@
   <!-- Generic Place -->
   <xsd:complexType name="PlaceType">
     <xsd:sequence>
-      <xsd:element name="connections" type="xsd:anyURI"/>
+      <xsd:element name="connection" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string" use="required"/>
     <xsd:attribute name="self" type="xsd:anyURI"/>
@@ -168,10 +168,12 @@
     </xsd:complexType>
   </xsd:element>
 
+  <!-- return first page of shortest path for vehicle, and then the user can get the other pages -->
   <xsd:element name="vehicle">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="place" type="xsd:anyURI" maxOccurs="unbounded"/>
+        <xsd:element ref="shortestPath"/>
+        <xsd:element name="shortestPathLink" type="xsd:anyURI"/>
       </xsd:sequence>
       <xsd:attribute name="self" type="xsd:anyURI"/>
       <xsd:attribute name="plateId" type="xsd:string" use="required"/>
@@ -181,6 +183,18 @@
       <xsd:attribute name="entryTime" type="xsd:dateTime" use="required"/>
       <xsd:attribute name="state" type="VehicleStateEnum" use="required"/>
       <xsd:attribute name="type" type="VehicleTypeEnum" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="shortestPath">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="PageResponseType">
+          <xsd:sequence>
+            <xsd:element name="place" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
 

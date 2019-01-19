@@ -17,8 +17,8 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.math.BigInteger;
 
-@Path("rns/connections")
-@Api(value = "/rns/connections")
+@Path("connections")
+@Api(value = "connections")
 public class ConnectionsResource {
 
   @Context
@@ -36,8 +36,8 @@ public class ConnectionsResource {
     connections.getConnection().replaceAll(
       connection -> {
         UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
-        connection.setTo(baseUrl.clone().path("rns/places").path(connection.getTo()).toTemplate());
-        connection.setFrom(baseUrl.clone().path("rns/places").path(connection.getFrom()).toTemplate());
+        connection.setTo(baseUrl.clone().path("places").path(connection.getTo()).toTemplate());
+        connection.setFrom(baseUrl.clone().path("places").path(connection.getFrom()).toTemplate());
         return connection;
       }
     );

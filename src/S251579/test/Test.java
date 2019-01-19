@@ -42,6 +42,27 @@ public class Test {
       "1"
     );
 
+
+    String s = "";
+
+    String[] split = s.split("/");
+
+    System.out.println(split[split.length - 1]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     Date d = null;
     try {

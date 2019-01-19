@@ -18,7 +18,7 @@ public class AdmClientImpl implements it.polito.dp2.RNS.lab3.AdmClient {
   public AdmClientImpl () throws ServiceException {
     String uri = System.getProperty("it.polito.dp2.RNS.lab3.URL");
     uri = uri == null ? "http://localhost:8080/RnsSystem/rest" : uri;
-    restUri = UriBuilder.fromUri(uri).path("rns").build();
+    restUri = UriBuilder.fromUri(uri).build();
 
     Client client = ClientBuilder.newClient();
 

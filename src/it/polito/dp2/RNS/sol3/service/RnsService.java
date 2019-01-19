@@ -2,15 +2,18 @@ package it.polito.dp2.RNS.sol3.service;
 
 import it.polito.dp2.RNS.GateReader;
 import it.polito.dp2.RNS.GateType;
+import it.polito.dp2.RNS.IdentifiedEntityReader;
 import it.polito.dp2.RNS.PlaceReader;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 import it.polito.dp2.RNS.sol3.service.db.RnsSystemDb;
+import it.polito.dp2.RNS.sol3.service.resources.PlacesResource;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.UriBuilder;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -25,12 +28,12 @@ public class RnsService {
     PlaceType placeType = new PlaceType();
     placeType.setId(placeReader.getId());
     placeType.setCapacity(BigInteger.valueOf(placeReader.getCapacity()));
+    placeType.getConnection().addAll(
+      placeReader.getNextPlaces().stream()
+        .map(IdentifiedEntityReader::getId)
+        .collect(Collectors.toList())
+    );
     return placeType;
-  }
-
-  public static String getIdFromUri (String uri) {
-    String[] split = uri.split("/");
-    return split[split.length - 1];
   }
 
   public Places getPlaces (String idSuffix, int page) {
@@ -43,7 +46,7 @@ public class RnsService {
       db.getPlaces(idSuffix)
         .stream()
         .map(RnsService::createPlaceType)
-        .collect(Collectors.toSet())
+        .collect(Collectors.toList())
     );
 
     return places;
@@ -179,13 +182,13 @@ public class RnsService {
     return db.updateVehicle(id, vehicle);
   }
 
-  public synchronized void removeVehicle (String id, boolean forced) {
+  public synchronized void removeVehicle (String id, boolean forced, UriBuilder baseUri) {
     Vehicle vehicle = getVehicle(id);
 
     if (vehicle == null)
       throw new NotFoundException();
 
-    GateReader gate = db.getGate(getIdFromUri(vehicle.getPosition()));
+    GateReader gate = db.getGate(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), baseUri));
     if (gate == null)
       throw new BadRequestException();
 
