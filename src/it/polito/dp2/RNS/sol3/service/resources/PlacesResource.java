@@ -239,6 +239,7 @@ public class PlacesResource {
     placeType.getConnection().replaceAll(
       placeId -> baseUrl.clone().path("places").path(placeId).toTemplate()
     );
+    placeType.setVehicles(self.path("vehicles").toTemplate());
     return placeType;
   }
 

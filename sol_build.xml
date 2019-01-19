@@ -2,13 +2,14 @@
 
 <project basedir="." default="build-service" name="RNS-SOL3">
   <description>
-    Script for RNS Assignment 2 solution
+    Script for RNS Assignment 3 solution
   </description>
 
   <property name="gen.dir" value="${basedir}/gen-src"/>
   <property name="schema.dir" value="${basedir}/xsd"/>
   <property name="build.dir" value="${basedir}/build"/>
   <property name="src.dir" location="${basedir}/src"/>
+  <property name="custom.dir" location="${basedir}/custom"/>
 
   <property name="lib.dir" location="${basedir}/lib"/>
   <property name="lib.src.dir" location="${basedir}/lib-src"/>
@@ -32,6 +33,10 @@
   <target name="init">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${gen.dir}"/>
+    <mkdir dir="${basedir}/WebContent/WEB-INF/classes/xsd"/>
+    <copy file="${schema.dir}/RnsSystem.xsd" todir="${basedir}/WebContent/WEB-INF/classes/xsd"/>
+    <mkdir dir="${basedir}/WebContent/WEB-INF/classes/html"/>
+    <copy file="${custom.dir}/html/BadRequestBodyTemplate.html" todir="${basedir}/WebContent/WEB-INF/classes/html"/>
   </target>
 
   <target name="generate-artifacts" depends="init">

@@ -105,6 +105,7 @@ public class PathFinderImpl implements PathFinder {
 
       // Convert result to NodeResult and save it
       NodeResult nodeResult = response.readEntity(NodeResult.class);
+      response.close();
 
       try {
         // Validate response
@@ -117,16 +118,16 @@ public class PathFinderImpl implements PathFinder {
 
       // Save node info
       nodes.put(nodeResult.getData().getId(), nodeResult);
-
-      // Also keep a map between node url and node id
-      nodesById = nodes
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-          e -> e.getValue().getSelf(),
-          Map.Entry::getKey
-        ));
     }
+
+    // Also keep a map between node url and node id
+    nodesById = nodes
+      .entrySet()
+      .stream()
+      .collect(Collectors.toMap(
+        e -> e.getValue().getSelf(),
+        Map.Entry::getKey
+      ));
   }
 
   private void loadConnections (Client client, Set<ConnectionReader> connections) throws ServiceException {

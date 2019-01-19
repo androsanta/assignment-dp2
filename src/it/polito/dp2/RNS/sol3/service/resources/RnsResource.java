@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.Rns;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.RnsEntry;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,8 +21,8 @@ public class RnsResource {
   @ApiOperation(value = "entry point", notes = "api entry point")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Rns rns (@Context UriInfo uriInfo) {
-    Rns rns = new Rns();
+  public RnsEntry rns (@Context UriInfo uriInfo) {
+    RnsEntry rns = new RnsEntry();
     rns.setPlaces(uriInfo.getAbsolutePathBuilder().path("places").toTemplate());
     rns.setVehicles(uriInfo.getAbsolutePathBuilder().path("vehicles").toTemplate());
     rns.setConnections(uriInfo.getAbsolutePathBuilder().path("connections").toTemplate());
