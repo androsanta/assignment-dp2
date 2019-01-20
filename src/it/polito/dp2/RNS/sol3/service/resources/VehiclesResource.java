@@ -1,5 +1,6 @@
 package it.polito.dp2.RNS.sol3.service.resources;
 
+import com.sun.jersey.api.client.Client;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -83,28 +84,37 @@ public class VehiclesResource {
   @ApiOperation(value = "create vehicle", notes = "insert new vehicle into the tracked vehicles")
   @ApiResponses(value = {
     @ApiResponse(code = 201, message = "Created"),
-    @ApiResponse(code = 400, message = "Bad Request"),
+    @ApiResponse(code = 403, message = "Forbidden"),
+    @ApiResponse(code = 409, message = "Conflict"),
+    @ApiResponse(code = 422, message = "Unprocessable Entity")
   })
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicle createVehicle (EnterVehicle enterRequest) {
+    /*
+    403 -> Forbidden - entrance gate provided is not IN/INOUT
+    409 -> Conflict - a vehicle with the same plateId is already in the system
+    422 -> Unprocessable Entity - source or destination place cannot be found
+     */
 
-    String gateId = PlacesResource.getPlaceIdFromUri(enterRequest.getEnterGate(), uriInfo.getBaseUriBuilder());
+    String entranceGateId = PlacesResource.getPlaceIdFromUri(enterRequest.getEnterGate(), uriInfo.getBaseUriBuilder());
+    String destinationPlaceId = PlacesResource.getPlaceIdFromUri(enterRequest.getDestination(), uriInfo.getBaseUriBuilder());
+
+    PlaceType origin = service.getPlace(entranceGateId);
+    PlaceType destination = service.getPlace(destinationPlaceId);
+
+    if (origin == null || destination == null)
+      throw new ClientErrorException(422);
+
 
     boolean isGateValid = service.getGates(null).getGate()
       .stream()
       .filter(g -> g.getType().equals(GateTypeEnum.IN) || g.getType().equals(GateTypeEnum.INOUT))
-      .anyMatch(g -> g.getId().equals(gateId));
+      .anyMatch(g -> g.getId().equals(entranceGateId));
 
     if (!isGateValid)
-      throw new BadRequestException();
+      throw new ClientErrorException(403);
 
-    PlaceType destination = service.getPlace(
-      PlacesResource.getPlaceIdFromUri(enterRequest.getDestination(), uriInfo.getBaseUriBuilder())
-    );
-
-    if (destination == null)
-      throw new BadRequestException();
 
     Vehicle vehicle = new Vehicle();
     vehicle.setPlateId(enterRequest.getPlateId());
@@ -127,10 +137,7 @@ public class VehiclesResource {
 
     try {
       UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
-      List<String> paths = service.findShortestPath(
-        PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder()),
-        PlacesResource.getPlaceIdFromUri(vehicle.getDestination(), uriInfo.getBaseUriBuilder())
-      );
+      List<String> paths = service.findShortestPath(entranceGateId, destinationPlaceId);
 
       ShortestPath shortestPath = new ShortestPath();
       shortestPath.setPage(BigInteger.ONE);
@@ -148,7 +155,7 @@ public class VehiclesResource {
     }
 
     if (service.addVehicle(vehicle) == null)
-      throw new BadRequestException();
+      throw new ClientErrorException(409);
 
     return vehicle;
   }

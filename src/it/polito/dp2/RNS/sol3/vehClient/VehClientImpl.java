@@ -3,10 +3,13 @@ package it.polito.dp2.RNS.sol3.vehClient;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.*;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.RnsEntry;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -52,6 +55,16 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     Client client = ClientBuilder.newClient();
 
     try {
+      EnterVehicle enterVehicle = new EnterVehicle();
+      enterVehicle.setPlateId(plateId);
+      enterVehicle.setVehicleType(VehicleTypeEnum.fromValue(type.value()));
+      enterVehicle.setEnterGate(inGate);
+      enterVehicle.setDestination(destination);
+
+      Response response = client.target(vehicleUrl)
+        .request()
+        .accept(MediaType.APPLICATION_XML)
+        .post(Entity.xml(enterVehicle));
 
     } catch (Exception e) {
 

@@ -1,9 +1,6 @@
 package it.polito.dp2.RNS.sol3.service;
 
-import it.polito.dp2.RNS.GateReader;
-import it.polito.dp2.RNS.GateType;
-import it.polito.dp2.RNS.IdentifiedEntityReader;
-import it.polito.dp2.RNS.PlaceReader;
+import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;

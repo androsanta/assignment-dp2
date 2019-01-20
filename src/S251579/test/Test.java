@@ -4,23 +4,11 @@ import it.polito.dp2.RNS.lab3.AdmClient;
 import it.polito.dp2.RNS.lab3.AdmClientException;
 import it.polito.dp2.RNS.lab3.AdmClientFactory;
 import it.polito.dp2.RNS.lab3.ServiceException;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicles;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
-import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class Test {
 
@@ -59,7 +47,15 @@ public class Test {
     );
 
 
+    Client client = ClientBuilder.newClient();
 
+    Response response = client.target("http://192.168.1.5:8080/RnsSystem/rest")
+      .path("vehicles")
+      .request()
+      .accept(MediaType.APPLICATION_XML)
+      .get();
+
+    System.out.println(response.getStatus());
 
     try {
       AdmClient admClient = AdmClientFactory.newInstance().newAdmClient();
