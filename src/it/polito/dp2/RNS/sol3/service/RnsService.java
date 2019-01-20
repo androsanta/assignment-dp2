@@ -9,6 +9,7 @@ import it.polito.dp2.RNS.sol3.service.db.RnsSystemDb;
 import it.polito.dp2.RNS.sol3.service.resources.PlacesResource;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriBuilder;
 import java.math.BigInteger;
@@ -84,6 +85,11 @@ public class RnsService {
           roadSegment.setCapacity(BigInteger.valueOf(rs.getCapacity()));
           roadSegment.setName(rs.getName());
           roadSegment.setRoadName(rs.getRoadName());
+          roadSegment.getConnection().addAll(
+            rs.getNextPlaces().stream()
+              .map(IdentifiedEntityReader::getId)
+              .collect(Collectors.toList())
+          );
           return roadSegment;
         })
         .collect(Collectors.toSet())
@@ -108,6 +114,11 @@ public class RnsService {
           ServicesType servicesType = new ServicesType();
           servicesType.getService().addAll(pa.getServices());
           parkingArea.setServices(servicesType);
+          parkingArea.getConnection().addAll(
+            pa.getNextPlaces().stream()
+              .map(IdentifiedEntityReader::getId)
+              .collect(Collectors.toList())
+          );
           return parkingArea;
         })
         .collect(Collectors.toSet())
@@ -130,6 +141,11 @@ public class RnsService {
           gate.setId(g.getId());
           gate.setCapacity(BigInteger.valueOf(g.getCapacity()));
           gate.setType(GateTypeEnum.fromValue(g.getType().value()));
+          gate.getConnection().addAll(
+            g.getNextPlaces().stream()
+              .map(IdentifiedEntityReader::getId)
+              .collect(Collectors.toList())
+          );
           return gate;
         })
         .collect(Collectors.toSet())
@@ -179,25 +195,44 @@ public class RnsService {
     return db.updateVehicle(id, vehicle);
   }
 
-  public synchronized void removeVehicle (String id, boolean forced, UriBuilder baseUri) {
+  public synchronized void removeVehicle (String id, String outGate, boolean forced, UriBuilder baseUri) {
     Vehicle vehicle = getVehicle(id);
+
+    System.out.println("DELETE vehicle --- args: id " + id + " outgate " + outGate + " forced " + forced + " base " + baseUri.clone().toTemplate());
+    System.out.println("vehicle " + vehicle);
 
     if (vehicle == null)
       throw new NotFoundException();
 
-    GateReader gate = db.getGate(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), baseUri));
-    if (gate == null)
-      throw new BadRequestException();
-
-    if (
-      forced ||
-        gate.getType() == GateType.IN ||
-        gate.getType() == GateType.INOUT
-    ) {
+    if (forced) {
       db.removeVehicle(id);
       return;
     }
 
-    throw new BadRequestException();
+    GateReader gate = db.getGate(PlacesResource.getPlaceIdFromUri(outGate, baseUri));
+
+    System.out.println("Gate provided " + gate);
+
+    if (gate == null)
+      throw new ClientErrorException(422);
+
+    PlaceReader previousPosition = db.getPlace(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), baseUri));
+    System.out.println("previous position " + previousPosition.getId());
+    System.out.println("previous position next places: ");
+    previousPosition.getNextPlaces().forEach(p -> System.out.println(p.getId()));
+
+    boolean isGateNear = previousPosition.getNextPlaces()
+      .stream()
+      .anyMatch(p -> p.getId().equals(gate.getId()));
+
+    System.out.println("isGateNear " + isGateNear);
+    System.out.println("Gate Type " + gate.getType().value());
+
+    if ((gate.getType() == GateType.OUT || gate.getType() == GateType.INOUT) && isGateNear) {
+      db.removeVehicle(id);
+      return;
+    }
+
+    throw new ClientErrorException(403);
   }
 }

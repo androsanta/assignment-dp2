@@ -1,18 +1,18 @@
 package S251579.test;
 
-import it.polito.dp2.RNS.lab3.AdmClient;
-import it.polito.dp2.RNS.lab3.AdmClientException;
-import it.polito.dp2.RNS.lab3.AdmClientFactory;
-import it.polito.dp2.RNS.lab3.ServiceException;
+import it.polito.dp2.RNS.VehicleType;
+import it.polito.dp2.RNS.lab3.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
+import it.polito.dp2.RNS.sol3.vehClient.VehClientImpl;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class Test {
 
@@ -50,26 +50,31 @@ public class Test {
       "it.polito.dp2.RNS.sol3.vehClient.VehClientFactory"
     );
 
+    try {
+      VehClient vehClient = new VehClientImpl();
+      List<String> path = vehClient.enter(
+        "ziofa",
+        VehicleType.CAR,
+        "http://192.168.1.5:8080/RnsSystem/rest/places/Gate0",
+        "http://192.168.1.5:8080/RnsSystem/rest/places/Gate1"
+      );
 
-    Client client = ClientBuilder.newClient();
-    EnterVehicle enterVehicle = new EnterVehicle();
-    enterVehicle.setPlateId("ziofa2");
-    enterVehicle.setEnterGate("http://192.168.1.5:8080/RnsSystem/rest/places/Gate0");
-    enterVehicle.setVehicleType(VehicleTypeEnum.CAR);
-    enterVehicle.setDestination("http://192.168.1.5:8080/RnsSystem/rest/places/SP0-S4");
+      for (int i = 0; i < path.size() - 1; i++) {
+        System.out.println("change path " + path.get(i));
+        vehClient.move(path.get(i));
+      }
 
-    Response response = client.target("http://192.168.1.5:8080/RnsSystem/rest")
-      .path("vehicles")
-      .request()
-      .accept(MediaType.APPLICATION_XML)
-      .post(Entity.xml(enterVehicle));
-
-    System.out.println(response.getStatus());
-    Vehicle vehicle = response.readEntity(Vehicle.class);
-    vehicle.getShortestPath().getPlace().forEach(System.out::println);
-
-    response.close();
-    client.close();
+    } catch (VehClientException e) {
+      e.printStackTrace();
+    } catch (EntranceRefusedException e) {
+      e.printStackTrace();
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    } catch (WrongPlaceException e) {
+      e.printStackTrace();
+    } catch (UnknownPlaceException e) {
+      e.printStackTrace();
+    }
 
     try {
       AdmClient admClient = AdmClientFactory.newInstance().newAdmClient();

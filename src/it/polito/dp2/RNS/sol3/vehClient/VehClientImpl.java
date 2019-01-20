@@ -68,7 +68,7 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     }
 
     switch (response.getStatus()) {
-      case 201:
+      case 200:
         vehicle = response.readEntity(Vehicle.class);
         response.close();
         client.close();
@@ -141,14 +141,14 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
         .request()
         .accept(MediaType.APPLICATION_XML)
         .method("PATCH", Entity.xml(updateVehicle));
-
-      if (response.getStatus() != 201)
-        throw new ServiceException();
-
-      vehicle = response.readEntity(Vehicle.class);
     } catch (Exception e) {
       throw new ServiceException(e);
     }
+
+    if (response.getStatus() != 200)
+      throw new ServiceException();
+
+    vehicle = response.readEntity(Vehicle.class);
   }
 
   @Override
@@ -158,14 +158,31 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     Response response;
     try {
       response = client.target(vehicle.getSelf())
+        .queryParam("outGate", outGate)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .delete();
-
-      if (response.getStatus() != 200)
-        throw new ServiceException();
     } catch (Exception e) {
       throw new ServiceException(e);
+    }
+
+    switch (response.getStatus()) {
+      case 204:
+        response.close();
+        client.close();
+        return;
+      case 403:
+        response.close();
+        client.close();
+        throw new WrongPlaceException();
+      case 422:
+        response.close();
+        client.close();
+        throw new UnknownPlaceException();
+      default:
+        response.close();
+        client.close();
+        throw new ServiceException();
     }
   }
 

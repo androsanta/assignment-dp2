@@ -9,6 +9,7 @@
   <property name="schema.dir" value="${basedir}/xsd"/>
   <property name="build.dir" value="${basedir}/build"/>
   <property name="src.dir" location="${basedir}/src"/>
+  <property name="sol3.dir" location="${src.dir}/it/polito/dp2/RNS/sol3"/>
   <property name="custom.dir" location="${basedir}/custom"/>
 
   <property name="lib.dir" location="${basedir}/lib"/>
@@ -47,7 +48,7 @@
   </target>
 
   <target name="build-service" depends="generate-artifacts">
-    <echo>Building the solution</echo>
+    <echo>Building the service</echo>
     <javac
       destdir="${build.dir}"
       debug="${debug}"
@@ -56,9 +57,40 @@
       includeantruntime="false">
       <src path="${src.dir}"/>
       <src path="${gen.dir}"/>
-      <include name="it/polito/dp2/RNS/sol3/**"/>
+      <include name="it/polito/dp2/RNS/sol3/service/**"/>
       <classpath>
-        <path refid="sol.classpath" />
+        <path refid="sol.classpath"/>
+      </classpath>
+    </javac>
+    <echo>Done.</echo>
+  </target>
+
+  <target name="build-client" depends="generate-artifacts">
+    <echo>Building the client</echo>
+    <javac
+      destdir="${build.dir}"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      includeantruntime="false">
+      <src path="${src.dir}"/>
+      <src path="${gen.dir}"/>
+      <include name="it/polito/dp2/RNS/sol3/admClient/**"/>
+      <classpath>
+        <path refid="sol.classpath"/>
+      </classpath>
+    </javac>
+    <javac
+      destdir="${build.dir}"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      includeantruntime="false">
+      <src path="${src.dir}"/>
+      <src path="${gen.dir}"/>
+      <include name="it/polito/dp2/RNS/sol3/vehClient/**"/>
+      <classpath>
+        <path refid="sol.classpath"/>
       </classpath>
     </javac>
     <echo>Done.</echo>

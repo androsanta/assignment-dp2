@@ -39,6 +39,8 @@ public class PlacesResource {
     @QueryParam("page") int page,
     @QueryParam("idSuffix") String idSuffix
   ) {
+    System.out.println("GET PLACES");
+
     if (admin) {
       Places places = service.getPlaces(idSuffix, page);
 
@@ -123,6 +125,8 @@ public class PlacesResource {
     @QueryParam("admin") @DefaultValue("false") boolean admin,
     @PathParam("id") String placeId
   ) {
+    System.out.println("GET VEHICLES IN PLACE " + placeId);
+
     if (admin) {
       if (service.getPlace(placeId) == null)
         throw new NotFoundException();

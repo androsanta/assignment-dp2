@@ -22,6 +22,7 @@ public class RnsResource {
   @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public RnsEntry rns (@Context UriInfo uriInfo) {
+    System.out.println("RNS ENTRY POINT GET");
     RnsEntry rns = new RnsEntry();
     rns.setPlaces(uriInfo.getAbsolutePathBuilder().path("places").toTemplate());
     rns.setVehicles(uriInfo.getAbsolutePathBuilder().path("vehicles").toTemplate());
