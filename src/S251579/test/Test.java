@@ -1,5 +1,6 @@
 package S251579.test;
 
+import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
@@ -12,14 +13,16 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Test {
 
   public static void main (String args[]) {
     System.setProperty(
       "it.polito.dp2.RNS.lab2.URL",
-      "http://192.168.1.5:7474/db"
+      "http://192.168.1.3:7474/db"
     );
     System.setProperty(
       "it.polito.dp2.RNS.lab2.PathFinderFactory",
@@ -43,36 +46,30 @@ public class Test {
     );
     System.setProperty(
       "it.polito.dp2.RNS.lab3.URL",
-      "http://192.168.1.5:8080/RnsSystem/rest"
+      "http://192.168.1.3:8080/RnsSystem/rest"
     );
     System.setProperty(
       "it.polito.dp2.RNS.lab3.VehClientFactory",
       "it.polito.dp2.RNS.sol3.vehClient.VehClientFactory"
     );
 
+    VehClient vehClient = null;
     try {
-      VehClient vehClient = new VehClientImpl();
+      vehClient = new VehClientImpl();
       List<String> path = vehClient.enter(
         "ziofa",
         VehicleType.CAR,
-        "http://192.168.1.5:8080/RnsSystem/rest/places/Gate0",
-        "http://192.168.1.5:8080/RnsSystem/rest/places/Gate1"
+        "Gate0",
+        "Gate1"
       );
 
-      for (int i = 0; i < path.size() - 1; i++) {
-        System.out.println("change path " + path.get(i));
+      for (int i = 1; i < path.size() - 1; i++) {
+        System.out.println("change path to" + path.get(i));
         vehClient.move(path.get(i));
       }
 
-    } catch (VehClientException e) {
-      e.printStackTrace();
-    } catch (EntranceRefusedException e) {
-      e.printStackTrace();
-    } catch (ServiceException e) {
-      e.printStackTrace();
-    } catch (WrongPlaceException e) {
-      e.printStackTrace();
-    } catch (UnknownPlaceException e) {
+      vehClient.changeState(VehicleState.PARKED);
+    } catch (VehClientException | UnknownPlaceException | WrongPlaceException | ServiceException | EntranceRefusedException e) {
       e.printStackTrace();
     }
 
@@ -84,7 +81,9 @@ public class Test {
       admClient.getConnections().forEach(c -> System.out.println("from " + c.getFrom().getId() + " to " + c.getTo().getId()));
       System.out.println("\nVEHICLES ---------");
       admClient.getUpdatedVehicles(null).forEach(v -> System.out.println(v.getId() + " " + v.getPosition().getId()));
-    } catch (AdmClientException | ServiceException e) {
+
+      vehClient.exit("Gate1");
+    } catch (AdmClientException | ServiceException | UnknownPlaceException | WrongPlaceException e) {
       e.printStackTrace();
     }
 

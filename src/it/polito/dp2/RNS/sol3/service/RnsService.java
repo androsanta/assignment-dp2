@@ -195,44 +195,22 @@ public class RnsService {
     return db.updateVehicle(id, vehicle);
   }
 
-  public synchronized void removeVehicle (String id, String outGate, boolean forced, UriBuilder baseUri) {
-    Vehicle vehicle = getVehicle(id);
+  public Vehicle forceRemoveVehicle (String plateId) {
+    return db.forceRemoveVehicle(plateId);
+  }
 
-    System.out.println("DELETE vehicle --- args: id " + id + " outgate " + outGate + " forced " + forced + " base " + baseUri.clone().toTemplate());
-    System.out.println("vehicle " + vehicle);
+  public void removeVehicle (String id, String outGate, UriBuilder baseUri) {
+    db.removeVehicle(id, outGate, baseUri);
+  }
 
-    if (vehicle == null)
-      throw new NotFoundException();
-
-    if (forced) {
-      db.removeVehicle(id);
-      return;
-    }
-
-    GateReader gate = db.getGate(PlacesResource.getPlaceIdFromUri(outGate, baseUri));
-
-    System.out.println("Gate provided " + gate);
-
-    if (gate == null)
-      throw new ClientErrorException(422);
-
-    PlaceReader previousPosition = db.getPlace(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), baseUri));
-    System.out.println("previous position " + previousPosition.getId());
-    System.out.println("previous position next places: ");
-    previousPosition.getNextPlaces().forEach(p -> System.out.println(p.getId()));
-
-    boolean isGateNear = previousPosition.getNextPlaces()
-      .stream()
-      .anyMatch(p -> p.getId().equals(gate.getId()));
-
-    System.out.println("isGateNear " + isGateNear);
-    System.out.println("Gate Type " + gate.getType().value());
-
-    if ((gate.getType() == GateType.OUT || gate.getType() == GateType.INOUT) && isGateNear) {
-      db.removeVehicle(id);
-      return;
-    }
-
-    throw new ClientErrorException(403);
+  public static boolean areVehiclesEquals (Vehicle v1, Vehicle v2) {
+    return (
+      v1.getSelf().equals(v2.getSelf()) &&
+        v1.getPlateId().equals(v2.getPlateId()) &&
+        v1.getOrigin().equals(v2.getOrigin()) &&
+        v1.getDestination().equals(v2.getDestination()) &&
+        v1.getEntryTime().equals(v2.getEntryTime()) &&
+        v1.getType().equals(v2.getType())
+    );
   }
 }

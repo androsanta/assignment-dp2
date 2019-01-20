@@ -61,7 +61,6 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
     Places places;
     try {
       Response response = client.target(placesUrl)
-        .queryParam("admin", true)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .get();
@@ -168,6 +167,7 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
 
   @Override
   public Set<VehicleReader> getUpdatedVehicles (String place) throws ServiceException {
+    System.out.println("\ngetUpdatedVehicles " + place);
     Client client = ClientBuilder.newClient();
 
     String requestUrl = place == null ? vehicleUrl : vehiclesInPlaceById.get(place);
@@ -191,22 +191,30 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
 
     client.close();
 
-    return vehicles.getVehicle()
+    Set<VehicleReader> readers = vehicles.getVehicle()
       .stream()
-      .map(v -> new it.polito.dp2.RNS.sol1.Vehicle(
-        v.getPlateId(),
-        VehicleType.fromValue(v.getType().value()),
-        v.getEntryTime().toGregorianCalendar(),
-        getPlace(placesIdByUrl.get(v.getOrigin())),
-        getPlace(placesIdByUrl.get(v.getDestination())),
-        getPlace(placesIdByUrl.get(v.getPosition())),
-        VehicleState.fromValue(v.getState().value())
-      ))
+      .map(v -> {
+        System.out.println("MAP " + v.getPlateId() + " " + v.getPosition());
+
+        return new it.polito.dp2.RNS.sol1.Vehicle(
+          v.getPlateId(),
+          VehicleType.fromValue(v.getType().value()),
+          v.getEntryTime().toGregorianCalendar(),
+          getPlace(placesIdByUrl.get(v.getOrigin())),
+          getPlace(placesIdByUrl.get(v.getDestination())),
+          getPlace(placesIdByUrl.get(v.getPosition())),
+          VehicleState.fromValue(v.getState().value())
+        );
+      })
       .collect(Collectors.toSet());
+    System.out.println("getUpdatedVehicles readers:" + readers);
+    return readers;
   }
 
   @Override
   public VehicleReader getUpdatedVehicle (String id) throws ServiceException {
+    System.out.println("\ngetUpdatedVehicle id: " + id);
+
     Client client = ClientBuilder.newClient();
     Vehicle vehicle;
     try {
@@ -215,6 +223,11 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
         .request()
         .accept(MediaType.APPLICATION_XML)
         .get();
+
+      if (response.getStatus() == 404) {
+        System.out.println("----- getUpdatedVehicle returning null!! -----");
+        return null;
+      }
 
       if (response.getStatus() != 200)
         throw new Exception("Get to " + vehicleUrl + "/" + id + " failed with code " + response.getStatus());
@@ -227,6 +240,7 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
 
     client.close();
 
+    System.out.println("vehicle found " + vehicle.getPlateId());
     return new it.polito.dp2.RNS.sol1.Vehicle(
       vehicle.getPlateId(),
       VehicleType.fromValue(vehicle.getType().value()),

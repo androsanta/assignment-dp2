@@ -35,26 +35,21 @@ public class PlacesResource {
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Places getPlaces (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
     @QueryParam("page") int page,
     @QueryParam("idSuffix") String idSuffix
   ) {
     System.out.println("GET PLACES");
 
-    if (admin) {
-      Places places = service.getPlaces(idSuffix, page);
+    Places places = service.getPlaces(idSuffix, page);
 
-      UriBuilder uri = uriInfo.getAbsolutePathBuilder();
-      places.setRoadSegments(uri.clone().path("roadSegments").toTemplate());
-      places.setParkingAreas(uri.clone().path("parkingAreas").toTemplate());
-      places.setGates(uri.clone().path("gates").toTemplate());
+    UriBuilder uri = uriInfo.getAbsolutePathBuilder();
+    places.setRoadSegments(uri.clone().path("roadSegments").toTemplate());
+    places.setParkingAreas(uri.clone().path("parkingAreas").toTemplate());
+    places.setGates(uri.clone().path("gates").toTemplate());
 
-      places.getPlace()
-        .replaceAll(placeType -> setPlaceLinks(placeType, uriInfo.getBaseUriBuilder()));
-      return places;
-    }
-
-    throw new ClientErrorException(403);
+    places.getPlace()
+      .replaceAll(placeType -> setPlaceLinks(placeType, uriInfo.getBaseUriBuilder()));
+    return places;
   }
 
   @GET

@@ -40,7 +40,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="updateVehicle">
+  <!-- xsd:element name="updateVehicle">
     <xsd:complexType>
       <xsd:sequence>
         <xsd:choice>
@@ -49,7 +49,7 @@
         </xsd:choice>
       </xsd:sequence>
     </xsd:complexType>
-  </xsd:element>
+  </xsd:element -->
 
   <xsd:complexType name="PageResponseType">
     <xsd:attribute name="totalPages" type="xsd:positiveInteger"/>

@@ -3,6 +3,7 @@ package it.polito.dp2.RNS.sol3.vehClient;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.*;
+import it.polito.dp2.RNS.sol1.Place;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 
 import javax.ws.rs.client.Client;
@@ -12,12 +13,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
 
   private String vehicleUrl;
   private Vehicle vehicle;
+  private Map<String, String> placeIdByUrl;
+  private Map<String, String> placeUrlById;
 
   public VehClientImpl () throws VehClientException {
     String uri = System.getProperty("it.polito.dp2.RNS.lab3.URL");
@@ -43,20 +49,54 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
       throw new VehClientException(e);
     }
 
+    Places places;
+    try {
+      Response response = client.target(entry.getPlaces())
+        .request()
+        .accept(MediaType.APPLICATION_XML)
+        .get();
+
+      if (response.getStatus() != 200)
+        throw new Exception("Get to " + entry.getPlaces() + " failed with code " + response.getStatus());
+
+      places = response.readEntity(Places.class);
+      response.close();
+    } catch (Exception e) {
+      throw new VehClientException(e.getMessage());
+    }
+
+    placeIdByUrl = places.getPlace()
+      .stream()
+      .collect(Collectors.toMap(PlaceType::getSelf, PlaceType::getId));
+    placeUrlById = places.getPlace()
+      .stream()
+      .collect(Collectors.toMap(PlaceType::getId, PlaceType::getSelf));
     vehicleUrl = entry.getVehicles();
     client.close();
+  }
+
+  private List<String> getShortestPath () {
+    return vehicle.getShortestPath().getPlace()
+      .stream()
+      .map(placeUrl -> placeIdByUrl.get(placeUrl))
+      .collect(Collectors.toList());
   }
 
   @Override
   public List<String> enter (String plateId, VehicleType type, String inGate, String destination)
     throws ServiceException, UnknownPlaceException, WrongPlaceException, EntranceRefusedException {
+    System.out.println("vehClient enter " + plateId + " gate " + inGate + " destination " + destination);
+
+    String inGateUrl = placeUrlById.get(inGate) == null ? inGate : placeUrlById.get(inGate);
+    String destinationUrl = placeUrlById.get(destination) == null ? destination : placeUrlById.get(destination);
+
     Client client = ClientBuilder.newClient();
     Response response;
     EnterVehicle enterVehicle = new EnterVehicle();
     enterVehicle.setPlateId(plateId);
     enterVehicle.setVehicleType(VehicleTypeEnum.fromValue(type.value()));
-    enterVehicle.setEnterGate(inGate);
-    enterVehicle.setDestination(destination);
+    enterVehicle.setEnterGate(inGateUrl);
+    enterVehicle.setDestination(destinationUrl);
 
     try {
       response = client.target(vehicleUrl)
@@ -67,12 +107,13 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
       throw new ServiceException(e);
     }
 
+    System.out.println("vehClient enter " + plateId + " gate " + inGate + " destination " + destination + " response " + response.getStatus());
     switch (response.getStatus()) {
       case 200:
         vehicle = response.readEntity(Vehicle.class);
         response.close();
         client.close();
-        return vehicle.getShortestPath().getPlace();
+        return getShortestPath();
       case 403:
         response.close();
         client.close();
@@ -98,22 +139,28 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     Client client = ClientBuilder.newClient();
 
     Response response;
-    UpdateVehicle updateVehicle = new UpdateVehicle();
-    updateVehicle.setPosition(newPlace);
+    String newPlaceUrl = placeUrlById.get(newPlace) == null ? newPlace : placeUrlById.get(newPlace);
+    vehicle.setPosition(newPlaceUrl);
+    vehicle.setState(VehicleStateEnum.IN_TRANSIT);
     try {
       response = client.target(vehicle.getSelf())
         .request()
         .accept(MediaType.APPLICATION_XML)
-        .method("PATCH", Entity.xml(updateVehicle));
+        .put(Entity.xml(vehicle));
     } catch (Exception e) {
       throw new ServiceException(e);
     }
+
     switch (response.getStatus()) {
       case 200:
-        vehicle = response.readEntity(Vehicle.class);
+        Vehicle newVehicle = response.readEntity(Vehicle.class);
         response.close();
         client.close();
-        return vehicle.getShortestPath().getPlace();
+        boolean pathChanged = newVehicle.getShortestPath().getPlace().containsAll(getShortestPath());
+        vehicle = newVehicle;
+        if (!pathChanged)
+          return null;
+        return getShortestPath();
       case 403:
         response.close();
         client.close();
@@ -134,13 +181,12 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     Client client = ClientBuilder.newClient();
 
     Response response;
-    UpdateVehicle updateVehicle = new UpdateVehicle();
-    updateVehicle.setState(VehicleStateEnum.fromValue(newState.value()));
+    vehicle.setState(VehicleStateEnum.fromValue(newState.value()));
     try {
       response = client.target(vehicle.getSelf())
         .request()
         .accept(MediaType.APPLICATION_XML)
-        .method("PATCH", Entity.xml(updateVehicle));
+        .put(Entity.xml(vehicle));
     } catch (Exception e) {
       throw new ServiceException(e);
     }
@@ -156,9 +202,11 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
     Client client = ClientBuilder.newClient();
 
     Response response;
+    String outGateUrl = placeUrlById.get(outGate) == null ? outGate : placeUrlById.get(outGate);
+    System.out.println("VEH CLIENT EXITTTTTTT " + outGate + " " + outGateUrl);
     try {
       response = client.target(vehicle.getSelf())
-        .queryParam("outGate", outGate)
+        .queryParam("outGate", outGateUrl)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .delete();
