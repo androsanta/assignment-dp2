@@ -3,9 +3,7 @@ package it.polito.dp2.RNS.sol3.vehClient;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.*;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.RnsEntry;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -19,6 +17,7 @@ import java.util.List;
 public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
 
   private String vehicleUrl;
+  private Vehicle vehicle;
 
   public VehClientImpl () throws VehClientException {
     String uri = System.getProperty("it.polito.dp2.RNS.lab3.URL");
@@ -51,41 +50,123 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
   @Override
   public List<String> enter (String plateId, VehicleType type, String inGate, String destination)
     throws ServiceException, UnknownPlaceException, WrongPlaceException, EntranceRefusedException {
-
     Client client = ClientBuilder.newClient();
+    Response response;
+    EnterVehicle enterVehicle = new EnterVehicle();
+    enterVehicle.setPlateId(plateId);
+    enterVehicle.setVehicleType(VehicleTypeEnum.fromValue(type.value()));
+    enterVehicle.setEnterGate(inGate);
+    enterVehicle.setDestination(destination);
 
     try {
-      EnterVehicle enterVehicle = new EnterVehicle();
-      enterVehicle.setPlateId(plateId);
-      enterVehicle.setVehicleType(VehicleTypeEnum.fromValue(type.value()));
-      enterVehicle.setEnterGate(inGate);
-      enterVehicle.setDestination(destination);
-
-      Response response = client.target(vehicleUrl)
+      response = client.target(vehicleUrl)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .post(Entity.xml(enterVehicle));
-
     } catch (Exception e) {
-
+      throw new ServiceException(e);
     }
 
-    return null;
+    switch (response.getStatus()) {
+      case 201:
+        vehicle = response.readEntity(Vehicle.class);
+        response.close();
+        client.close();
+        return vehicle.getShortestPath().getPlace();
+      case 403:
+        response.close();
+        client.close();
+        throw new WrongPlaceException();
+      case 409:
+        response.close();
+        client.close();
+        throw new EntranceRefusedException();
+      case 422:
+        response.close();
+        client.close();
+        throw new UnknownPlaceException();
+      default:
+        response.close();
+        client.close();
+        throw new ServiceException();
+    }
+
   }
 
   @Override
   public List<String> move (String newPlace) throws ServiceException, UnknownPlaceException, WrongPlaceException {
-    return null;
+    Client client = ClientBuilder.newClient();
+
+    Response response;
+    UpdateVehicle updateVehicle = new UpdateVehicle();
+    updateVehicle.setPosition(newPlace);
+    try {
+      response = client.target(vehicle.getSelf())
+        .request()
+        .accept(MediaType.APPLICATION_XML)
+        .method("PATCH", Entity.xml(updateVehicle));
+    } catch (Exception e) {
+      throw new ServiceException(e);
+    }
+    switch (response.getStatus()) {
+      case 200:
+        vehicle = response.readEntity(Vehicle.class);
+        response.close();
+        client.close();
+        return vehicle.getShortestPath().getPlace();
+      case 403:
+        response.close();
+        client.close();
+        throw new WrongPlaceException();
+      case 422:
+        response.close();
+        client.close();
+        throw new UnknownPlaceException();
+      default:
+        response.close();
+        client.close();
+        throw new ServiceException();
+    }
   }
 
   @Override
   public void changeState (VehicleState newState) throws ServiceException {
+    Client client = ClientBuilder.newClient();
 
+    Response response;
+    UpdateVehicle updateVehicle = new UpdateVehicle();
+    updateVehicle.setState(VehicleStateEnum.fromValue(newState.value()));
+    try {
+      response = client.target(vehicle.getSelf())
+        .request()
+        .accept(MediaType.APPLICATION_XML)
+        .method("PATCH", Entity.xml(updateVehicle));
+
+      if (response.getStatus() != 201)
+        throw new ServiceException();
+
+      vehicle = response.readEntity(Vehicle.class);
+    } catch (Exception e) {
+      throw new ServiceException(e);
+    }
   }
 
   @Override
   public void exit (String outGate) throws ServiceException, UnknownPlaceException, WrongPlaceException {
+    Client client = ClientBuilder.newClient();
 
+    Response response;
+    try {
+      response = client.target(vehicle.getSelf())
+        .request()
+        .accept(MediaType.APPLICATION_XML)
+        .delete();
+
+      if (response.getStatus() != 200)
+        throw new ServiceException();
+    } catch (Exception e) {
+      throw new ServiceException(e);
+    }
   }
 
 }

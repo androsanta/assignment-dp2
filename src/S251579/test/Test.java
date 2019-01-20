@@ -4,9 +4,13 @@ import it.polito.dp2.RNS.lab3.AdmClient;
 import it.polito.dp2.RNS.lab3.AdmClientException;
 import it.polito.dp2.RNS.lab3.AdmClientFactory;
 import it.polito.dp2.RNS.lab3.ServiceException;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
+import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -48,14 +52,24 @@ public class Test {
 
 
     Client client = ClientBuilder.newClient();
+    EnterVehicle enterVehicle = new EnterVehicle();
+    enterVehicle.setPlateId("ziofa2");
+    enterVehicle.setEnterGate("http://192.168.1.5:8080/RnsSystem/rest/places/Gate0");
+    enterVehicle.setVehicleType(VehicleTypeEnum.CAR);
+    enterVehicle.setDestination("http://192.168.1.5:8080/RnsSystem/rest/places/SP0-S4");
 
     Response response = client.target("http://192.168.1.5:8080/RnsSystem/rest")
       .path("vehicles")
       .request()
       .accept(MediaType.APPLICATION_XML)
-      .get();
+      .post(Entity.xml(enterVehicle));
 
     System.out.println(response.getStatus());
+    Vehicle vehicle = response.readEntity(Vehicle.class);
+    vehicle.getShortestPath().getPlace().forEach(System.out::println);
+
+    response.close();
+    client.close();
 
     try {
       AdmClient admClient = AdmClientFactory.newInstance().newAdmClient();
