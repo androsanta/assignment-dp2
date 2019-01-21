@@ -6,11 +6,19 @@
   </description>
 
   <property name="lab1.location" location="." />
+  <property name="lab2.location" location="." />
 
   <target name="make-zip-lab1" description="make zip to be submitted">
     <zip destfile="lab1.zip"
          basedir="${lab1.location}"
          includes="src/it/polito/dp2/RNS/sol1/**/*.java xsd/rnsInfo.xsd xsd/rnsInfo.xml doc.txt"
+    />
+  </target>
+
+  <target name="make-zip-lab2" description="Make zip to be submitted">
+    <zip destfile="lab2.zip"
+         basedir="${lab2.location}"
+         includes="custom/restClient.xsd src/it/polito/dp2/RNS/sol2/**/*.java sol-build.xml"
     />
   </target>
 

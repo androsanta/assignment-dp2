@@ -183,8 +183,7 @@ public class PathFinderImpl implements PathFinder {
     }
   }
 
-  //@TODO just for test, make it private
-  public void unloadModel (Client client) throws ServiceException {
+  private void unloadModel (Client client) throws ServiceException {
     // If things go wrong the model should not be set as loaded
     isModelLoaded = false;
 
