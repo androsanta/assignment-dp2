@@ -29,9 +29,6 @@
       <include name="*.jar" />
       <exclude name="ant-*.jar"/>
     </fileset>
-    <!--fileset dir="custom">
-      <include name="restClient.xsd"/>
-    </fileset-->
   </path>
 
   <target name="init">
@@ -41,7 +38,8 @@
     <copy file="${schema.dir}/RnsSystem.xsd" todir="${basedir}/WebContent/WEB-INF/classes/xsd"/>
     <mkdir dir="${basedir}/WebContent/WEB-INF/classes/html"/>
     <copy file="${custom.dir}/html/BadRequestBodyTemplate.html" todir="${basedir}/WebContent/WEB-INF/classes/html"/>
-    <copydir src="doc" dest="WebContent"/>
+    <mkdir dir="${basedir}/WebContent/doc"/>
+    <copydir src="${basedir}/doc" dest="${basedir}/WebContent/doc"/>
   </target>
 
   <target name="generate-artifacts" depends="init">

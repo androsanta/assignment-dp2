@@ -3,7 +3,6 @@ package it.polito.dp2.RNS.sol2;
 import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.sol2.rest.client.jaxb.*;
-import org.xml.sax.SAXException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -13,20 +12,10 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.util.JAXBSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 public class PathFinderImpl implements PathFinder {
 
@@ -36,9 +25,6 @@ public class PathFinderImpl implements PathFinder {
   private Map<String, String> nodesById;
   private List<RelationshipResult> relationships;
 
-  private JAXBContext jaxbContext;
-  private Validator validator;
-
 
   public PathFinderImpl () throws PathFinderException {
     String uri = System.getProperty("it.polito.dp2.RNS.lab2.URL");
@@ -46,18 +32,6 @@ public class PathFinderImpl implements PathFinder {
     if (uri == null)
       throw new PathFinderException("System property 'it.polito.dp2.RNS.lab2.URL' must be set");
     restUri = UriBuilder.fromUri(uri).path("data").build();
-
-    try {
-      SchemaFactory sf = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-      Schema schema = sf.newSchema(new File("custom/restClient.xsd"));
-
-      validator = schema.newValidator();
-      validator.setErrorHandler(new CustomErrorHandler());
-
-      jaxbContext = JAXBContext.newInstance("it.polito.dp2.RNS.sol2.rest.client.jaxb");
-    } catch (JAXBException | SAXException e) {
-      throw new PathFinderException(e);
-    }
   }
 
   private RnsReader loadReader () throws ModelException {
@@ -73,21 +47,9 @@ public class PathFinderImpl implements PathFinder {
 
     // Create Neo4j nodes
     for (PlaceReader placeReader : places) {
-      ObjectFactory of = new ObjectFactory();
-      JAXBSource source;
-
       // Request body, a node property
       NodeProperty nodeProperty = new NodeProperty();
       nodeProperty.setId(placeReader.getId());
-
-      try {
-        // Validate nodeProperty (non empty id)
-        // if element cannot be validated then something is wrong with the model
-        source = new JAXBSource(jaxbContext, of.createNodeProperty(nodeProperty));
-        validator.validate(source);
-      } catch (JAXBException | SAXException | IOException e) {
-        throw new ModelException(e);
-      }
 
       Response response;
       try {
@@ -106,15 +68,6 @@ public class PathFinderImpl implements PathFinder {
       // Convert result to NodeResult and save it
       NodeResult nodeResult = response.readEntity(NodeResult.class);
       response.close();
-
-      try {
-        // Validate response
-        // if response cannot be validated something is wrong with the service
-        source = new JAXBSource(jaxbContext, of.createNodeResult(nodeResult));
-        validator.validate(source);
-      } catch (JAXBException | SAXException | IOException e) {
-        throw new ServiceException(e);
-      }
 
       // Save node info
       nodes.put(nodeResult.getData().getId(), nodeResult);
@@ -143,10 +96,6 @@ public class PathFinderImpl implements PathFinder {
         relationshipRequest.setTo(destinationNode.getSelf());
         relationshipRequest.setType(ConnectionType.CONNECTED_TO);
 
-        ObjectFactory of = new ObjectFactory();
-        JAXBSource source = new JAXBSource(jaxbContext, of.createRelationshipRequest(relationshipRequest));
-        validator.validate(source);
-
         Response response = target
           .request()
           .accept(MediaType.APPLICATION_JSON)
@@ -157,9 +106,6 @@ public class PathFinderImpl implements PathFinder {
         }
 
         RelationshipResult relationship = response.readEntity(RelationshipResult.class);
-
-        source = new JAXBSource(jaxbContext, of.createRelationshipResult(relationship));
-        validator.validate(source);
 
         relationships.add(relationship);
       } catch (Exception e) {
@@ -266,11 +212,6 @@ public class PathFinderImpl implements PathFinder {
       List<PathResponse> pathResponses = response.readEntity(new GenericType<List<PathResponse>>() {});
 
       client.close();
-
-      for (PathResponse pathResponse : pathResponses) {
-        JAXBSource jaxbSource = new JAXBSource(jaxbContext, new ObjectFactory().createPathResponse(pathResponse));
-        validator.validate(jaxbSource);
-      }
 
       return pathResponses
         .stream()
