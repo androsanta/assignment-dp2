@@ -32,7 +32,7 @@ public class VehiclesResource {
   @GET
   @ApiOperation(value = "Get vehicles", notes = "Get tracked vehicles in the system, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Vehicles.class),
     @ApiResponse(code = 400, message = "Bad Request"),
     @ApiResponse(code = 403, message = "Forbidden")
   })
@@ -80,7 +80,7 @@ public class VehiclesResource {
   @POST
   @ApiOperation(value = "Create vehicle", notes = "Create a vehicle and insert it into the tracked vehicles of the system")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Vehicle.class),
     @ApiResponse(code = 403, message = "Forbidden"),
     @ApiResponse(code = 409, message = "Conflict"),
     @ApiResponse(code = 422, message = "Unprocessable Entity")
@@ -162,7 +162,7 @@ public class VehiclesResource {
   @Path("{id}")
   @ApiOperation(value = "Update vehicle", notes = "Update vehicle, note that only state or position can be changed")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Vehicle.class),
     @ApiResponse(code = 403, message = "Forbidden"),
     @ApiResponse(code = 404, message = "Not Found"),
     @ApiResponse(code = 409, message = "Conflict"),
@@ -248,7 +248,7 @@ public class VehiclesResource {
   @Path("{id}")
   @ApiOperation(value = "Get vehicle", notes = "Get a single tracked vehicle")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Vehicle.class),
     @ApiResponse(code = 404, message = "Not Found"),
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -264,7 +264,7 @@ public class VehiclesResource {
   @Path("{id}/shortestPath")
   @ApiOperation(value = "Get shortest path", notes = "Get shortest path of a vehicle")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = ShortestPath.class),
     @ApiResponse(code = 404, message = "Not Found")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

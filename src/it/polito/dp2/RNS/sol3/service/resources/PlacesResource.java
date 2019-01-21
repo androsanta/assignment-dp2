@@ -27,9 +27,7 @@ public class PlacesResource {
 
   @GET
   @ApiOperation(value = "Get places", notes = "Get places of rns, returned in portion")
-  @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK")
-  })
+  @ApiResponse(code = 200, message = "OK", response = Places.class)
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Places getPlaces (
@@ -52,7 +50,7 @@ public class PlacesResource {
   @Path("{id}")
   @ApiOperation(value = "Get place", notes = "Get a single place by its id, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = PlaceType.class),
     @ApiResponse(code = 403, message = "Forbidden"),
     @ApiResponse(code = 404, message = "Not Found"),
   })
@@ -79,7 +77,7 @@ public class PlacesResource {
   @Path("{id}/connections")
   @ApiOperation(value = "Get place connection", notes = "Get connections of the specified place, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = PlaceType.class, responseContainer = "List"),
     @ApiResponse(code = 403, message = "Forbidden"),
     @ApiResponse(code = 404, message = "Not Found"),
   })
@@ -107,7 +105,7 @@ public class PlacesResource {
   @Path("{id}/vehicles")
   @ApiOperation(value = "Get vehicles in place", notes = "Get vehicles that are currently in the specified place, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Vehicles.class),
     @ApiResponse(code = 403, message = "Forbidden"),
     @ApiResponse(code = 404, message = "Not Found"),
   })
@@ -144,7 +142,7 @@ public class PlacesResource {
   @Path("roadSegments")
   @ApiOperation(value = "Get road segments", notes = "Get road segments in the system, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = RoadSegments.class),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -169,7 +167,7 @@ public class PlacesResource {
   @Path("parkingAreas")
   @ApiOperation(value = "Get parking areas", notes = "Get parking areas in the system, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = ParkingAreas.class),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -195,7 +193,7 @@ public class PlacesResource {
   @Path("gates")
   @ApiOperation(value = "Get gates", notes = "Get gates in the system, restricted to admin")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Gates.class),
     @ApiResponse(code = 400, message = "Bad request"),
     @ApiResponse(code = 403, message = "Forbidden")
   })

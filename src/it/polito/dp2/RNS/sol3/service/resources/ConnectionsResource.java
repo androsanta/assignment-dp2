@@ -26,7 +26,7 @@ public class ConnectionsResource {
     notes = "Get connections of rns, restricted to admin and returned in portion"
   )
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 200, message = "OK", response = Connections.class),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

@@ -7,6 +7,11 @@
 
   <property name="lab1.location" location="." />
   <property name="lab2.location" location="." />
+  <property name="lab3.location" location="." />
+  <property name="sol.build.file" value="sol_build.xml" />
+  <property name="sol1.dir" value="src/it/polito/dp2/RNS/sol1" />
+  <property name="sol2.dir" value="src/it/polito/dp2/RNS/sol2" />
+  <property name="sol3.dir" value="src/it/polito/dp2/RNS/sol3" />
 
   <target name="make-zip-lab1" description="make zip to be submitted">
     <zip destfile="lab1.zip"
@@ -20,6 +25,12 @@
          basedir="${lab2.location}"
          includes="custom/restClient.xsd src/it/polito/dp2/RNS/sol2/**/*.java sol-build.xml"
     />
+  </target>
+
+  <target name="make-zip-lab3" description="Make zip to be submitted">
+    <zip destfile="lab3.zip"
+         basedir="${lab3.location}"
+         includes="${sol.build.file} custom/html/**/* xsd/RnsSystem.xsd doc/**/* WebContent/**/* ${sol1.dir}/**/* ${sol2.dir}/**/* ${sol3.dir}/**/*" />
   </target>
 
 </project>

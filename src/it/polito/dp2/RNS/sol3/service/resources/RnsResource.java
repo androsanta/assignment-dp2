@@ -3,7 +3,6 @@ package it.polito.dp2.RNS.sol3.service.resources;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.RnsEntry;
 
 import javax.ws.rs.GET;
@@ -22,7 +21,7 @@ public class RnsResource {
     value = "Api entry point of RnsSystem",
     notes = "Get information about places, vehicles and connection in the system"
   )
-  @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+  @ApiResponse(code = 200, message = "OK", response = RnsEntry.class)
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public RnsEntry rns (@Context UriInfo uriInfo) {
     RnsEntry rns = new RnsEntry();
