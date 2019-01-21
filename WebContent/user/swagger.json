@@ -1,0 +1,1148 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": ""
+  },
+  "host": "localhost:8080",
+  "basePath": "/RnsSystem/rest",
+  "tags": [
+    {
+      "name": "places"
+    },
+    {
+      "name": "connections"
+    },
+    {
+      "name": "vehicles"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "": {
+      "get": {
+        "summary": "Api entry point of RnsSystem",
+        "description": "Get information about places, vehicles and connection in the system",
+        "operationId": "rns",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RnsEntry"
+            }
+          }
+        }
+      }
+    },
+    "/connections": {
+      "get": {
+        "tags": [
+          "connections"
+        ],
+        "summary": "Get connections",
+        "description": "Get connections of rns, restricted to admin and returned in portion",
+        "operationId": "getConnections",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Which page of the resource must be returned",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Connections"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/places": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get places",
+        "description": "Get places of rns, returned in portion",
+        "operationId": "getPlaces",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Which page of the resource must be returned",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "idSuffix",
+            "in": "query",
+            "description": "Retrieve only places for which the id have this suffix",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Places"
+            }
+          }
+        }
+      }
+    },
+    "/places/gates": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get gates",
+        "description": "Get gates in the system, restricted to admin",
+        "operationId": "getGates",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "gateType",
+            "in": "query",
+            "description": "Get only gates of the specified type",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Gates"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/places/parkingAreas": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get parking areas",
+        "description": "Get parking areas in the system, restricted to admin",
+        "operationId": "getParkingAreas",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "description": "Get only parking areas that have the specified list of services",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ParkingAreas"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/places/roadSegments": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get road segments",
+        "description": "Get road segments in the system, restricted to admin",
+        "operationId": "getRoadSegments",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "roadName",
+            "in": "query",
+            "description": "Get road segment only from the specified road name",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RoadSegments"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/places/{id}": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get place",
+        "description": "Get a single place by its id, restricted to admin",
+        "operationId": "getPlace",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the place to get",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PlaceType"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/places/{id}/connections": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get place connection",
+        "description": "Get connections of the specified place, restricted to admin",
+        "operationId": "getPlaceConnections",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the place",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PlaceType"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/places/{id}/vehicles": {
+      "get": {
+        "tags": [
+          "places"
+        ],
+        "summary": "Get vehicles in place",
+        "description": "Get vehicles that are currently in the specified place, restricted to admin",
+        "operationId": "getVehiclesInPlace",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the place",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Vehicles"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get vehicles",
+        "description": "Get tracked vehicles in the system, restricted to admin",
+        "operationId": "getVehicles",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Which page of the resource must be returned",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Return only vehicles that have entered into the system since this date (using format yyyy-MM-dd'T'HH:mm:ss.SSSXXX)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter vehicles by the specified state",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter vehicles by the specified types",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Vehicles"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Create vehicle",
+        "description": "Create a vehicle and insert it into the tracked vehicles of the system",
+        "operationId": "createVehicle",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/EnterVehicle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/vehicles/{id}": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get vehicle",
+        "description": "Get a single tracked vehicle",
+        "operationId": "getVehicle",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the vehicle",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Update vehicle",
+        "description": "Update vehicle, note that only state or position can be changed",
+        "operationId": "updateVehicle",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the vehicle",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Remove vehicle",
+        "description": "Remove vehicle from tracked vehicles, vehicle must specify an OUT or INOUT gate, only admin can remove it from any place",
+        "operationId": "removeVehicle",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "description": "Specify if the client requesting the resource is an admin",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "outGate",
+            "in": "query",
+            "description": "The gate from which the vehicle must exit",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id if the vehicle",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/vehicles/{id}/shortestPath": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get shortest path",
+        "description": "Get shortest path of a vehicle",
+        "operationId": "getShortestPath",
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the vehicle",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Which page of the resource must be returned",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ShortestPath"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Connections": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "connection": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Connection"
+          }
+        }
+      },
+      "xml": {
+        "name": "connections"
+      }
+    },
+    "ParkingAreas": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "parkingArea": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParkingArea"
+          }
+        }
+      },
+      "xml": {
+        "name": "parkingAreas"
+      }
+    },
+    "PlaceType": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicles": {
+          "type": "string"
+        }
+      }
+    },
+    "QName": {
+      "type": "object",
+      "properties": {
+        "namespaceURI": {
+          "type": "string"
+        },
+        "localPart": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        }
+      }
+    },
+    "Connection": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "connection"
+      }
+    },
+    "RoadSegment": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicles": {
+          "type": "string"
+        },
+        "roadName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "RoadSegments": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "roadSegment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoadSegment"
+          }
+        }
+      },
+      "xml": {
+        "name": "roadSegments"
+      }
+    },
+    "JAXBElementPlaceType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/QName"
+        },
+        "value": {
+          "$ref": "#/definitions/PlaceType"
+        },
+        "nil": {
+          "type": "boolean",
+          "default": false
+        },
+        "globalScope": {
+          "type": "boolean",
+          "default": false
+        },
+        "typeSubstituted": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Gate": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicles": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "IN",
+            "OUT",
+            "INOUT"
+          ]
+        }
+      }
+    },
+    "Places": {
+      "type": "object",
+      "required": [
+        "gates",
+        "parkingAreas",
+        "roadSegments"
+      ],
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "roadSegments": {
+          "type": "string"
+        },
+        "parkingAreas": {
+          "type": "string"
+        },
+        "gates": {
+          "type": "string"
+        },
+        "place": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlaceType"
+          }
+        }
+      },
+      "xml": {
+        "name": "places"
+      }
+    },
+    "Vehicles": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vehicle"
+          }
+        }
+      },
+      "xml": {
+        "name": "vehicles"
+      }
+    },
+    "Vehicle": {
+      "type": "object",
+      "required": [
+        "shortestPath",
+        "shortestPathLink"
+      ],
+      "properties": {
+        "shortestPath": {
+          "$ref": "#/definitions/ShortestPath"
+        },
+        "shortestPathLink": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "plateId": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "entryTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PARKED",
+            "IN_TRANSIT"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "CAR",
+            "TRUCK",
+            "SHUTTLE",
+            "CARAVAN"
+          ]
+        }
+      },
+      "xml": {
+        "name": "vehicle"
+      }
+    },
+    "RnsEntry": {
+      "type": "object",
+      "required": [
+        "connections",
+        "places",
+        "vehicles"
+      ],
+      "properties": {
+        "places": {
+          "type": "string"
+        },
+        "vehicles": {
+          "type": "string"
+        },
+        "connections": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "rnsEntry"
+      }
+    },
+    "ParkingArea": {
+      "type": "object",
+      "required": [
+        "services"
+      ],
+      "properties": {
+        "connection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicles": {
+          "type": "string"
+        },
+        "services": {
+          "$ref": "#/definitions/ServicesType"
+        }
+      }
+    },
+    "ServicesType": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ShortestPath": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "place": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "xml": {
+        "name": "shortestPath"
+      }
+    },
+    "EnterVehicle": {
+      "type": "object",
+      "required": [
+        "destination",
+        "enterGate",
+        "plateId",
+        "vehicleType"
+      ],
+      "properties": {
+        "enterGate": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "plateId": {
+          "type": "string"
+        },
+        "vehicleType": {
+          "type": "string",
+          "enum": [
+            "CAR",
+            "TRUCK",
+            "SHUTTLE",
+            "CARAVAN"
+          ]
+        }
+      },
+      "xml": {
+        "name": "enterVehicle"
+      }
+    },
+    "Gates": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "gate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Gate"
+          }
+        }
+      },
+      "xml": {
+        "name": "gates"
+      }
+    }
+  }
+}

@@ -5,12 +5,8 @@ import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleStateEnum;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
-import it.polito.dp2.RNS.sol3.service.resources.PlacesResource;
 
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.UriBuilder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -120,6 +116,10 @@ public class RnsSystemDb {
     return trackedVehicles.get(plateId);
   }
 
+  public Map<String, Vehicle> getVehiclesMap () {
+    return trackedVehicles;
+  }
+
   public Vehicle updateVehicle (String id, Vehicle updatedVehicle) {
     return trackedVehicles.computeIfPresent(
       id,
@@ -127,46 +127,7 @@ public class RnsSystemDb {
     );
   }
 
-  public Vehicle forceRemoveVehicle (String plateId) {
+  public Vehicle removeVehicle (String plateId) {
     return trackedVehicles.remove(plateId);
-  }
-
-  public synchronized void removeVehicle (String plateId, String outGate, UriBuilder baseUri) {
-    Vehicle vehicle = getVehicle(plateId);
-
-    System.out.println("DELETE vehicle --- args: id " + plateId + " outgate " + outGate + " base " + baseUri.clone().toTemplate());
-    System.out.println("vehicle " + vehicle);
-
-    if (vehicle == null)
-      throw new NotFoundException();
-
-    GateReader gate = db.getGate(PlacesResource.getPlaceIdFromUri(outGate, baseUri));
-
-    System.out.println("Gate provided " + gate);
-
-    if (gate == null)
-      throw new ClientErrorException(422);
-
-    PlaceReader previousPosition = db.getPlace(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), baseUri));
-    System.out.println("previous position " + previousPosition.getId());
-    System.out.println("previous position next places: ");
-    previousPosition.getNextPlaces().forEach(p -> System.out.println(p.getId()));
-
-    boolean isGateNear = previousPosition.getNextPlaces()
-      .stream()
-      .anyMatch(p -> p.getId().equals(gate.getId()));
-
-    System.out.println("isGateNear " + isGateNear);
-    System.out.println("Gate Type " + gate.getType().value());
-
-    if (
-      (gate.getType() == GateType.OUT || gate.getType() == GateType.INOUT) &&
-        (isGateNear || outGate.equals(vehicle.getPosition()))
-    ) {
-      trackedVehicles.remove(plateId);
-      return;
-    }
-
-    throw new ClientErrorException(403);
   }
 }

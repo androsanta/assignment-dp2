@@ -1,6 +1,9 @@
 package it.polito.dp2.RNS.sol3.service.resources;
 
 import io.swagger.annotations.*;
+import it.polito.dp2.RNS.GateReader;
+import it.polito.dp2.RNS.GateType;
+import it.polito.dp2.RNS.PlaceReader;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
@@ -170,78 +173,78 @@ public class VehiclesResource {
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicle updateVehicle (@ApiParam(value = "Id of the vehicle") @PathParam("id") String id, Vehicle vehicle) {
-    Vehicle oldVehicle = service.getVehicle(id);
+    synchronized (service.getVehiclesSyncObject()) {
+      Vehicle oldVehicle = service.getVehicle(id);
 
-    if (oldVehicle == null || !RnsService.areVehiclesEquals(oldVehicle, vehicle))
-      throw new NotFoundException();
+      if (oldVehicle == null || !RnsService.areVehiclesEquals(oldVehicle, vehicle))
+        throw new NotFoundException();
 
-    String vehicleId = getVehicleIdFromUri(oldVehicle.getSelf(), uriInfo.getBaseUriBuilder());
-    String newPosition = vehicle.getPosition();
-    String newPositionId = PlacesResource.getPlaceIdFromUri(newPosition, uriInfo.getBaseUriBuilder());
+      String vehicleId = getVehicleIdFromUri(oldVehicle.getSelf(), uriInfo.getBaseUriBuilder());
+      String newPosition = vehicle.getPosition();
+      String newPositionId = PlacesResource.getPlaceIdFromUri(newPosition, uriInfo.getBaseUriBuilder());
 
 
-    // start from the shortest path already present in the system
-    vehicle.getShortestPath().getPlace().clear();
-    vehicle.getShortestPath().getPlace().addAll(
-      oldVehicle.getShortestPath().getPlace()
-    );
+      // start from the shortest path already present in the system
+      vehicle.getShortestPath().getPlace().clear();
+      vehicle.getShortestPath().getPlace().addAll(
+        oldVehicle.getShortestPath().getPlace()
+      );
 
-    if (!newPosition.equals(oldVehicle.getPosition())) {
+      if (!newPosition.equals(oldVehicle.getPosition())) {
 
-      if (service.getPlace(newPositionId) != null) {
+        if (service.getPlace(newPositionId) != null) {
 
-        // if position change than the vehicle is IN_TRANSIT
-        vehicle.setState(VehicleStateEnum.IN_TRANSIT);
+          // if position change than the vehicle is IN_TRANSIT
+          vehicle.setState(VehicleStateEnum.IN_TRANSIT);
 
-        // check if vehicle has a suggested path
-        if (vehicle.getShortestPath().getPlace().size() > 0) {
+          // check if vehicle has a suggested path
+          if (vehicle.getShortestPath().getPlace().size() > 0) {
 
-          // check if the new place is on the suggested path
-          int currentPosIndex = vehicle.getShortestPath().getPlace().indexOf(oldVehicle.getPosition());
-          // check if next place from old place is equals to the new position
-          if (currentPosIndex != -1 && vehicle.getShortestPath().getPlace().get(currentPosIndex + 1).equals(vehicle.getPosition())) {
+            // check if the new place is on the suggested path
+            int currentPosIndex = vehicle.getShortestPath().getPlace().indexOf(oldVehicle.getPosition());
+            // check if next place from old place is equals to the new position
+            if (currentPosIndex != -1 && vehicle.getShortestPath().getPlace().get(currentPosIndex + 1).equals(vehicle.getPosition())) {
+              return service.updateVehicle(vehicleId, vehicle);
+            }
+          }
+
+          // continue if place is not on suggested path or there's no suggested path, vehicle can move only to near places
+          String oldPositionId = PlacesResource.getPlaceIdFromUri(oldVehicle.getPosition(), uriInfo.getBaseUriBuilder());
+          String destinationId = PlacesResource.getPlaceIdFromUri(vehicle.getDestination(), uriInfo.getBaseUriBuilder());
+          boolean isConnected = service.getPlaceConnections(oldPositionId)
+            .stream()
+            .anyMatch(place -> place.getId().equals(newPositionId));
+
+          if (isConnected) {
+            try {
+              UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
+              List<String> shortestPath = service.findShortestPath(
+                newPositionId,
+                destinationId
+              );
+              vehicle.getShortestPath().getPlace().clear();
+              vehicle.getShortestPath().getPlace().addAll(
+                shortestPath
+                  .stream()
+                  .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
+                  .collect(Collectors.toList())
+              );
+            } catch (UnknownIdException | BadStateException e) {
+              throw new InternalServerErrorException();
+            } catch (ServiceException e) {
+              vehicle.getShortestPath().getPlace().clear();
+            }
+
             return service.updateVehicle(vehicleId, vehicle);
           }
+
         }
 
-        // continue if place is not on suggested path or there's no suggested path
-        // vehicle can move only to near places
-
-        String oldPositionId = PlacesResource.getPlaceIdFromUri(oldVehicle.getPosition(), uriInfo.getBaseUriBuilder());
-        String destinationId = PlacesResource.getPlaceIdFromUri(vehicle.getDestination(), uriInfo.getBaseUriBuilder());
-        boolean isConnected = service.getPlaceConnections(oldPositionId)
-          .stream()
-          .anyMatch(place -> place.getId().equals(newPositionId));
-
-        if (isConnected) {
-          try {
-            UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
-            List<String> shortestPath = service.findShortestPath(
-              newPositionId,
-              destinationId
-            );
-            vehicle.getShortestPath().getPlace().clear();
-            vehicle.getShortestPath().getPlace().addAll(
-              shortestPath
-                .stream()
-                .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
-                .collect(Collectors.toList())
-            );
-          } catch (UnknownIdException | BadStateException e) {
-            throw new InternalServerErrorException();
-          } catch (ServiceException e) {
-            vehicle.getShortestPath().getPlace().clear();
-          }
-
-          return service.updateVehicle(vehicleId, vehicle);
-        }
-
+        throw new ClientErrorException(422);
       }
 
-      throw new ClientErrorException(422);
+      return service.updateVehicle(vehicleId, vehicle);
     }
-
-    return service.updateVehicle(vehicleId, vehicle);
   }
 
   @GET
@@ -297,16 +300,46 @@ public class VehiclesResource {
   public void removeVehicle (
     @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
     @ApiParam(value = "The gate from which the vehicle must exit") @QueryParam("outGate") @DefaultValue("") String outGate,
-    @ApiParam(value = "The id if the vehicle") @PathParam("id") String id
+    @ApiParam(value = "The id if the vehicle") @PathParam("id") String plateId
   ) {
+    Vehicle vehicle;
+
     if (admin) {
-      Vehicle vehicle = service.forceRemoveVehicle(id);
-      if (vehicle == null)
+      // directly remove the vehicle, null is returned if the vehicle is not present
+      if (service.removeVehicle(plateId) == null)
         throw new NotFoundException();
       return;
     }
 
-    service.removeVehicle(id, outGate, uriInfo.getBaseUriBuilder());
+    vehicle = getVehicle(plateId);
+
+    if (vehicle == null)
+      throw new NotFoundException();
+
+    GateReader gate = service.getGate(PlacesResource.getPlaceIdFromUri(outGate, uriInfo.getBaseUriBuilder()));
+
+    if (gate == null)
+      throw new ClientErrorException(422);
+
+    List<PlaceType> connections = service.getPlaceConnections(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder()));
+
+    boolean isGateNear = connections
+      .stream()
+      .anyMatch(p -> p.getId().equals(gate.getId()));
+
+    if (
+      (gate.getType() == GateType.OUT || gate.getType() == GateType.INOUT) &&
+        (isGateNear || outGate.equals(vehicle.getPosition()))
+    ) {
+      // ok vehicle is authorized to exit
+      // try to remove it and throw not found if null is returned
+      // since other threads may have removed it
+      if (service.removeVehicle(plateId) == null)
+        throw new NotFoundException();
+      return;
+    }
+
+    throw new ClientErrorException(403);
   }
 
   public static String getVehicleIdFromUri (String uri, UriBuilder baseUrl) {

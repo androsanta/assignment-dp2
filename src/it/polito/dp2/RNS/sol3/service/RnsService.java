@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -154,6 +155,10 @@ public class RnsService {
     return gates;
   }
 
+  public GateReader getGate (String id) {
+    return db.getGate(id);
+  }
+
   public Connections getConnections (int page) {
     Connections connections = new Connections();
 
@@ -195,12 +200,12 @@ public class RnsService {
     return db.updateVehicle(id, vehicle);
   }
 
-  public Vehicle forceRemoveVehicle (String plateId) {
-    return db.forceRemoveVehicle(plateId);
+  public Map<String, Vehicle> getVehiclesSyncObject () {
+    return db.getVehiclesMap();
   }
 
-  public void removeVehicle (String id, String outGate, UriBuilder baseUri) {
-    db.removeVehicle(id, outGate, baseUri);
+  public Vehicle removeVehicle (String id) {
+    return db.removeVehicle(id);
   }
 
   public static boolean areVehiclesEquals (Vehicle v1, Vehicle v2) {

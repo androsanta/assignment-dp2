@@ -56,24 +56,6 @@ public class Test {
       "it.polito.dp2.RNS.sol3.vehClient.VehClientFactory"
     );
 
-    try {
-      PathFinder pathFinder = PathFinderFactory.newInstance().newPathFinder();
-      pathFinder.reloadModel();
-      Set<List<String>> paths = pathFinder.findShortestPaths("Gate1", "Gate0", 0);
-      paths.forEach(System.out::println);
-    } catch (PathFinderException | it.polito.dp2.RNS.lab2.ServiceException | ModelException | UnknownIdException | BadStateException e) {
-      e.printStackTrace();
-    }
-
-
-    List<String> list = new ArrayList<>();
-    list.add("ciao");
-    list.add("come");
-    list.add("stao");
-
-    list.replaceAll(String::toUpperCase);
-
-
     VehClient vehClient = null;
     try {
       vehClient = new VehClientImpl();
@@ -84,7 +66,7 @@ public class Test {
         "Gate1"
       );
 
-      for (int i = 1; i < path.size() - 1; i++) {
+      for (int i = 1; i < path.size() - 2; i++) {
         System.out.println("change path to" + path.get(i));
         vehClient.move(path.get(i));
       }
@@ -104,6 +86,9 @@ public class Test {
       admClient.getUpdatedVehicles(null).forEach(v -> System.out.println(v.getId() + " " + v.getPosition().getId()));
 
       vehClient.exit("Gate1");
+
+      System.out.println("\nVEHICLES ---------");
+      admClient.getUpdatedVehicles(null).forEach(v -> System.out.println(v.getId() + " " + v.getPosition().getId()));
     } catch (AdmClientException | ServiceException | UnknownPlaceException | WrongPlaceException e) {
       e.printStackTrace();
     }

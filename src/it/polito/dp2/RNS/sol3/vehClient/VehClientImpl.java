@@ -85,7 +85,6 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
   @Override
   public List<String> enter (String plateId, VehicleType type, String inGate, String destination)
     throws ServiceException, UnknownPlaceException, WrongPlaceException, EntranceRefusedException {
-    System.out.println("vehClient enter " + plateId + " gate " + inGate + " destination " + destination);
 
     String inGateUrl = placeUrlById.get(inGate) == null ? inGate : placeUrlById.get(inGate);
     String destinationUrl = placeUrlById.get(destination) == null ? destination : placeUrlById.get(destination);
@@ -107,7 +106,6 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
       throw new ServiceException(e);
     }
 
-    System.out.println("vehClient enter " + plateId + " gate " + inGate + " destination " + destination + " response " + response.getStatus());
     switch (response.getStatus()) {
       case 200:
         vehicle = response.readEntity(Vehicle.class);
@@ -203,7 +201,6 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
 
     Response response;
     String outGateUrl = placeUrlById.get(outGate) == null ? outGate : placeUrlById.get(outGate);
-    System.out.println("VEH CLIENT EXITTTTTTT " + outGate + " " + outGateUrl);
     try {
       response = client.target(vehicle.getSelf())
         .queryParam("outGate", outGateUrl)

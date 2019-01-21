@@ -29,6 +29,9 @@
       <include name="*.jar" />
       <exclude name="ant-*.jar"/>
     </fileset>
+    <!--fileset dir="custom">
+      <include name="restClient.xsd"/>
+    </fileset-->
   </path>
 
   <target name="init">
@@ -38,9 +41,14 @@
     <copy file="${schema.dir}/RnsSystem.xsd" todir="${basedir}/WebContent/WEB-INF/classes/xsd"/>
     <mkdir dir="${basedir}/WebContent/WEB-INF/classes/html"/>
     <copy file="${custom.dir}/html/BadRequestBodyTemplate.html" todir="${basedir}/WebContent/WEB-INF/classes/html"/>
+    <copydir src="doc" dest="WebContent"/>
   </target>
 
   <target name="generate-artifacts" depends="init">
+    <exec executable="xjc" failonerror="true">
+      <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol2.rest.client.jaxb"/>
+      <arg line="${custom.dir}/restClient.xsd"/>
+    </exec>
     <exec executable="xjc" failonerror="true">
       <arg line="-d ${gen.dir} -p it.polito.dp2.RNS.sol3.rest.service.jaxb"/>
       <arg line="${schema.dir}/RnsSystem.xsd"/>
@@ -58,6 +66,7 @@
       <src path="${src.dir}"/>
       <src path="${gen.dir}"/>
       <include name="it/polito/dp2/RNS/sol3/service/**"/>
+      <include name="it/polito/dp2/RNS/sol2/**/*"/>
       <classpath>
         <path refid="sol.classpath"/>
       </classpath>
@@ -76,6 +85,7 @@
       <src path="${src.dir}"/>
       <src path="${gen.dir}"/>
       <include name="it/polito/dp2/RNS/sol3/admClient/**"/>
+      <include name="it/polito/dp2/RNS/sol2/**/*"/>
       <classpath>
         <path refid="sol.classpath"/>
       </classpath>
@@ -89,6 +99,7 @@
       <src path="${src.dir}"/>
       <src path="${gen.dir}"/>
       <include name="it/polito/dp2/RNS/sol3/vehClient/**"/>
+      <include name="it/polito/dp2/RNS/sol2/**/*"/>
       <classpath>
         <path refid="sol.classpath"/>
       </classpath>

@@ -30,7 +30,7 @@
   <target name="make-zip-lab3" description="Make zip to be submitted">
     <zip destfile="lab3.zip"
          basedir="${lab3.location}"
-         includes="${sol.build.file} custom/html/**/* xsd/RnsSystem.xsd doc/**/* WebContent/**/* ${sol1.dir}/**/* ${sol2.dir}/**/* ${sol3.dir}/**/*" />
+         includes="${sol.build.file} custom/**/* xsd/RnsSystem.xsd doc/**/* WebContent/**/* ${sol1.dir}/**/* ${sol2.dir}/**/* ${sol3.dir}/**/*" />
   </target>
 
 </project>
