@@ -1,9 +1,6 @@
 package it.polito.dp2.RNS.sol3.service.resources;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.jaxrs.PATCH;
+import io.swagger.annotations.*;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
@@ -24,8 +21,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @Path("vehicles")
+@Api(value = "vehicles")
 public class VehiclesResource {
 
   @Context
@@ -33,20 +30,20 @@ public class VehiclesResource {
   private RnsService service = new RnsService();
 
   @GET
-  @ApiOperation(value = "vehicles", notes = "get tracked vehicles")
+  @ApiOperation(value = "Get vehicles", notes = "Get tracked vehicles in the system, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
+    @ApiResponse(code = 400, message = "Bad Request"),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicles getVehicles (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @QueryParam("page") int page,
-    @QueryParam("since") String since,
-    @QueryParam("state") String state,
-    @QueryParam("type") Set<String> types
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Which page of the resource must be returned") @QueryParam("page") int page,
+    @ApiParam(value = "Return only vehicles that have entered into the system since this date (using format yyyy-MM-dd'T'HH:mm:ss.SSSXXX)") @QueryParam("since") String since,
+    @ApiParam(value = "Filter vehicles by the specified state") @QueryParam("state") String state,
+    @ApiParam(value = "Filter vehicles by the specified types") @QueryParam("type") Set<String> types
   ) {
-    System.out.println("GET VEHICLES");
     if (admin) {
       GregorianCalendar calendar = null;
       VehicleStateEnum vehicleState;
@@ -81,7 +78,7 @@ public class VehiclesResource {
   }
 
   @POST
-  @ApiOperation(value = "create vehicle", notes = "insert new vehicle into the tracked vehicles")
+  @ApiOperation(value = "Create vehicle", notes = "Create a vehicle and insert it into the tracked vehicles of the system")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden"),
@@ -96,8 +93,6 @@ public class VehiclesResource {
     409 -> Conflict - a vehicle with the same plateId is already in the system
     422 -> Unprocessable Entity - source or destination place cannot be found
      */
-
-    System.out.println("CREATE VEHICLES " + enterRequest.getPlateId());
 
     String entranceGateId = PlacesResource.getPlaceIdFromUri(enterRequest.getEnterGate(), uriInfo.getBaseUriBuilder());
     String destinationPlaceId = PlacesResource.getPlaceIdFromUri(enterRequest.getDestination(), uriInfo.getBaseUriBuilder());
@@ -137,24 +132,25 @@ public class VehiclesResource {
       throw new InternalServerErrorException();
     }
 
+    ShortestPath shortestPath = new ShortestPath();
+    shortestPath.setPage(BigInteger.ONE);
+    shortestPath.setTotalPages(BigInteger.ONE);
     try {
       UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
       List<String> paths = service.findShortestPath(entranceGateId, destinationPlaceId);
 
-      ShortestPath shortestPath = new ShortestPath();
-      shortestPath.setPage(BigInteger.ONE);
-      shortestPath.setTotalPages(BigInteger.ONE);
       shortestPath.getPlace().addAll(
         paths.stream()
           .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
-          // .filter(p -> !p.equals(vehicle.getPosition()))
           .collect(Collectors.toList())
       );
-      vehicle.setShortestPath(shortestPath);
-      vehicle.setShortestPathLink(selfBuilder.path("shortestPath").toTemplate());
-    } catch (ServiceException | UnknownIdException | BadStateException e) {
+    } catch (UnknownIdException | BadStateException | ServiceException e) {
+      // If findShortestPath fails is not client's fault so InternalServerError is returned
       throw new InternalServerErrorException();
     }
+
+    vehicle.setShortestPath(shortestPath);
+    vehicle.setShortestPathLink(selfBuilder.path("shortestPath").toTemplate());
 
     if (service.addVehicle(vehicle) == null)
       throw new ClientErrorException(409);
@@ -162,9 +158,9 @@ public class VehiclesResource {
     return vehicle;
   }
 
-  @PUT // @PATCH
+  @PUT
   @Path("{id}")
-  @ApiOperation(value = "update vehicle", notes = "update state or position of a vehicle")
+  @ApiOperation(value = "Update vehicle", notes = "Update vehicle, note that only state or position can be changed")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden"),
@@ -173,9 +169,7 @@ public class VehiclesResource {
     @ApiResponse(code = 422, message = "Unprocessable Entity")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Vehicle updateVehicle (@PathParam("id") String id, Vehicle vehicle) {
-    System.out.println("\nUPDATE VEHICLE ----  id " + id);
-
+  public Vehicle updateVehicle (@ApiParam(value = "Id of the vehicle") @PathParam("id") String id, Vehicle vehicle) {
     Vehicle oldVehicle = service.getVehicle(id);
 
     if (oldVehicle == null || !RnsService.areVehiclesEquals(oldVehicle, vehicle))
@@ -193,19 +187,14 @@ public class VehiclesResource {
     );
 
     if (!newPosition.equals(oldVehicle.getPosition())) {
-      // UPDATE POSITION
-      System.out.println("changing vehicle position");
 
       if (service.getPlace(newPositionId) != null) {
-        System.out.println("NEW POSITION " + newPosition + " new position id " + newPositionId + " place exists " + (service.getPlace(newPositionId) != null));
 
         // if position change than the vehicle is IN_TRANSIT
         vehicle.setState(VehicleStateEnum.IN_TRANSIT);
-        System.out.println("vehicle is IN_TRANSIT");
 
         // check if vehicle has a suggested path
         if (vehicle.getShortestPath().getPlace().size() > 0) {
-          System.out.println("vehicle has a suggested path");
 
           // check if the new place is on the suggested path
           int currentPosIndex = vehicle.getShortestPath().getPlace().indexOf(oldVehicle.getPosition());
@@ -215,7 +204,6 @@ public class VehiclesResource {
           }
         }
 
-        System.out.println("vehicle has no suggested path, or is deviating from it");
         // continue if place is not on suggested path or there's no suggested path
         // vehicle can move only to near places
 
@@ -226,8 +214,6 @@ public class VehiclesResource {
           .anyMatch(place -> place.getId().equals(newPositionId));
 
         if (isConnected) {
-          System.out.println("requested position is reachable");
-
           try {
             UriBuilder baseUrl = uriInfo.getBaseUriBuilder();
             List<String> shortestPath = service.findShortestPath(
@@ -239,15 +225,12 @@ public class VehiclesResource {
               shortestPath
                 .stream()
                 .map(p -> PlacesResource.setPlaceLinks(service.getPlace(p), baseUrl).getSelf())
-                // .filter(p -> !p.equals(newPosition))
                 .collect(Collectors.toList())
             );
-            System.out.println("new shortest path computed");
           } catch (UnknownIdException | BadStateException e) {
             throw new InternalServerErrorException();
           } catch (ServiceException e) {
             vehicle.getShortestPath().getPlace().clear();
-            System.out.println("is not possible to compute a shortest path");
           }
 
           return service.updateVehicle(vehicleId, vehicle);
@@ -255,7 +238,6 @@ public class VehiclesResource {
 
       }
 
-      System.out.println("requested position is not a valid place");
       throw new ClientErrorException(422);
     }
 
@@ -264,15 +246,13 @@ public class VehiclesResource {
 
   @GET
   @Path("{id}")
-  @ApiOperation(value = "get vehicle", notes = "get single tracked vehicle")
+  @ApiOperation(value = "Get vehicle", notes = "Get a single tracked vehicle")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 404, message = "Not Found"),
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Vehicle getVehicle (@PathParam("id") String id) {
-    System.out.println("GET VEHICLE " + id);
-
+  public Vehicle getVehicle (@ApiParam(value = "Id of the vehicle") @PathParam("id") String id) {
     Vehicle vehicle = service.getVehicle(id);
     if (vehicle == null)
       throw new NotFoundException();
@@ -282,14 +262,16 @@ public class VehiclesResource {
 
   @GET
   @Path("{id}/shortestPath")
-  @ApiOperation(value = "update vehicle", notes = "update state or position of a vehicle")
+  @ApiOperation(value = "Get shortest path", notes = "Get shortest path of a vehicle")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 404, message = "Not Found")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public ShortestPath getShortestPath (@PathParam("id") String id, @QueryParam("page") int page) {
-    System.out.println("GET SHORTEST PATH " + id);
+  public ShortestPath getShortestPath (
+    @ApiParam(value = "Id of the vehicle") @PathParam("id") String id,
+    @ApiParam(value = "Which page of the resource must be returned") @QueryParam("page") int page
+  ) {
     Vehicle vehicle = service.getVehicle(id);
 
     if (vehicle == null)
@@ -300,21 +282,23 @@ public class VehiclesResource {
 
   @DELETE
   @Path("{id}")
-  @ApiOperation(value = "delete vehicle", notes = "remove vehicle from tracked vehicles")
+  @ApiOperation(
+    value = "Remove vehicle",
+    notes = "Remove vehicle from tracked vehicles, vehicle must specify an " +
+      "OUT or INOUT gate, only admin can remove it from any place"
+  )
   @ApiResponses(value = {
     @ApiResponse(code = 204, message = "No Content"),
     @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 422, message = "Unprocessable Entity"),
-    @ApiResponse(code = 404, message = "Not Found")
+    @ApiResponse(code = 404, message = "Not Found"),
+    @ApiResponse(code = 422, message = "Unprocessable Entity")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public void removeVehicle (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @QueryParam("outGate") @DefaultValue("") String outGate,
-    @PathParam("id") String id
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "The gate from which the vehicle must exit") @QueryParam("outGate") @DefaultValue("") String outGate,
+    @ApiParam(value = "The id if the vehicle") @PathParam("id") String id
   ) {
-    System.out.println("REMOVE VEHICLE");
-
     if (admin) {
       Vehicle vehicle = service.forceRemoveVehicle(id);
       if (vehicle == null)

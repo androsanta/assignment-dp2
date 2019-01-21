@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @Path("places")
 @Api(value = "places")
 public class PlacesResource {
@@ -27,19 +26,16 @@ public class PlacesResource {
   private RnsService service = new RnsService();
 
   @GET
-  @ApiOperation(value = "get places", notes = "get places of rns")
+  @ApiOperation(value = "Get places", notes = "Get places of rns, returned in portion")
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK"),
-    @ApiResponse(code = 403, message = "Forbidden"),
+    @ApiResponse(code = 200, message = "OK")
   })
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Places getPlaces (
-    @QueryParam("page") int page,
-    @QueryParam("idSuffix") String idSuffix
+    @ApiParam(value = "Which page of the resource must be returned") @QueryParam("page") int page,
+    @ApiParam(value = "Retrieve only places for which the id have this suffix") @QueryParam("idSuffix") String idSuffix
   ) {
-    System.out.println("GET PLACES");
-
     Places places = service.getPlaces(idSuffix, page);
 
     UriBuilder uri = uriInfo.getAbsolutePathBuilder();
@@ -54,7 +50,7 @@ public class PlacesResource {
 
   @GET
   @Path("{id}")
-  @ApiOperation(value = "get item", notes = "get single item")
+  @ApiOperation(value = "Get place", notes = "Get a single place by its id, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden"),
@@ -62,8 +58,8 @@ public class PlacesResource {
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public JAXBElement<PlaceType> getPlace (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @PathParam("id") String id
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Id of the place to get") @PathParam("id") String id
   ) {
     if (admin) {
       PlaceType placeType = service.getPlace(id);
@@ -81,7 +77,7 @@ public class PlacesResource {
 
   @GET
   @Path("{id}/connections")
-  @ApiOperation(value = "get connections", notes = "get connections of specified place")
+  @ApiOperation(value = "Get place connection", notes = "Get connections of the specified place, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden"),
@@ -89,8 +85,8 @@ public class PlacesResource {
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public List<JAXBElement<PlaceType>> getPlaceConnections (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @PathParam("id") String id
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Id of the place") @PathParam("id") String id
   ) {
     if (admin) {
       List<PlaceType> placeTypes = service.getPlaceConnections(id);
@@ -109,7 +105,7 @@ public class PlacesResource {
 
   @GET
   @Path("{id}/vehicles")
-  @ApiOperation(value = "get connections", notes = "get connections of specified place")
+  @ApiOperation(value = "Get vehicles in place", notes = "Get vehicles that are currently in the specified place, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden"),
@@ -117,11 +113,9 @@ public class PlacesResource {
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicles getVehiclesInPlace (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @PathParam("id") String placeId
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Id of the place") @PathParam("id") String placeId
   ) {
-    System.out.println("GET VEHICLES IN PLACE " + placeId);
-
     if (admin) {
       if (service.getPlace(placeId) == null)
         throw new NotFoundException();
@@ -148,15 +142,15 @@ public class PlacesResource {
 
   @GET
   @Path("roadSegments")
-  @ApiOperation(value = "get road segments", notes = "get road segments")
+  @ApiOperation(value = "Get road segments", notes = "Get road segments in the system, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public RoadSegments getRoadSegments (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @QueryParam("roadName") String roadName
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Get road segment only from the specified road name") @QueryParam("roadName") String roadName
   ) {
     if (admin) {
       RoadSegments roadSegments = service.getRoadSegments(roadName);
@@ -173,15 +167,15 @@ public class PlacesResource {
 
   @GET
   @Path("parkingAreas")
-  @ApiOperation(value = "get parking areas", notes = "get parking areas")
+  @ApiOperation(value = "Get parking areas", notes = "Get parking areas in the system, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public ParkingAreas getParkingAreas (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @QueryParam("service") List<String> servicesList
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Get only parking areas that have the specified list of services") @QueryParam("service") List<String> servicesList
   ) {
     if (admin) {
       Set<String> services = servicesList == null ? null : new HashSet<>(servicesList);
@@ -199,7 +193,7 @@ public class PlacesResource {
 
   @GET
   @Path("gates")
-  @ApiOperation(value = "get gates", notes = "get gates")
+  @ApiOperation(value = "Get gates", notes = "Get gates in the system, restricted to admin")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 400, message = "Bad request"),
@@ -207,8 +201,8 @@ public class PlacesResource {
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Gates getGates (
-    @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @QueryParam("gateType") String type
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
+    @ApiParam(value = "Get only gates of the specified type") @QueryParam("gateType") String type
   ) {
     if (admin) {
       GateType gateType = null;

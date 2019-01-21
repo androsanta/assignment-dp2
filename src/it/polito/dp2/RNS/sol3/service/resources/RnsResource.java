@@ -18,11 +18,13 @@ import javax.ws.rs.core.UriInfo;
 public class RnsResource {
 
   @GET
-  @ApiOperation(value = "entry point", notes = "api entry point")
+  @ApiOperation(
+    value = "Api entry point of RnsSystem",
+    notes = "Get information about places, vehicles and connection in the system"
+  )
   @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public RnsEntry rns (@Context UriInfo uriInfo) {
-    System.out.println("RNS ENTRY POINT GET");
     RnsEntry rns = new RnsEntry();
     rns.setPlaces(uriInfo.getAbsolutePathBuilder().path("places").toTemplate());
     rns.setVehicles(uriInfo.getAbsolutePathBuilder().path("vehicles").toTemplate());

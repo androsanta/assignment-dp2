@@ -2,7 +2,9 @@ package S251579.test;
 
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
+import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.lab3.*;
+import it.polito.dp2.RNS.lab3.ServiceException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Test {
@@ -52,6 +55,24 @@ public class Test {
       "it.polito.dp2.RNS.lab3.VehClientFactory",
       "it.polito.dp2.RNS.sol3.vehClient.VehClientFactory"
     );
+
+    try {
+      PathFinder pathFinder = PathFinderFactory.newInstance().newPathFinder();
+      pathFinder.reloadModel();
+      Set<List<String>> paths = pathFinder.findShortestPaths("Gate1", "Gate0", 0);
+      paths.forEach(System.out::println);
+    } catch (PathFinderException | it.polito.dp2.RNS.lab2.ServiceException | ModelException | UnknownIdException | BadStateException e) {
+      e.printStackTrace();
+    }
+
+
+    List<String> list = new ArrayList<>();
+    list.add("ciao");
+    list.add("come");
+    list.add("stao");
+
+    list.replaceAll(String::toUpperCase);
+
 
     VehClient vehClient = null;
     try {

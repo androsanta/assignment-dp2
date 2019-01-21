@@ -1,9 +1,6 @@
 package it.polito.dp2.RNS.sol3.service.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Connections;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Places;
 import it.polito.dp2.RNS.sol3.service.RnsService;
@@ -24,13 +21,19 @@ public class ConnectionsResource {
   private RnsService service = new RnsService();
 
   @GET
-  @ApiOperation(value = "get connections", notes = "get connections of rns")
+  @ApiOperation(
+    value = "Get connections",
+    notes = "Get connections of rns, restricted to admin and returned in portion"
+  )
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK"),
     @ApiResponse(code = 403, message = "Forbidden")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Connections getConnections (@QueryParam("admin") boolean admin, @QueryParam("page") int page) {
+  public Connections getConnections (
+    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") boolean admin,
+    @ApiParam(value = "Which page of the resource must be returned") @QueryParam("page") int page
+  ) {
     if (admin) {
       Connections connections = service.getConnections(page);
 
