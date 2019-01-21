@@ -1,0 +1,24 @@
+Assignment n. 1 – part a
+XML application Documentation
+
+The root element of the application is named rns and contains the element places (of type PlacesType, contains a list of places)
+and vehicles (of type VehiclesType, contains a list of vehicles).
+There are 3 type of places, RoadSegmentType, ParkingAreaType and GateType, and each one is an extension of the base type PlaceType,
+since some type of information are shared (such as id, capacity and connections).
+A place in the system can be referenced by its identifier, this is obtained using a key element (of name placesKey), which also
+enforce the uniqueness of those keys. However, in the system an identified entity is unique globally, so to enforce uniqueness of
+ids of both places and vehicles I’ve exploited a unique element (with name identifiedEntityUnique).
+ConnectionsType contains a list of ids of place, to avoid duplicate connections a unique element is exploited inside the definition
+of the base type PlaceType. A connection must reference a valid place id, to enforce this I’ve used a key ref of name placesKeyref
+that refers to the key placesKey defined before.
+VehicleType contains information about the vehicle position, origin and destination and each one of them must refer to a valid
+place id, to do so I’ve used a keyref element that refers to the already defined key placesKey (keyref: positionPlaceKeyref,
+originPlaceKeyref, destinationPlaceKeyref).
+RoadSegmentType extends the base type PlaceType and add to it information about road name (attribute roadName) and road segment
+name (attribute name). A road segment must be unique within the road (there could be 2 segment with the same name but not on the same road),
+so the couple road name and road segment name must be unique across the system and this is enforced by the unique element uniqueSegmentInRoad.
+ParkingAreaType extends the base type PlaceType by adding a ServicesType, which is a list of strings identifying services,
+a unique element (uniqueService) is exploited to enforce uniqueness of services inside each parking area.
+GateType extends the base type PlaceType by adding the type of the gate.
+Some enums are defined for well-defined values such as vehicle state and type (VehicleStateEnum and VehicleTypeEnum) and
+gate type (GateTypeEnum).

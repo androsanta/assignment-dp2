@@ -31,24 +31,7 @@ public class RnsInfoSerializer {
     rns = new Rns();
   }
 
-  private static void setProperties () {
-    System.setProperty(
-      "it.polito.dp2.RNS.RnsReaderFactory",
-      "it.polito.dp2.RNS.Random.RnsReaderFactoryImpl"
-    );
-    System.setProperty(
-      "it.polito.dp2.RNS.Random.seed",
-      "1123956"
-    );
-    System.setProperty(
-      "it.polito.dp2.RNS.Random.testcase",
-      "2"
-    );
-  }
-
   public static void main (String[] args) {
-    //@TODO remove before submitting solution
-    // setProperties();
 
     if (args.length != 1) {
       System.out.println("Specify an output file as argument");
@@ -153,6 +136,7 @@ public class RnsInfoSerializer {
     try {
       return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     } catch (DatatypeConfigurationException e) {
+      // if an error occurs here it is handled further in schema validation
       e.printStackTrace();
     }
     return null;
