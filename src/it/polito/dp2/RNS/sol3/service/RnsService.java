@@ -1,17 +1,14 @@
 package it.polito.dp2.RNS.sol3.service;
 
-import it.polito.dp2.RNS.*;
+import it.polito.dp2.RNS.GateType;
+import it.polito.dp2.RNS.IdentifiedEntityReader;
+import it.polito.dp2.RNS.PlaceReader;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 import it.polito.dp2.RNS.sol3.service.db.RnsSystemDb;
-import it.polito.dp2.RNS.sol3.service.resources.PlacesResource;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.UriBuilder;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -153,10 +150,6 @@ public class RnsService {
     );
 
     return gates;
-  }
-
-  public GateReader getGate (String id) {
-    return db.getGate(id);
   }
 
   public Connections getConnections (int page) {

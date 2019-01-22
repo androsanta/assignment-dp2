@@ -3,7 +3,6 @@ package it.polito.dp2.RNS.sol3.vehClient;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.*;
-import it.polito.dp2.RNS.sol1.Place;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 
 import javax.ws.rs.client.Client;
@@ -13,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -134,6 +132,7 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
 
   @Override
   public List<String> move (String newPlace) throws ServiceException, UnknownPlaceException, WrongPlaceException {
+    System.out.println("Vehicle move to " + newPlace);
     Client client = ClientBuilder.newClient();
 
     Response response;
@@ -197,13 +196,16 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
 
   @Override
   public void exit (String outGate) throws ServiceException, UnknownPlaceException, WrongPlaceException {
+    System.out.println("Vehicle exit to " + outGate + " position " + vehicle.getPosition());
+
+    if (!outGate.equals(placeIdByUrl.get(vehicle.getPosition())))
+      move(outGate);
+
     Client client = ClientBuilder.newClient();
 
     Response response;
-    String outGateUrl = placeUrlById.get(outGate) == null ? outGate : placeUrlById.get(outGate);
     try {
       response = client.target(vehicle.getSelf())
-        .queryParam("outGate", outGateUrl)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .delete();
@@ -220,10 +222,6 @@ public class VehClientImpl implements it.polito.dp2.RNS.lab3.VehClient {
         response.close();
         client.close();
         throw new WrongPlaceException();
-      case 422:
-        response.close();
-        client.close();
-        throw new UnknownPlaceException();
       default:
         response.close();
         client.close();

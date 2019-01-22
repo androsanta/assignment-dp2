@@ -1,24 +1,12 @@
 package S251579.test;
 
+import it.polito.dp2.RNS.VehicleReader;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
-import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.lab3.*;
-import it.polito.dp2.RNS.lab3.ServiceException;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.EnterVehicle;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
 import it.polito.dp2.RNS.sol3.vehClient.VehClientImpl;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Test {
 
@@ -60,13 +48,13 @@ public class Test {
     try {
       vehClient = new VehClientImpl();
       List<String> path = vehClient.enter(
-        "ziofa",
+        "ziofaa",
         VehicleType.CAR,
         "Gate0",
         "Gate1"
       );
 
-      for (int i = 1; i < path.size() - 2; i++) {
+      for (int i = 1; i < path.size() - 1; i++) {
         System.out.println("change path to" + path.get(i));
         vehClient.move(path.get(i));
       }
@@ -84,6 +72,9 @@ public class Test {
       admClient.getConnections().forEach(c -> System.out.println("from " + c.getFrom().getId() + " to " + c.getTo().getId()));
       System.out.println("\nVEHICLES ---------");
       admClient.getUpdatedVehicles(null).forEach(v -> System.out.println(v.getId() + " " + v.getPosition().getId()));
+
+      VehicleReader veh = admClient.getUpdatedVehicle("ziofaa");
+      System.out.println(veh.getId());
 
       vehClient.exit("Gate1");
 

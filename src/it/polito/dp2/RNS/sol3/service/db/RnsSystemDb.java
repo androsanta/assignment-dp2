@@ -75,15 +75,6 @@ public class RnsSystemDb {
     return rnsReader.getGates(type);
   }
 
-  public GateReader getGate (String id) {
-    List<GateReader> gates = rnsReader.getGates(null).stream()
-      .filter(g -> g.getId().equals(id))
-      .collect(Collectors.toList());
-    if (gates.size() == 1)
-      return gates.get(0);
-    return null;
-  }
-
   public Set<ConnectionReader> getConnections () {
     return rnsReader.getConnections();
   }

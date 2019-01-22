@@ -84,17 +84,18 @@ public class VehiclesResource {
   @ApiOperation(value = "Create vehicle", notes = "Create a vehicle and insert it into the tracked vehicles of the system")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK", response = Vehicle.class),
-    @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 409, message = "Conflict"),
-    @ApiResponse(code = 422, message = "Unprocessable Entity")
+    @ApiResponse(code = 403, message = "Forbidden - Entrance gate provided is not IN/IN_OUT"),
+    @ApiResponse(code = 409, message = "Conflict - A vehicle with the same name is already in the system"),
+    @ApiResponse(code = 422, message = "Unprocessable Entity - source or destination cannot be found")
   })
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicle createVehicle (EnterVehicle enterRequest) {
     /*
-    403 -> Forbidden - entrance gate provided is not IN/INOUT
-    409 -> Conflict - a vehicle with the same plateId is already in the system
-    422 -> Unprocessable Entity - source or destination place cannot be found
+    The HTTP 403 Forbidden client error status response code indicates that the server understood the request but refuses to authorize it.
+    The HTTP 409 Conflict response status code indicates a request conflict with current state of the server.
+    The HTTP 422 Unprocessable Entity response status code indicates that the server understands the content type of the request entity,
+    and the syntax of the request entity is correct, but it was unable to process the contained instructions.
      */
 
     String entranceGateId = PlacesResource.getPlaceIdFromUri(enterRequest.getEnterGate(), uriInfo.getBaseUriBuilder());
@@ -166,10 +167,9 @@ public class VehiclesResource {
   @ApiOperation(value = "Update vehicle", notes = "Update vehicle, note that only state or position can be changed")
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "OK", response = Vehicle.class),
-    @ApiResponse(code = 403, message = "Forbidden"),
+    @ApiResponse(code = 403, message = "Forbidden - New position is not reachable from the current position"),
     @ApiResponse(code = 404, message = "Not Found"),
-    @ApiResponse(code = 409, message = "Conflict"),
-    @ApiResponse(code = 422, message = "Unprocessable Entity")
+    @ApiResponse(code = 422, message = "Unprocessable Entity - New position is not a valid place")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Vehicle updateVehicle (@ApiParam(value = "Id of the vehicle") @PathParam("id") String id, Vehicle vehicle) {
@@ -238,6 +238,7 @@ public class VehiclesResource {
             return service.updateVehicle(vehicleId, vehicle);
           }
 
+          throw new ClientErrorException(403);
         }
 
         throw new ClientErrorException(422);
@@ -292,45 +293,26 @@ public class VehiclesResource {
   )
   @ApiResponses(value = {
     @ApiResponse(code = 204, message = "No Content"),
-    @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 404, message = "Not Found"),
-    @ApiResponse(code = 422, message = "Unprocessable Entity")
+    @ApiResponse(code = 403, message = "Forbidden - The vehicle is not in an OUT/IN_OUT gate"),
+    @ApiResponse(code = 404, message = "Not Found")
   })
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public void removeVehicle (
     @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @ApiParam(value = "The gate from which the vehicle must exit") @QueryParam("outGate") @DefaultValue("") String outGate,
     @ApiParam(value = "The id if the vehicle") @PathParam("id") String plateId
   ) {
-    Vehicle vehicle;
-
-    if (admin) {
-      // directly remove the vehicle, null is returned if the vehicle is not present
-      if (service.removeVehicle(plateId) == null)
-        throw new NotFoundException();
-      return;
-    }
-
-    vehicle = getVehicle(plateId);
+    Vehicle vehicle = getVehicle(plateId);
 
     if (vehicle == null)
       throw new NotFoundException();
 
-    GateReader gate = service.getGate(PlacesResource.getPlaceIdFromUri(outGate, uriInfo.getBaseUriBuilder()));
-
-    if (gate == null)
-      throw new ClientErrorException(422);
-
-    List<PlaceType> connections = service.getPlaceConnections(PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder()));
-
-    boolean isGateNear = connections
+    String vehiclePositionId = PlacesResource.getPlaceIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder());
+    boolean isPositionValid = service.getGates(null).getGate()
       .stream()
-      .anyMatch(p -> p.getId().equals(gate.getId()));
+      .filter(g -> g.getType().equals(GateTypeEnum.OUT) || g.getType().equals(GateTypeEnum.INOUT))
+      .anyMatch(g -> g.getId().equals(vehiclePositionId));
 
-    if (
-      (gate.getType() == GateType.OUT || gate.getType() == GateType.INOUT) &&
-        (isGateNear || outGate.equals(vehicle.getPosition()))
-    ) {
+    if (admin || isPositionValid) {
       // ok vehicle is authorized to exit
       // try to remove it and throw not found if null is returned
       // since other threads may have removed it
