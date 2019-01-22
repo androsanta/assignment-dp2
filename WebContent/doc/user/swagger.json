@@ -303,99 +303,6 @@
         }
       }
     },
-    "/places/{id}/connections": {
-      "get": {
-        "tags": [
-          "places"
-        ],
-        "summary": "Get place connection",
-        "description": "Get connections of the specified place, restricted to admin",
-        "operationId": "getPlaceConnections",
-        "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "name": "admin",
-            "in": "query",
-            "description": "Specify if the client requesting the resource is an admin",
-            "required": false,
-            "type": "boolean",
-            "default": "false"
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Id of the place",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PlaceType"
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/places/{id}/vehicles": {
-      "get": {
-        "tags": [
-          "places"
-        ],
-        "summary": "Get vehicles in place",
-        "description": "Get vehicles that are currently in the specified place, restricted to admin",
-        "operationId": "getVehiclesInPlace",
-        "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "name": "admin",
-            "in": "query",
-            "description": "Specify if the client requesting the resource is an admin",
-            "required": false,
-            "type": "boolean",
-            "default": "false"
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Id of the place",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Vehicles"
-            }
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
     "/vehicles": {
       "get": {
         "tags": [
@@ -449,6 +356,13 @@
               "type": "string"
             },
             "collectionFormat": "csv"
+          },
+          {
+            "name": "placeId",
+            "in": "query",
+            "description": "Select only vehicles that have this position",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -736,9 +650,6 @@
         "capacity": {
           "type": "integer",
           "format": "int64"
-        },
-        "vehicles": {
-          "type": "string"
         }
       }
     },
@@ -792,9 +703,6 @@
         "capacity": {
           "type": "integer",
           "format": "int64"
-        },
-        "vehicles": {
-          "type": "string"
         },
         "roadName": {
           "type": "string"
@@ -868,9 +776,6 @@
           "type": "integer",
           "format": "int64"
         },
-        "vehicles": {
-          "type": "string"
-        },
         "type": {
           "type": "string",
           "enum": [
@@ -939,6 +844,28 @@
         "name": "places"
       }
     },
+    "RnsEntry": {
+      "type": "object",
+      "required": [
+        "connections",
+        "places",
+        "vehicles"
+      ],
+      "properties": {
+        "places": {
+          "type": "string"
+        },
+        "vehicles": {
+          "type": "string"
+        },
+        "connections": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "rnsEntry"
+      }
+    },
     "Vehicle": {
       "type": "object",
       "required": [
@@ -992,28 +919,6 @@
         "name": "vehicle"
       }
     },
-    "RnsEntry": {
-      "type": "object",
-      "required": [
-        "connections",
-        "places",
-        "vehicles"
-      ],
-      "properties": {
-        "places": {
-          "type": "string"
-        },
-        "vehicles": {
-          "type": "string"
-        },
-        "connections": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "rnsEntry"
-      }
-    },
     "ParkingArea": {
       "type": "object",
       "required": [
@@ -1035,9 +940,6 @@
         "capacity": {
           "type": "integer",
           "format": "int64"
-        },
-        "vehicles": {
-          "type": "string"
         },
         "services": {
           "$ref": "#/definitions/ServicesType"
