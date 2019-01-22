@@ -5,6 +5,56 @@
 </head>
 <body>
 <h2>RnsSystem RESTful Web Service design documentation</h2>
-<p></p>
+<p>
+    There are three main resources in the RnsSystem: places, vehicles and connections <br/><br/>
+    <b>GET to /places, /vehicles, /connections</b> - each of this calls return a list (of places, vehicles and connections respectively). Since this kind of data<br/>
+    is going to grown together with the system the returned list could be very large, so instead of return everything, it is divided in constant length chunk (pages).<br/>
+    The user can then specify which page to get through a query parameter (returned data also contains info about total number of pages). This improve performance<br/>
+    as the user is not forced to get a huge quantity of data but can choose what to get.<br/>
+    To get a subset of resources is possible to specify some query parameters such as idSuffix for places or since, state, types and placeId for vehicles.<br/><br/>
+    To access a single place is possible to specify its id in /places/{id}, the returned data contains info about the place, including its connections. Under the<br/>
+    assumption that the number of connections that a place could have is limited, even when the system scales up, those connections are not returned using a separate link<br/>
+    but are included in the place data (PlaceType).<br/><br/>
+    In the same way is possible to access a single vehicle (/vehicles/{id}), and returned data contains info about the vehicle. At each vehicle is associated a shortest path<br/>
+    that heads to vehicle's destination (when is possible to compute it). A shortest path is an ordered list of places link, since it is subjected to grown as the system scales<br/>
+    up, is not ok for performance reason to include this list into vehicle information. However the shortest path is an information that a vehicle client may be interested in<br/>
+    very frequently, so having it as a separate resource may increase too much the number of interaction that the client should perform.<br/>
+    A trade-off between the two cases could be: the shortest path resource is divided into chunks (the same way as places or vehicles) but the first chunk (page) is included<br/>
+    together with vehicle information, and the client could also access to the entire list through the corresponding link.<br/><br/>
+    To let the client easily use the api every resource is associated to a link, also starting from the rest service entry point is possible to navigate through the various<br/>
+    resources without the needs for the client to manually build links to resources.<br/><br/>
+    The client can easily choose the format of data using corresponding http headers, the services will support xml and json format.<br/><br/>
+    To perform action on resources the service provide http methods accordingly:<br>
+    <ul>
+        <li>
+            <b>GET</b> - to retrieve data (read only without modifications), used for /places, /vehicles, /connections etc.., with use of query parameters to restrict<br/>
+            returned data. This has been used in conjunction with query parameters (rather than using other alternatives) since GET is idempotent.
+        </li>
+        <li><b>POST</b> - to create data, used to create a vehicle (at /(vehicles)</li>
+        <li><b>PUT</b> - to update by replacing the resource, used to update a vehicle (at /vehicles/{id})</li>
+        <li><b>DELETE</b> - ro remove a resource, used to remove a vehicle from the tracked vehicles</li>
+    </ul>
+    Standard status code meanings has been used, in particular:
+    <ul>
+        <li><b>200 OK</b> - request succeeded</li>
+        <li><b>201 Created</b> - resource created successfully</li>
+        <li><b>204 No Content</b> - request succeeded, without new content</li>
+        <li>
+            <b>403 Forbidden</b> - <i>"indicates that the server understood the request but refuses to authorize it."</i>
+            Used in create, update and delete of a vehicle. It indicates that the request would take the client into a wrong state, so the server undestand<br/>
+            the request but refuse to authorize it.
+        </li>
+        <li><b>404 Not Found</b> - resource not found</li>
+        <li>
+            <b>409 Conflict</b> - <i>"indicates a request conflict with current state of the server."</i>
+            Used in create of vehicle. It indicates that a vehicle with the provided id already exists.
+        </li>
+        <li>
+            <b>422 Unprocessable Entity</b> - <i>"indicates that the server understands the content type of the request entity, and the syntax of the request<br/>
+            entity is correct, but it was unable to process the contained instructions."</i>
+            Used in create and update of vehicle. It indicates that the request is syntactically correct but provided places cannot be found
+        </li>
+    </ul>
+</p>
 </body>
 </html>

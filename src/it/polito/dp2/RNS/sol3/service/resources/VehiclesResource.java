@@ -1,9 +1,6 @@
 package it.polito.dp2.RNS.sol3.service.resources;
 
 import io.swagger.annotations.*;
-import it.polito.dp2.RNS.GateReader;
-import it.polito.dp2.RNS.GateType;
-import it.polito.dp2.RNS.PlaceReader;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
@@ -45,7 +42,8 @@ public class VehiclesResource {
     @ApiParam(value = "Which page of the resource must be returned") @QueryParam("page") int page,
     @ApiParam(value = "Return only vehicles that have entered into the system since this date (using format yyyy-MM-dd'T'HH:mm:ss.SSSXXX)") @QueryParam("since") String since,
     @ApiParam(value = "Filter vehicles by the specified state") @QueryParam("state") String state,
-    @ApiParam(value = "Filter vehicles by the specified types") @QueryParam("type") Set<String> types
+    @ApiParam(value = "Filter vehicles by the specified types") @QueryParam("type") Set<String> types,
+    @ApiParam(value = "Select only vehicles that have this position") @QueryParam("placeId") String placeId
   ) {
     if (admin) {
       GregorianCalendar calendar = null;
@@ -71,7 +69,7 @@ public class VehiclesResource {
       vehicles.setTotalPages(BigInteger.ONE);
 
       vehicles.getVehicle().addAll(
-        service.getVehicles(calendar, vehicleState, vehicleTypes)
+        service.getVehicles(calendar, vehicleState, vehicleTypes, placeId, uriInfo.getBaseUriBuilder())
       );
 
       return vehicles;

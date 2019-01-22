@@ -11,11 +11,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Path("places")
 @Api(value = "places")
@@ -68,71 +66,6 @@ public class PlacesResource {
       return new ObjectFactory().createPlace(
         setPlaceLinks(placeType, baseUriBuilder)
       );
-    }
-
-    throw new ClientErrorException(403);
-  }
-
-  @GET
-  @Path("{id}/connections")
-  @ApiOperation(value = "Get place connection", notes = "Get connections of the specified place, restricted to admin")
-  @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK", response = PlaceType.class, responseContainer = "List"),
-    @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 404, message = "Not Found"),
-  })
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public List<JAXBElement<PlaceType>> getPlaceConnections (
-    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @ApiParam(value = "Id of the place") @PathParam("id") String id
-  ) {
-    if (admin) {
-      List<PlaceType> placeTypes = service.getPlaceConnections(id);
-      if (placeTypes == null)
-        throw new NotFoundException();
-
-      ObjectFactory of = new ObjectFactory();
-      UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-      return placeTypes.stream()
-        .map(p -> of.createPlace(setPlaceLinks(p, baseUriBuilder)))
-        .collect(Collectors.toList());
-    }
-
-    throw new ClientErrorException(403);
-  }
-
-  @GET
-  @Path("{id}/vehicles")
-  @ApiOperation(value = "Get vehicles in place", notes = "Get vehicles that are currently in the specified place, restricted to admin")
-  @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK", response = Vehicles.class),
-    @ApiResponse(code = 403, message = "Forbidden"),
-    @ApiResponse(code = 404, message = "Not Found"),
-  })
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  public Vehicles getVehiclesInPlace (
-    @ApiParam(value = "Specify if the client requesting the resource is an admin") @QueryParam("admin") @DefaultValue("false") boolean admin,
-    @ApiParam(value = "Id of the place") @PathParam("id") String placeId
-  ) {
-    if (admin) {
-      if (service.getPlace(placeId) == null)
-        throw new NotFoundException();
-
-      Vehicles vehicles = new Vehicles();
-      vehicles.setPage(BigInteger.ONE);
-      vehicles.setTotalPages(BigInteger.ONE);
-
-      vehicles.getVehicle().addAll(
-        service.getVehicles(null, null, null)
-          .stream()
-          .filter(vehicle -> {
-            String vehicleId = VehiclesResource.getVehicleIdFromUri(vehicle.getPosition(), uriInfo.getBaseUriBuilder());
-            return vehicleId.equals(placeId);
-          })
-          .collect(Collectors.toList())
-      );
-
-      return vehicles;
     }
 
     throw new ClientErrorException(403);
@@ -230,7 +163,6 @@ public class PlacesResource {
     placeType.getConnection().replaceAll(
       placeId -> baseUrl.clone().path("places").path(placeId).toTemplate()
     );
-    placeType.setVehicles(self.path("vehicles").toTemplate());
     return placeType;
   }
 

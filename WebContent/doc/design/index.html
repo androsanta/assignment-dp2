@@ -5,6 +5,12 @@
 </head>
 <body>
 <h2>RnsSystem RESTful Web Service design documentation</h2>
-
+<p>
+    There are three main resources in the RnsSystem: places, vehicles and connections <br/><br/>
+    <b>GET to /places, /vehicles, /connections</b> - each of this calls return a list (of places, vehicles and connections respectively). Since this kind of data<br/>
+    is going to grown together with the system the returned list could be very large, so instead of return everything, it is divided in constant length chunk (pages).<br/>
+    The user can then specify which page to get through a query parameter (returned data also contains info about total number of pages). This improve performance<br/>
+    as the user is not forced to get a huge quantity of data but can choose what to get.<br/><br/>
+</p>
 </body>
 </html>

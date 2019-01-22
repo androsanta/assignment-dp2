@@ -8,7 +8,9 @@ import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.*;
 import it.polito.dp2.RNS.sol3.service.db.RnsSystemDb;
+import it.polito.dp2.RNS.sol3.service.resources.PlacesResource;
 
+import javax.ws.rs.core.UriBuilder;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -181,8 +183,14 @@ public class RnsService {
     return db.addVehicle(vehicle);
   }
 
-  public List<Vehicle> getVehicles (GregorianCalendar since, VehicleStateEnum state, Set<VehicleTypeEnum> types) {
-    return db.getVehicles(since, state, types);
+  public List<Vehicle> getVehicles (GregorianCalendar since, VehicleStateEnum state, Set<VehicleTypeEnum> types, String placeId, UriBuilder baseUrl) {
+    return db.getVehicles()
+      .stream()
+      .filter(v -> since == null || v.getEntryTime().toGregorianCalendar().after(since))
+      .filter(v -> state == null || v.getState().equals(state))
+      .filter(v -> types == null || types.size() == 0 || types.contains(v.getType()))
+      .filter(v -> placeId == null || placeId.equals(PlacesResource.getPlaceIdFromUri(v.getPosition(), baseUrl)))
+      .collect(Collectors.toList());
   }
 
   public Vehicle getVehicle (String id) {

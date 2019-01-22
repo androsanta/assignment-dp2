@@ -24,8 +24,6 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
 
   private String vehiclesUrl;
   private Map<String, String> placesIdByUrl;
-  private Map<String, String> vehiclesInPlaceById;
-
 
   public AdmClientImpl () throws ServiceException {
     String uri = System.getProperty("it.polito.dp2.RNS.lab3.URL");
@@ -148,10 +146,6 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
       .stream()
       .collect(Collectors.toMap(PlaceType::getSelf, PlaceType::getId));
 
-    vehiclesInPlaceById = places.getPlace()
-      .stream()
-      .collect(Collectors.toMap(PlaceType::getId, PlaceType::getVehicles));
-
     // Connections
     places.getPlace().forEach(p -> {
       PlaceReader from = getPlace(p.getId());
@@ -169,18 +163,17 @@ public class AdmClientImpl extends RnsLib implements it.polito.dp2.RNS.lab3.AdmC
   public Set<VehicleReader> getUpdatedVehicles (String place) throws ServiceException {
     Client client = ClientBuilder.newClient();
 
-    String requestUrl = place == null ? vehiclesUrl : vehiclesInPlaceById.get(place);
-
     Vehicles vehicles;
     try {
-      Response response = client.target(requestUrl)
+      Response response = client.target(vehiclesUrl)
         .queryParam("admin", true)
+        .queryParam("placeId", place)
         .request()
         .accept(MediaType.APPLICATION_XML)
         .get();
 
       if (response.getStatus() != 200)
-        throw new Exception("Get to " + requestUrl + " failed with code " + response.getStatus());
+        throw new Exception("Get to " + vehiclesUrl + " failed with code " + response.getStatus());
 
       vehicles = response.readEntity(Vehicles.class);
       response.close();

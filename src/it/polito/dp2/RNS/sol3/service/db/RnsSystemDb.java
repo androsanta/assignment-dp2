@@ -3,21 +3,19 @@ package it.polito.dp2.RNS.sol3.service.db;
 import it.polito.dp2.RNS.*;
 import it.polito.dp2.RNS.lab2.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Vehicle;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleStateEnum;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.VehicleTypeEnum;
 
 import javax.ws.rs.InternalServerErrorException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class RnsSystemDb {
 
   private static RnsSystemDb db = new RnsSystemDb();
 
   private RnsReader rnsReader;
-  private Map<String, PlaceReader> places;
-
   private PathFinder pathFinder;
   private ConcurrentHashMap<String, Vehicle> trackedVehicles;
 
@@ -95,12 +93,8 @@ public class RnsSystemDb {
     return new ArrayList<>(paths).get(0);
   }
 
-  public List<Vehicle> getVehicles (GregorianCalendar since, VehicleStateEnum state, Set<VehicleTypeEnum> types) {
-    return trackedVehicles.values().stream()
-       .filter(v -> since == null || v.getEntryTime().toGregorianCalendar().after(since))
-       .filter(v -> state == null || v.getState().equals(state))
-       .filter(v -> types == null || types.size() == 0 || types.contains(v.getType()))
-      .collect(Collectors.toList());
+  public List<Vehicle> getVehicles () {
+    return new ArrayList<>(trackedVehicles.values());
   }
 
   public Vehicle getVehicle (String plateId) {

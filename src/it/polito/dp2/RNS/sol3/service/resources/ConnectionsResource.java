@@ -2,7 +2,6 @@ package it.polito.dp2.RNS.sol3.service.resources;
 
 import io.swagger.annotations.*;
 import it.polito.dp2.RNS.sol3.rest.service.jaxb.Connections;
-import it.polito.dp2.RNS.sol3.rest.service.jaxb.Places;
 import it.polito.dp2.RNS.sol3.service.RnsService;
 
 import javax.ws.rs.*;
@@ -10,7 +9,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.math.BigInteger;
 
 @Path("connections")
 @Api(value = "connections")

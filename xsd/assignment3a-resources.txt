@@ -29,10 +29,6 @@ rns/places/{id}/vehicles    | GET        | body: administrator      | 200 ok    
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |
 ------------------------------------------------------------------------------------------------------------------------------------------------
-rns/places/{id}/connections | GET        | body: administrator      | 200 ok             | list of places                     | Yes            | x
-                            |            |                          | 403 forbidden      |                                    |                |
-                            |            |                          | 404 not found      |                                    |                |
-------------------------------------------------------------------------------------------------------------------------------------------------
 rns/places/connections      | GET        | body: pageRequest        | 200 ok             | connections                        | Yes            | x
                             |            |                          | 403 forbidden      |                                    |                |
                             |            |                          | 404 not found      |                                    |                |

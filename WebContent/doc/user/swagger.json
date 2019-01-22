@@ -8,13 +8,13 @@
   "basePath": "/RnsSystem/rest",
   "tags": [
     {
-      "name": "places"
+      "name": "vehicles"
     },
     {
       "name": "connections"
     },
     {
-      "name": "vehicles"
+      "name": "places"
     }
   ],
   "schemes": [
@@ -499,13 +499,13 @@
             }
           },
           "422": {
-            "description": "Unprocessable Entity"
+            "description": "Unprocessable Entity - source or destination cannot be found"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden - Entrance gate provided is not IN/IN_OUT"
           },
           "409": {
-            "description": "Conflict"
+            "description": "Conflict - A vehicle with the same name is already in the system"
           }
         }
       }
@@ -579,16 +579,13 @@
             }
           },
           "422": {
-            "description": "Unprocessable Entity"
+            "description": "Unprocessable Entity - New position is not a valid place"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden - New position is not reachable from the current position"
           },
           "404": {
             "description": "Not Found"
-          },
-          "409": {
-            "description": "Conflict"
           }
         }
       },
@@ -613,13 +610,6 @@
             "default": "false"
           },
           {
-            "name": "outGate",
-            "in": "query",
-            "description": "The gate from which the vehicle must exit",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "id",
             "in": "path",
             "description": "The id if the vehicle",
@@ -628,14 +618,11 @@
           }
         ],
         "responses": {
-          "422": {
-            "description": "Unprocessable Entity"
-          },
           "204": {
             "description": "No Content"
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden - The vehicle is not in an OUT/IN_OUT gate"
           },
           "404": {
             "description": "Not Found"
@@ -894,6 +881,28 @@
         }
       }
     },
+    "Vehicles": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vehicle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vehicle"
+          }
+        }
+      },
+      "xml": {
+        "name": "vehicles"
+      }
+    },
     "Places": {
       "type": "object",
       "required": [
@@ -928,28 +937,6 @@
       },
       "xml": {
         "name": "places"
-      }
-    },
-    "Vehicles": {
-      "type": "object",
-      "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "vehicle": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Vehicle"
-          }
-        }
-      },
-      "xml": {
-        "name": "vehicles"
       }
     },
     "Vehicle": {
